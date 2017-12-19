@@ -1,9 +1,9 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^cds/(\w*)$ index.php?cds=$1 
-RewriteRule ^cds/(\w*)/start/([\w-]*)$ index.php?cds=$1&start=$2 
-RewriteRule ^cds/(\w*)/end/([\w-]*)$ index.php?cds=$1&end=$2 
-RewriteRule ^cds/(\w*)/start/([\w-]*)/end/([\w-]*)$ index.php?cds=$1&start=$2&end=$3 [QSA,NC,L]
+RewriteRule ^cds/(\w*)/?$ index.php?cds=$1 
+#RewriteRule ^cds/(\w*)/start/([\w-]*)$ index.php?cds=$1&start=$2 
+#RewriteRule ^cds/(\w*)/end/([\w-]*)$ index.php?cds=$1&end=$2 
+#RewriteRule ^cds/(\w*)/start/([\w-]*)/end/([\w-]*)$ index.php?cds=$1&start=$2&end=$3 [QSA,NC,L]</IfModule>
 </IfModule>
+
+ErrorDocument 404 /404.html
