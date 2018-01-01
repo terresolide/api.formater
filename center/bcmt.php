@@ -1,17 +1,48 @@
 <?php
+/** configuration **/
+
 $ftp_server = "ftp.bcmt.fr";
-$file = "ftp://ftp.bcmt.fr/DEFINITIVE/ams/yea/ams.year";
+$ftp_user = "bcmt_public";
+$ftp_pwd = "bcmt";
+
+//header("Content-Type: text/plain; charset=us-ascii");
+var_dump( $_GET);
+/** observatory **/
+if( !isset( $_GET["ob"]) ){
+    echo mb_convert_encoding("NO_OBSERVATORY", "us-ascii", "utf-8");
+    exit;
+}
+
+$observatory = $_GET["ob"];
+
+if( !isset( $_GET["start"])){
+    //last 10 days
+    $start = new DateTime(" -10 day");
+    $end = new DateTime();
+    
+    var_dump( $end);
+}
+
+$file = "/DEFINITIVE/ams/yea/ams.year";
 // Mise en place d'une connexion
 $conn_id = ftp_connect($ftp_server) or die("Impossible de se connecter au serveur $ftp_server"); 
 //$r = ftp_pasv($ftp, true);
-//ftp_login($conn_id, 'anonymous', '');
 
+
+if( ! @ftp_login( $conn_id, 'bcmt_public', 'bcmt' ) ){
+    die( 'Bad login, but no PHP warning thrown.');
+}
+
+
+// read directory
+$files = ftp_nlist ( $conn_id , "/DEFINITIVE/ams/" );
+var_dump( $files);
 //$ret = ftp_nb_fget($conn_id, $fp, $file, FTP_BINARY);
-//ob_start();
-//$result = ftp_get($conn_id, "php://output", $file, FTP_BINARY);
-//$data = ob_get_contents();
-//ob_end_clean();
-//echo $data;
+ob_start();
+$result = ftp_get($conn_id, "php://output", $file, FTP_ASCII);
+$data = ob_get_contents();
+ob_end_clean();
+echo $data;
 
 //$handle = file_get_contents("ftp://ftp.bcmt.fr/DEFINITIVE/ams/yea/ams.year");
 
@@ -48,6 +79,6 @@ function ftp_get_contents($ftp_stream, $remote_file, $mode=FTP_ASCII, $resume_po
     if($fail || $ret!=FTP_FINISHED) return false;
     return $data;
 }
-$handle = ftp_get_contents("ftp://ftp.bcmt.fr/DEFINITIVE/ams/yea/ams.year", "php://output");
+//$handle = ftp_get_contents("ftp://ftp.bcmt.fr/DEFINITIVE/ams/yea/ams.year", "php://output");
 
-echo $handle;
+//echo $handle;
