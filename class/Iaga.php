@@ -20,7 +20,6 @@ Class Iaga
             }
             
         }else{
-            var_dump("ici");
             foreach( $files as $file){
                 
                 $url = $this->ftp.$file;
@@ -58,7 +57,6 @@ Class Iaga
                 $fields = preg_split('/\s+/', $line);
                 array_pop( $fields);
                 array_pop( $fields);
-                var_dump($fields);
             }else if (preg_match($pattern, $line)) {
                 // data lines
                 $data = preg_split('/\s+/',$line); 
@@ -86,8 +84,11 @@ Class Iaga
             }
             $i++;
         }
-        echo "nombre de lignes ". $i;
+        //echo "nombre de lignes ". $i;
       
         //return array
     }
+     public function json(){
+         return json_encode( array( "meta"=> $this->meta, "collection"=> $this->data), JSON_NUMERIC_CHECK);
+     }
 }
