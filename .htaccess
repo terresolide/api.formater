@@ -1,9 +1,9 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^cds/([a-z]*)/?$ /center/$1.php 
-RewriteRule ^cds/([a-z]*)/ob/([a-z]*)/?$ /center/$1.php?ob=$2 
-RewriteRule ^cds/([a-z]*)/ob/([a-z]*)/start/([0-9-]*)/?$ /center/$1.php?ob=$2&start=$3 
-RewriteRule ^cds/([a-z]*)/ob/([a-z]*)/start/([0-9-]*)/end/([0-9-]*)/?$ /center/$1.php?ob=$2&start=$3&end=$4 
+RewriteRule ^cds/([a-z]+)/?$ /center/$1.php 
+RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/?$ /center/$1.php?ob=$2 
+RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/start/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/?$ /center/$1.php?ob=$2&start=$3 
+RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/start/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/end/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/?$ /center/$1.php?ob=$2&start=$3&end=$4 
 </IfModule>
 
 ErrorDocument 404 /404.php
