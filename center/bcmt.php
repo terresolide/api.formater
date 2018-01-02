@@ -21,6 +21,8 @@ if( !isset( $_GET["start"])){
     $end = new DateTime();
     
     var_dump( $end);
+}else{
+    
 }
 
 $file = "/DEFINITIVE/ams/yea/ams.year";

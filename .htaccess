@@ -4,8 +4,6 @@ RewriteRule ^cds/([a-z]*)/?$ /center/$1.php
 RewriteRule ^cds/([a-z]*)/ob/([a-z]*)/?$ /center/$1.php?ob=$2 
 RewriteRule ^cds/([a-z]*)/ob/([a-z]*)/start/([0-9-]*)/?$ /center/$1.php?ob=$2&start=$3 
 RewriteRule ^cds/([a-z]*)/ob/([a-z]*)/start/([0-9-]*)/end/([0-9-]*)/?$ /center/$1.php?ob=$2&start=$3&end=$4 
-#RewriteRule ^cds/(\w*)/end/([\w-]*)$ index.php?cds=$1&end=$2 
-#RewriteRule ^cds/(\w*)/start/([\w-]*)/end/([\w-]*)$ index.php?cds=$1&start=$2&end=$3 [QSA,NC,L]
 </IfModule>
 
 ErrorDocument 404 /404.php
