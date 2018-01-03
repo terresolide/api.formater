@@ -5,17 +5,24 @@ $ftp_server = "ftp.bcmt.fr";
 $ftp_user = "bcmt_public";
 $ftp_pwd = "bcmt";
 
-
-//ini_set("display_errors", 0); 
-
 $observatories = array( "aae", "ams", "bng", "box", "clf", "czt", "dlt", "dmc", "drv", "ipm", "kou", "lzh", "mbo", "paf", "phu");
 
+/**
+ * headers for response
+ */
+/**
+ * Response
+ */
 if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
     header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     
 }
-header("Content-Type: application/json"); 
+header("Content-Type: application/json");
+
+/**
+ * CONTROLE PARAMETERS
+ */
 
 /** observatory **/
 if( !isset( $_GET["ob"]) ){
@@ -54,12 +61,56 @@ if( $diff->invert === 1){
     echo '{"error": "INCONSISTENT_DATE"}';
     exit;
 }
+
+
+/**
+ * SEARCH FILES ON FTP SERVER
+ */
+function search_files( $directory, $prefix, $observatory, $type, $start, $end){
+    global $conn_id;
+    $files = ftp_nlist ( $conn_id , $directory);
+    $results = array();
+
+    switch( $type){
+        case "yea":
+        case "mon":
+        case "day":
+            $start_year = intVal($start->format("Y"));
+            $end_year = intVal( $end->format("Y"));
+            for($i= $start_year; $i<= $end_year; $i++){
+                $file = $directory."/".$observatory . $i. $prefix . $type.".".$type;
+ 
+                if(in_array( $file, $files)){
+                    array_push( $results, $file);
+                }
+            }
+            break;
+        case "hor":
+            $current = new DateTime( $start->format("Y-m-d"));
+            
+            while( $current<= $end){
+                
+                $file = $directory."/".$observatory . $current->format("Ym"). $prefix . $type.".".$type;
+
+                if(in_array( $file, $files)){
+                    array_push( $results, $file);
+                   // array_push( $done, $current->format("Ym"));
+                }
+                $current->modify( 'first day of next month' );
+                
+            }
+            break;
+    }
+    
+    return $results;
+}
 if($diff->y > 25){
     $type = "yea";
+ 
 }else if( $diff->y >= 1){
     //search month data
     $type ="mon";
-}else if( $diff->days > 20 ){
+}else if( $diff->days > 15 ){
     //search days data
     $type = "day";
 }else{
@@ -67,47 +118,36 @@ if($diff->y > 25){
     $type = "hor";
 }
 
-//search first in DEFINITIVE data
-
-$directory0 = "/DEFINITIVE/".$observatory."/".$type;
-$directory1 = "/QUASI_DEFINITIVE".$observatory."/".$type;
-
-$start_year = intVal($start->format("Y"));
-$end_year = intVal( $end->format("Y"));
-
-
-// Mise en place d'une connexion
 $conn_id = ftp_connect($ftp_server) or die('{ "error": "NO_FTP_CONNEXION"}'); 
-
-
-
 
 if( ! @ftp_login( $conn_id, $ftp_user, $ftp_pwd ) ){
     die( '{ "error": "BAD_LOGIN_PWD"}');
 }
 
+//search first in DEFINITIVE data
+// @todo choose quasi_definitive data if no  definitive
 
-// search in file DEFINITIVE or QUASI-DEFINITIVE
-$files = ftp_nlist ( $conn_id , $directory0);
+$directory0 = "/DEFINITIVE/".$observatory."/".$type;
+$directory1 = "/QUASI_DEFINITIVE".$observatory."/".$type;
+$result0 = search_files( $directory0,"d", $observatory, $type, $start, $end);
 
-//var_dump( $files);
-//$ret = ftp_nb_fget($conn_id, $fp, $file, FTP_BINARY);
-/*ob_start();
-$result = ftp_get($conn_id, "php://output", $file, FTP_ASCII);
-$data = ob_get_contents();
-ob_end_clean();
-echo $data;*/
-
-//$handle = file_get_contents("ftp://ftp.bcmt.fr/DEFINITIVE/ams/yea/ams.year");
+//$result1= search_files($directory1, "q", $observatory, $type, $start, $end);
 
 
-//$handle = ftp_get_contents("ftp://ftp.bcmt.fr/DEFINITIVE/ams/yea/ams.year", "php://output");
+ftp_close($conn_id);
 
-//echo $handle;
-
+/**
+ * extract data from files
+ */
 include_once '../class/Iaga.php';
 
 
-$iaga = new Iaga( array("../data/box201602qhor.hor"), "2016-02-02","2016-02-03");
+
+$iaga = new Iaga( $result0, $start->format("Y-m-d"),$end->format("Y-m-d"), "ftp://bcmt_public:bcmt@ftp.bcmt.fr/");
+
+
+/**
+ * response
+ */
 
 echo $iaga->json();

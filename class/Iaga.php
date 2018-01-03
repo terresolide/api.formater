@@ -16,6 +16,7 @@ Class Iaga
                 $flx = fopen( $file, "r+b");
                 if( !$flx===false){
                     $this->read( $flx);
+                    fclose( $flx);
                 }
             }
             
@@ -32,6 +33,7 @@ Class Iaga
                 //$this->read( $flx);
                 if( !$flx===false){
                     $this->read( $flx);
+                    fclose( $flx);
                 }
             }
         }
@@ -53,6 +55,7 @@ Class Iaga
         while (!feof($resource)) {
             //line start by D
             $line = fgets($resource);
+           
             if( preg_match(  "/^D/", $line)){ 
                 $fields = preg_split('/\s+/', $line);
                 array_pop( $fields);
@@ -89,6 +92,10 @@ Class Iaga
         //return array
     }
      public function json(){
-         return json_encode( array( "meta"=> $this->meta, "collection"=> $this->data), JSON_NUMERIC_CHECK);
+         if( !empty( $this->meta)){
+            return json_encode( array( "meta"=> $this->meta, "collection"=> $this->data), JSON_NUMERIC_CHECK);
+         }else{
+            return '{ error: "NO_DATA"}';
+         }
      }
 }
