@@ -5,7 +5,7 @@ $ftp_server = "ftp.bcmt.fr";
 $ftp_user = "bcmt_public";
 $ftp_pwd = "bcmt";
 
-$observatories = array( "aae", "ams", "bng", "box", "clf", "czt", "dlt", "dmc", "drv", "ipm", "kou", "lzh", "mbo", "paf", "phu");
+$observatories = array( "aae", "ams", "bng", "box", "clf", "czt", "dlt", "dmc", "drv", "ipm", "kou", "lzh", "mbo", "paf", "phu", "ppt", "psm", "qsb", "tam", "tan", "vlj");
 
 /**
  * headers for response
