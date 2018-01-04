@@ -1,13 +1,19 @@
 <?php
+function replace_code( &$item, $key,$obs){
+    $item = str_replace( $obs, "", $item);
+    
+}
 Class Iaga
 {
+    private $code;
     private $start = null;
     private $end = null;
     private $ftp = null;
     public $data = array();
     public $meta = array();
     
-    public function __construct( $files, $start=null, $end=null,$ftp= null){
+    public function __construct( $files, $code, $start=null, $end=null,$ftp= null){
+        $this->code = strtoupper($code);
         $this->start = $start;
         $this->end = $end;
         $this->ftp = $ftp;
@@ -48,10 +54,14 @@ Class Iaga
         }
     }
     public function read( $resource){
+        @ob_end_clean(); 
         $i=0;
         // search line that do not start with a space
         $pattern = "/^(?![ D]{1})/";
         $answer = array();
+        
+       
+       
         while (!feof($resource)) {
             //line start by D
             $line = fgets($resource);
@@ -60,11 +70,12 @@ Class Iaga
                 $fields = preg_split('/\s+/', $line);
                 array_pop( $fields);
                 array_pop( $fields);
+                array_walk( $fields, "replace_code", $this->code);
             }else if (preg_match($pattern, $line)) {
                 // data lines
                 $data = preg_split('/\s+/',$line); 
                 array_pop($data);
-                if( !empty($data) && $this->isRequired( $data[0]) )
+                if( !empty($data) && $this->isRequired( $data[0]) && $data[3]!="99999")
                 $this->data[ ] = array_combine( $fields, $data);
             }else if( preg_match( "/^(?!\s#)/", $line)){
                 $find = false;
@@ -79,6 +90,9 @@ Class Iaga
                         "name" => $name, 
                         "content"=> trim( substr( $line, 23,45))
                     );
+                    if("name" === "IAGA Code"){
+                        $code = trim( substr( $line, 23,45));
+                    }
                 }else{
                     //case already define, but other value
                     //for example Data Type  quasi-definitive and Data Type definitive
@@ -95,7 +109,7 @@ Class Iaga
          if( !empty( $this->meta)){
             return json_encode( array( "meta"=> $this->meta, "collection"=> $this->data), JSON_NUMERIC_CHECK);
          }else{
-            return '{ error: "NO_DATA"}';
+            return '{ "error": "NO_DATA"}';
          }
      }
 }

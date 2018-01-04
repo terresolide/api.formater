@@ -143,7 +143,7 @@ include_once '../class/Iaga.php';
 
 
 
-$iaga = new Iaga( $result0, $start->format("Y-m-d"),$end->format("Y-m-d"), "ftp://bcmt_public:bcmt@ftp.bcmt.fr/");
+$iaga = new Iaga( $result0, $observatory, $start->format("Y-m-d"),$end->format("Y-m-d"), "ftp://bcmt_public:bcmt@ftp.bcmt.fr/");
 
 
 /**
