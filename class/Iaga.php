@@ -1,5 +1,6 @@
 <?php
 function replace_code( &$item, $key,$obs){
+    
     $item = str_replace( $obs, "", $item);
     
 }
@@ -66,7 +67,7 @@ Class Iaga
             //line start by D
             $line = fgets($resource);
            
-            if( preg_match(  "/^D/", $line)){ 
+            if( preg_match(  "/^D/", $line) ){ 
                 $fields = preg_split('/\s+/', $line);
                 array_pop( $fields);
                 array_pop( $fields);

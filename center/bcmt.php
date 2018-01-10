@@ -18,7 +18,7 @@ if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     
 }
-header("Content-Type: application/json");
+//header("Content-Type: application/json");
 
 /**
  * CONTROLE PARAMETERS
@@ -131,10 +131,8 @@ $directory0 = "/DEFINITIVE/".$observatory."/".$type;
 $directory1 = "/QUASI_DEFINITIVE".$observatory."/".$type;
 $result0 = search_files( $directory0,"d", $observatory, $type, $start, $end);
 
-//$result1= search_files($directory1, "q", $observatory, $type, $start, $end);
 
 
-ftp_close($conn_id);
 
 /**
  * extract data from files
@@ -145,7 +143,11 @@ include_once '../class/Iaga.php';
 
 $iaga = new Iaga( $result0, $observatory, $start->format("Y-m-d"),$end->format("Y-m-d"), "ftp://bcmt_public:bcmt@ftp.bcmt.fr/");
 
-
+if(empty($iaga->meta)){
+	$result1= search_files($directory1, "q", $observatory, $type, $start,$end);
+   $iaga = new Iaga( $result1, $observatory, $start->format("Y-m-d"),$end->format("Y-m-d"), "ftp://bcmt_public:bcmt@ftp.bcmt.fr/");
+}
+ftp_close($conn_id);
 /**
  * response
  */
