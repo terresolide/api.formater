@@ -5,7 +5,7 @@ $ftp_server = "ftp.bcmt.fr";
 $ftp_user = "bcmt_public";
 $ftp_pwd = "bcmt";
 
-$observatories = array( "aae", "ams", "bng", "box", "clf", "czt", "dlt", "dmc", "drv", "ipm", "kou", "lzh", "mbo", "paf", "phu", "ppt", "psm", "qsb", "tam", "tan", "vlj");
+$observatories = array( "aae", "ams", "bng", "box", "clf", "czt", "dlt", "dmc", "drv", "ipm", "kou", "lzh", "mbo", "paf", "phu", "ppt", "tan", "tam");
 
 /**
  * headers for response
@@ -18,7 +18,7 @@ if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     
 }
-//header("Content-Type: application/json");
+header("Content-Type: application/json");
 
 /**
  * CONTROLE PARAMETERS
@@ -39,7 +39,7 @@ if( ! in_array( $observatory, $observatories)){
 /** start and end date **/
 if( !isset( $_GET["start"]) && !isset($_GET["end"])){
     //last 10 days
-    $start = new DateTime(" -10 day");
+    $start = new DateTime(" -3 day");
     $end = new DateTime();
     
     
@@ -62,7 +62,18 @@ if( $diff->invert === 1){
     exit;
 }
 
-
+function steppify($delta) {
+    /**  */
+    if($delta<=1){
+        return 1;
+    }
+    $precision = round( log10( $delta ));
+   
+    $p = pow(10, $precision);
+ 
+    $max = ceil($delta / $p) * $p;
+    return $max / 2 > $delta ? $max / 2 : $max;
+};
 /**
  * SEARCH FILES ON FTP SERVER
  */
@@ -104,6 +115,57 @@ function search_files( $directory, $prefix, $observatory, $type, $start, $end){
     
     return $results;
 }
+/** 
+ * search by min in variation
+ */
+
+function search_files_by_min( $obs,  $start, $end){
+    global $conn_id;
+ 
+    $directory0 = "";
+    $results = array();
+    $diff = $start->diff( $end );
+    $days = $diff->days;
+    $current = new DateTime( $start->format("Y-m-d"));
+    $files = array();
+    $step = steppify( $days/15);
+    $cumul = 1;
+    $last = false;
+    while( $current<= $end && !$last){
+        $directory = "/VARIATION/".$obs."/min/".$current->format("Y");
+        //read directory if not done
+        if( $directory != $directory0){
+            $directory0 =  $directory;
+            $files = ftp_nlist ( $conn_id , $directory0);
+      
+        }
+        $file = $directory."/".$obs . $current->format("Ymd"). "vmin.min";
+        
+        if(in_array( $file, $files)){
+            array_push( $results, $file);
+            // array_push( $done, $current->format("Ym"));
+        }
+        
+        $current->modify( '+'.$step.' days' );
+        
+    }
+    //last day
+    $directory = "/VARIATION/".$obs."/min/".$end->format("Y");
+    if( $directory != $directory0){
+        $directory0 =  $directory;
+        $files = ftp_nlist ( $conn_id , $directory0);
+        
+    }
+    $file = $directory."/".$obs . $end->format("Ymd"). "vmin.min";
+    
+    if(in_array( $file, $files)){
+        array_push( $results, $file);
+        // array_push( $done, $current->format("Ym"));
+    }
+    return $results;
+}
+
+
 if($diff->y > 25){
     $type = "yea";
  
@@ -123,17 +185,25 @@ $conn_id = ftp_connect($ftp_server) or die('{ "error": "NO_FTP_CONNEXION"}');
 if( ! @ftp_login( $conn_id, $ftp_user, $ftp_pwd ) ){
     die( '{ "error": "BAD_LOGIN_PWD"}');
 }
-
+//$test = search_files_by_min($observatory, $start, $end);
+//var_dump($test);
+//exit;
 //search first in DEFINITIVE data
-// @todo choose quasi_definitive data if no  definitive
-
+$ismin = false;
 $directory0 = "/DEFINITIVE/".$observatory."/".$type;
-$directory1 = "/QUASI_DEFINITIVE".$observatory."/".$type;
+$directory1 = "/QUASI_DEFINITIVE/".$observatory."/".$type;
 $result0 = search_files( $directory0,"d", $observatory, $type, $start, $end);
 
+if(empty( $result0)){
+    $result0 = search_files( $directory1,"q", $observatory, $type, $start, $end);
+}
+if( empty( $result0)){
+    $result0 = search_files_by_min($observatory, $start, $end);
+    $ismin = $diff->days + 1;
+}
 
-
-
+ftp_close($conn_id);
+//exit;
 /**
  * extract data from files
  */
@@ -141,13 +211,10 @@ include_once '../class/Iaga.php';
 
 
 
-$iaga = new Iaga( $result0, $observatory, $start->format("Y-m-d"),$end->format("Y-m-d"), "ftp://bcmt_public:bcmt@ftp.bcmt.fr/");
+$iaga = new Iaga( $result0, $observatory, $start->format("Y-m-d"),$end->format("Y-m-d"), "ftp://bcmt_public:bcmt@ftp.bcmt.fr/", $ismin);
 
-if(empty($iaga->meta)){
-	$result1= search_files($directory1, "q", $observatory, $type, $start,$end);
-   $iaga = new Iaga( $result1, $observatory, $start->format("Y-m-d"),$end->format("Y-m-d"), "ftp://bcmt_public:bcmt@ftp.bcmt.fr/");
-}
-ftp_close($conn_id);
+
+
 /**
  * response
  */

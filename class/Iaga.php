@@ -10,14 +10,19 @@ Class Iaga
     private $start = null;
     private $end = null;
     private $ftp = null;
+    private $pattern = "/^(?![ D]{1})/";
+    private $ismin = false; // search in file minutes
     public $data = array();
     public $meta = array();
     
-    public function __construct( $files, $code, $start=null, $end=null,$ftp= null){
+    public function __construct( $files, $code, $start=null, $end=null,$ftp= null, $ismin=false){
         $this->code = strtoupper($code);
         $this->start = $start;
         $this->end = $end;
         $this->ftp = $ftp;
+        $this->ismin = $ismin;
+        var_dump($ismin);
+        $this->pattern();
         if(!$ftp ){
             foreach($files as $file){
                 $flx = fopen( $file, "r+b");
@@ -45,6 +50,7 @@ Class Iaga
             }
         }
     }
+    
     public function isRequired( $date ){
         if( $this->start && $date < $this->start ){
             return false;
@@ -60,8 +66,8 @@ Class Iaga
         // search line that do not start with a space
         $pattern = "/^(?![ D]{1})/";
         $answer = array();
-        
-       
+        $matches = array();
+        $first = empty( $this->meta);
        
         while (!feof($resource)) {
             //line start by D
@@ -72,13 +78,15 @@ Class Iaga
                 array_pop( $fields);
                 array_pop( $fields);
                 array_walk( $fields, "replace_code", $this->code);
-            }else if (preg_match($pattern, $line)) {
+            }else if (preg_match($this->pattern, $line, $matches)){
                 // data lines
                 $data = preg_split('/\s+/',$line); 
                 array_pop($data);
-                if( !empty($data) && $this->isRequired( $data[0]) && $data[3]!="99999")
+                if( !empty($data) && $this->isRequired( $data[0]) && $data[3]<"99999" && $data[4]<"99999"
+                    && $data[5]<"99999" && (!isset($data[6]) || $data[6]<"99999"))
                 $this->data[ ] = array_combine( $fields, $data);
-            }else if( preg_match( "/^(?!\s#)/", $line)){
+            }else if( $first && preg_match( "/^(?!\s#)/", $line)){
+
                 $find = false;
                 $name = trim( substr($line, 1,22));
                 for($i=0; $i< count($this->meta) && $find===false; $i++){
@@ -111,6 +119,19 @@ Class Iaga
             return json_encode( array( "meta"=> $this->meta, "collection"=> $this->data), JSON_NUMERIC_CHECK);
          }else{
             return '{ "error": "NO_DATA"}';
+         }
+     }
+     private function pattern(){
+         if( $this->ismin){
+            
+             if($this->ismin < 5){
+                 $this->pattern = "/^[0-9\-]{10}\s[0-9]{2}:00:00/";
+             }else{
+                 $this->pattern = "/^[0-9\-]{10}\s12:00:00/";
+             }
+            // $this->pattern = "/^[0-9\-]{10}\s([0-9]{2}):00:00/";
+         }else{
+             $this->pattern =  "/^(?![ D]{1})/";
          }
      }
 }
