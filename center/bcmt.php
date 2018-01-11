@@ -131,7 +131,7 @@ function search_files_by_min( $obs,  $start, $end){
     $step = steppify( $days/15);
     $cumul = 1;
     $last = false;
-    while( $current<= $end && !$last){
+    while( $current< $end && !$last){
         $directory = "/VARIATION/".$obs."/min/".$current->format("Y");
         //read directory if not done
         if( $directory != $directory0){
