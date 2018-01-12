@@ -158,7 +158,7 @@ function search_files_by_min( $obs,  $start, $end){
     }
     $file = $directory."/".$obs . $end->format("Ymd"). "vmin.min";
     
-    if(in_array( $file, $files)){
+    if(!in_array($file,$results) && in_array( $file, $files)){
         array_push( $results, $file);
         // array_push( $done, $current->format("Ym"));
     }
