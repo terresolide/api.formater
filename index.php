@@ -53,7 +53,7 @@
  
 <p>Search Observatories</p>
 
-<pre><code>http://formater.art-sciences.fr/cds/bcmt/obs?start=2011-05-01&end=2018-01-01&bbox=-20,2,70,90
+<pre><code>http://formater.art-sciences.fr/cds/bcmt/obs?start=2011-05-01&end=2018-01-01&bbox=-20,-50,70,90
 </code></pre>
 <div>where <ul>
 <li><code>bcmt</code> is a data center,</li>
@@ -63,7 +63,7 @@
 <ul>
 <li><code>2011-11-05</code> is the start date </li>
 <li><code>2018-01-01</code> is the end date</li>
-<li><code>-20,2,70,90</code> is used to describe bbox (longitude min, latitude min, longitude max, latitude max)</li>
+<li><code>-20,-50,70,90</code> is used to describe bbox (longitude min, latitude min, longitude max, latitude max)</li>
 </ul>
 </div>
 </div>
