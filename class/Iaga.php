@@ -113,6 +113,14 @@ Class Iaga
       
         //return array
     }
+    
+    public function to_array(){
+        if(!empty( $this->meta)){
+            return  array( "meta"=> $this->meta, "collection"=> $this->data);
+        }else{
+            return array( "error" => "NO_DATA");
+        }
+    }
      public function json(){
          if( !empty( $this->meta)){
             return json_encode( array( "meta"=> $this->meta, "collection"=> $this->data), JSON_NUMERIC_CHECK);
