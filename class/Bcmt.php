@@ -9,7 +9,7 @@
 namespace bcmt;
 
 /** use treatment file IAGA*/
-
+include_once "../functions.php";
 include_once "Iaga.php";
 
 Class Config{
@@ -52,22 +52,7 @@ Class Config{
   }
 }
 
-  function steppify($delta) {
-            /**  */
-            if($delta<=1){
-                return 1;
-            }
-            $precision = round( log10( $delta ));
-            
-            $p = pow(10, $precision);
-            
-            $max = ceil($delta / $p) * $p;
-            return $max / 2 > $delta ? $max / 2 : $max;
-    }
-    
-     function valid_date( $str_date ){
-            return preg_match("/^[0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01])$/", $str_date);
-    }
+
   /**
    * Treatment Request URI to BCMT
    *  cds/bcmt/obs ...  search observatories
@@ -110,9 +95,7 @@ Class Config{
         public function to_json(){
             return $this->searcher->to_json();
         }
-        private function extractParam( $param){
-            return $param;
-        }
+      
         private function parseRequest(){
             //suppr cds/bcmt
             if( preg_match( Config::$pattern_root, $this->request)){
@@ -124,7 +107,11 @@ Class Config{
                 $this->type = "observatories";
                 $this->request = $matches[1];
                 if( preg_match( Config::$pattern_obs_ob, $this->request, $matches)){
-                    $this->ob = strtolower( $matches[1]);
+                    if(Config::is_code_obs($matches[1])){
+                        $this->ob = strtolower( $matches[1]);
+                    }else{
+                        $this->type = "404";
+                    }
                 }
             }else if( preg_match( Config::$pattern_data , $this->request, $matches)){
                 //search geomagnetic data for one observatory

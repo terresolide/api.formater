@@ -10,6 +10,7 @@ Class Iaga
     private $start = null;
     private $end = null;
     private $ftp = null;
+    private $isgi = false;
     private $pattern = "/^(?![ D]{1})/";
     private $ismin = false; // search in file minutes
     public $data = array();
@@ -17,10 +18,14 @@ Class Iaga
     
     public function __construct( $files, $code, $start=null, $end=null,$ftp= null, $ismin=false){
         $this->code = strtoupper($code);
+        if( empty( $this->code)){
+            $this->isgi = true;
+        }
         $this->start = $start;
         $this->end = $end;
         $this->ftp = $ftp;
         $this->ismin = $ismin;
+        $this->ismin = true;
         $this->pattern();
         if(!$ftp ){
             foreach($files as $file){
@@ -74,16 +79,28 @@ Class Iaga
            
             if( preg_match(  "/^D/", $line) ){ 
                 $fields = preg_split('/\s+/', $line);
-                array_pop( $fields);
-                array_pop( $fields);
-                array_walk( $fields, "replace_code", $this->code);
+                if($this->isgi){
+                    $fields = array_splice( $fields, 0, 4);
+                }else{
+                    array_pop( $fields);
+                    array_pop( $fields);
+                    array_walk( $fields, "replace_code", $this->code);
+                }
             }else if (preg_match($this->pattern, $line, $matches)){
                 // data lines
                 $data = preg_split('/\s+/',$line); 
-                array_pop($data);
-                if( !empty($data) && $this->isRequired( $data[0]) && $data[3]<"99999" && $data[4]<"99999"
-                    && $data[5]<"99999" && (!isset($data[6]) || $data[6]<"99999"))
-                $this->data[ ] = array_combine( $fields, $data);
+                if( $this->isgi){
+                    //keep only the index value
+                    $data = array_splice( $data, 0, 4);
+                    if(!empty( $data[3])){
+                        $this->data[ ] = array_combine( $fields, $data);
+                    }
+                 }else{
+                    array_pop($data);
+                    if( !empty($data) && $this->isRequired( $data[0]) && $data[3]<"99999" && $data[4]<"99999"
+                        && (!isset($data[5]) || $data[5]<"99999") && (!isset($data[6]) || $data[6]<"99999"))
+                    $this->data[ ] = array_combine( $fields, $data);
+                }
             }else if( $first && preg_match( "/^(?![1-9]{1}|\s#)/", $line)){
 
                 $find = false;
