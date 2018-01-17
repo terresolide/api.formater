@@ -5,12 +5,12 @@ RewriteEngine On
 # RewriteCond %{REQUEST_URI} cds/([a-z]+)/ob/([a-z]{3})/start/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))\/end\/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))\/
 # RewriteRule ^.*$ /class.%2.php?action=someaction&item[]=%3&lang=%1 [NC,N]
 
-RewriteRule ^cds/([a-z]+)/?.*?$ /center/$1.php?%{QUERY_STRING} [L]
-# RewriteRule ^cds/([a-z]+)/(obs|data|indices).*$ /center/$1.php?%{QUERY_STRING} [L]
+# RewriteRule ^cds/([a-z]+)/?.*?$ /center/$1.php?%{QUERY_STRING} [L]
+RewriteRule ^cds/(bcmt|isgi)/(obs|data|indices).*$ /center/$1.php?%{QUERY_STRING} [L]
 
-RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/?$ /center/$1.php?ob=$2 [L]
-RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/start/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/?$ /center/$1.php?ob=$2&start=$3 [L]
-RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/start/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/end/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/?$ /center/$1.php?ob=$2&start=$3&end=$4 [L]
+#RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/?$ /center/$1.php?ob=$2 [L]
+#RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/start/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/?$ /center/$1.php?ob=$2&start=$3 [L]
+#RewriteRule ^cds/([a-z]+)/ob/([a-z]{3})/start/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/end/([0-9]{4}-(?:0[0-9]|1[0-2])-(?:0[0-9]|[1-2][0-9]|3[01]))/?$ /center/$1.php?ob=$2&start=$3&end=$4 [L]
 </IfModule>
 
 ErrorDocument 404 /404.php
