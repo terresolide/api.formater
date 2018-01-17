@@ -16,10 +16,11 @@ include_once "../functions.php";
 
 function get_http_content_type( $response_headers){
     $type = get_response_header( "Content-Type", $response_headers);
-    if( strpos("text/plain", $type) !== false ){
+
+    if( preg_match("/^.*text\/plain.*$/", $type)){
         return "text";
     }
-    if(  strpos("application/octet-stream", $type) !== false ){
+    if( preg_match("/^.*application\/octet-stream.*$/", $type) ){
         return "zip";
     }
 }
@@ -34,7 +35,7 @@ function get_zip_filename( $response_headers){
 }
 Class Config{
     const API_URL = "http://isgi.unistra.fr/ws";
-    public static $upload_dir = "../content";
+    public static $upload_dir = "../temp";
     public static $pattern_indices = "/^\/cds\/isgi\/indices\/?(.*)$/";
     public static $pattern_indices_indice = "/^([a-zA-Z]{2,6})\/?(.?)$/";
     public static $pattern_data = "/^\/cds\/isgi\/data\/([a-zA-Z]{2,6})\/?(.*)$/";
@@ -63,7 +64,7 @@ Class Request{
 
         switch( $this->type){
             case "indices":
-                $this->searcher = new Searcher();
+                $this->searcher = new IndicesSearcher( $this->indice);
                 break;
             case "data":
                 $this->searcher = new DataSearcher( $this->indice );
@@ -115,6 +116,39 @@ Class  Searcher{
     public $end = null;
     public $error = null;
     public $result = array();
+    public function __construct( $indice = null ){
+        $this->indice = $indice;
+    }
+    public function execute( $get ){
+        $this->extract_params( $get );
+        if( !is_null($this->error )){
+            $this->result =  array( "error" => $this->error );
+            return array( "error" => $this->error );
+        }
+        $this->treatment();
+    }
+    
+    public function to_json(){
+        return json_encode( $this->result );
+    }
+    protected function extract_params( $get = array() ){
+        return $get;
+    }
+    protected function treatment(){
+        $this->result = array("error" => "NOT_FOUND");
+    }
+}
+Class IndicesSearcher extends Searcher{
+    protected function treatment(){
+        $this->result = array("error" => "NOT_IMPLEMENTED");
+    }
+}
+Class  DataSearcher extends Searcher{
+    public $indice = null;
+    public $start = null;
+    public $end = null;
+    public $error = null;
+    public $result = array();
     private $files = array();
     private $isgi_url = null;
     private $root = null;
@@ -133,7 +167,11 @@ Class  Searcher{
     }
     
     public function to_json(){
-        return json_encode( $this->result );
+        if( ! is_null( $this->error) ){
+            return json_encode( array("error" => $this->error));
+        }else{
+            return $this->iaga->json();
+        }
     }
     protected function extract_params( $get = array() ){
         if(isset( $get["start"])){
@@ -155,19 +193,33 @@ Class  Searcher{
         }
     }
     protected function treatment(){
-        $this->call_service();
+        $this->search_files();
         if( is_null( $this->error)){
-            //$this->extract_files();
-            var_dump( $this->files);
             $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end);
             $this->result = $this->iaga->to_array();
+            $this->clean_temporary_file();
         }else{
-            $this->result = array("error" => "NOT_FOUND");
+            $this->result = array("error" => $this->error);
         }
         
     }
+    private function extract_error( $content){
+        $lines = preg_split("(\r\n|\n|\r)", $content);
+        $this->error = $lines[2];
+        return $lines[2];
+    }
     private function clean_temporary_file(){
-        
+        if(count($this->files) > 0 ){
+            foreach( $this->files as $file){
+                unlink( $file);
+            }
+        }
+        $this->files = array();
+        //remove directory
+        rmdir( Config::$upload_dir ."/" .$this->root );
+        //remove zip file
+        unlink(Config::$upload_dir ."/" .$this->root .".zip");
+        $this->root = null;
     }
     private function prepare_get(){
         $data = array(
@@ -187,12 +239,10 @@ Class  Searcher{
         if( !is_null($this->root.".zip")){
             $zip = new \ZipArchive();
             $root = ( Config::$upload_dir ."/" .$this->root );
-            var_dump( "root = ". $root);
             if ($zip->open( $root.".zip") === TRUE) {
                   $zip->extractTo( $root );
                   for($i = 0; $i < $zip->numFiles; $i++) {
                       $filename = $zip->getNameIndex($i);
-                      var_dump(" i = " . $i);
                       array_push( $this->files, $root. "/" . $filename);
                      // $fileinfo = pathinfo($filename);
                      // copy("zip://".$path."#".$filename, "/your/new/destination/".$fileinfo['basename']);
@@ -207,64 +257,28 @@ Class  Searcher{
         $this->error = "FAILED UPLOAD DATA";
         return false;
     }
-    private function read_files(){
-       
-    }
-    private function call_service(){
+
+    private function search_files(){
         $this->isgi_url = Config::API_URL."?" . $this->prepare_get();
         $content = file_get_contents($this->isgi_url );
         // the decoded content of your zip file
-        $content_type = get_response_header("Content-type", $http_response_header);
+
+       // $content_type = get_response_header("Content-type", $http_response_header);
+        //var_dump($content_type);
         switch( get_http_content_type( $http_response_header)){
             case "text":
-                $this->error = $content;
+                $this->error = $this->extract_error($content);
                 break;
             case "zip":
                 $filename = get_zip_filename( $http_response_header);
                 $this->root = $filename;
                 file_put_contents( Config::$upload_dir ."/" . $filename . ".zip" , $content);
-                if( $this->extract_files()){
-                   var_dump( "succes");
-                }
-                //$this->treatment_zip();
+                $this->extract_files();
                 break;
             default:
-                $this->error = "UNKNOWN_RESPONSE";
+                $this->error = "UNKNOWN_ERROR";
         }
-        var_dump($content_type);
-        // this will empty the memory and appen your zip content
-      //  $written = file_put_contents('php://memory', $content);
-        $written = file_put_contents("../content/treus.zip", $content);
-        // bytes written to memory
-        var_dump($written);
-        
-        // new instance of the ZipArchive
-        $zip = new \ZipArchive;
-        
-        // success of the archive reading
-       // var_dump(true === $zip->open('php://memory'));
-        var_dump($http_response_header);
        
-  
-      //  $temp = tmpfile();
-       // if (!copy(Config::API_URL."?user=cnrs-formater610&index=aa", "../content/truc.zip")) {
-           // echo "failed to copy $file...\n";
-       // }
-        $zip = new \ZipArchive;
-        if ($zip->open("../content/treus.zip") === TRUE) {
-           // $zip->extractTo('/mon/dossier/destination/');
-           // $zip->close();
-            echo 'ok';
-            var_dump( "ok");
-        } else {
-            var_dump( "faoij");
-            echo 'échec';
-        }
     }
 }
 
-Class DataSearcher extends Searcher{
-    
-    private $diff = null;
-    private $iaga = array();
-}
