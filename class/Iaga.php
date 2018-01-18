@@ -25,7 +25,7 @@ Class Iaga
         $this->end = $end;
         $this->ftp = $ftp;
         $this->ismin = $ismin;
-        $this->ismin = true;
+       // $this->ismin = true;
         $this->pattern();
         if(!$ftp ){
             foreach($files as $file){
