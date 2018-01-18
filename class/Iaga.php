@@ -130,7 +130,9 @@ Class Iaga
       
         //return array
     }
-    
+    public function add_meta( $name, $content){
+        $this->meta[] = array( "name" => $name, "content" => $content);
+    }
     public function to_array(){
         if(!empty( $this->meta)){
             return  array( "meta"=> $this->meta, "collection"=> $this->data);

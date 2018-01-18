@@ -196,8 +196,10 @@ Class  DataSearcher extends Searcher{
         $this->search_files();
         if( is_null( $this->error)){
             $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end);
-            $this->result = $this->iaga->to_array();
+            $this->iaga->add_meta("isgi_url", $this->isgi_url);
             
+            $this->result = $this->iaga->to_array();
+
             $this->clean_temporary_file();
         }else{
             $this->result = array("error" => $this->error);
