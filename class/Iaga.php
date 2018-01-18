@@ -11,7 +11,7 @@ Class Iaga
     private $end = null;
     private $ftp = null;
     private $isgi = false;
-    private $pattern = "/^(?![ D]{1})/";
+    private $pattern = "/^[0-9\-]{10}\s[0-9]{2}:00:00/";
     private $ismin = false; // search in file minutes
     public $data = array();
     public $meta = array();
@@ -80,7 +80,11 @@ Class Iaga
             if( preg_match(  "/^D/", $line) ){ 
                 $fields = preg_split('/\s+/', $line);
                 if($this->isgi){
-                    $fields = array_splice( $fields, 0, 4);
+                    $length = 4;
+                    if( substr($fields[4], 0,2) == "Kp"){
+                        $length = 5;
+                    }
+                    $fields = array_splice( $fields, 0, $length);
                 }else{
                     array_pop( $fields);
                     array_pop( $fields);
@@ -91,8 +95,9 @@ Class Iaga
                 $data = preg_split('/\s+/',$line); 
                 if( $this->isgi){
                     //keep only the index value
-                    $data = array_splice( $data, 0, 4);
-                    if(!empty( $data[3])){
+                    $data = array_splice( $data, 0, $length );
+                    if(!empty( $data[3]) && $data[3]!= "9999"){
+                        
                         $this->data[ ] = array_combine( $fields, $data);
                     }
                  }else{
@@ -157,7 +162,7 @@ Class Iaga
              }
             // $this->pattern = "/^[0-9\-]{10}\s([0-9]{2}):00:00/";
          }else{
-             $this->pattern =  "/^(?![ D]{1})/";
+             $this->pattern =  "/^[0-9\-]{10}\s[0-9]{2}:00:00/";
          }
      }
 }
