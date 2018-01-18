@@ -197,6 +197,7 @@ Class  DataSearcher extends Searcher{
         if( is_null( $this->error)){
             $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end);
             $this->result = $this->iaga->to_array();
+            
             $this->clean_temporary_file();
         }else{
             $this->result = array("error" => $this->error);
@@ -204,9 +205,15 @@ Class  DataSearcher extends Searcher{
         
     }
     private function extract_error( $content){
+        
         $lines = preg_split("(\r\n|\n|\r)", $content);
-        $this->error = $lines[2];
-        return $lines[2];
+
+        if(isset( $lines[2]) && !empty( $lines[2])){
+            $this->error = $lines[2];
+        }else{
+            $this->error = $lines[0];
+        }
+        return $this->error;
     }
     private function clean_temporary_file(){
         if(count($this->files) > 0 ){
