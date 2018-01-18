@@ -35,7 +35,7 @@ function get_zip_filename( $response_headers){
 }
 Class Config{
     const API_URL = "http://isgi.unistra.fr/ws";
-    public static $upload_dir = "../temp";
+    public static $upload_dir = null;
     public static $pattern_indices = "/^\/cds\/isgi\/indices\/?(.*)$/";
     public static $pattern_indices_indice = "/^([a-zA-Z]{2,6})\/?(.?)$/";
     public static $pattern_data = "/^\/cds\/isgi\/data\/([a-zA-Z]{2,6})\/?(.*)$/";
@@ -47,9 +47,12 @@ Class Config{
             return false;
         }
     }
+    public static function initialize(){
+        self::$upload_dir = realpath( "../temp");
+    }
 }
 
-
+Config::initialize();
 
 Class Request{
     private $request = null;
