@@ -96,7 +96,7 @@ Class Iaga
                 if( $this->isgi){
                     //keep only the index value
                     $data = array_splice( $data, 0, $length );
-                    if(!empty( $data[3]) && $data[3]!= "9999"){
+                    if(!empty( $data[3]) && $data[3]!= "9999" && $data[3]!="999.00"){
                         
                         $this->data[ ] = array_combine( $fields, $data);
                     }
