@@ -92,19 +92,21 @@ Class Iaga
                 }
             }else if (preg_match($this->pattern, $line, $matches)){
                 // data lines
-                $data = preg_split('/\s+/',$line); 
-                if( $this->isgi){
-                    //keep only the index value
-                    $data = array_splice( $data, 0, $length );
-                    if(!empty( $data[3]) && $data[3]!= "9999" && $data[3]!="999.00"){
-                        
+                $data = preg_split('/\s+/',$line);
+                if(!empty($data) && $this->isRequired( $data[0])){
+                    if( $this->isgi){
+                        //keep only the index value
+                        $data = array_splice( $data, 0, $length );
+                        if(!empty( $data[3]) && $data[3]!= "9999" && $data[3]!="999.00"){
+                            
+                            $this->data[ ] = array_combine( $fields, $data);
+                        }
+                     }else{
+                        array_pop($data);
+                        if( $data[3]<"99999" && $data[4]<"99999"
+                            && (!isset($data[5]) || $data[5]<"99999") && (!isset($data[6]) || $data[6]<"99999"))
                         $this->data[ ] = array_combine( $fields, $data);
                     }
-                 }else{
-                    array_pop($data);
-                    if( !empty($data) && $this->isRequired( $data[0]) && $data[3]<"99999" && $data[4]<"99999"
-                        && (!isset($data[5]) || $data[5]<"99999") && (!isset($data[6]) || $data[6]<"99999"))
-                    $this->data[ ] = array_combine( $fields, $data);
                 }
             }else if( $first && preg_match( "/^(?![1-9]{1}|\s#)/", $line)){
 
