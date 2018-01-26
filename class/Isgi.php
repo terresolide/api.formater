@@ -197,10 +197,19 @@ Class  DataSearcher extends Searcher{
     }
     protected function treatment(){
         $this->search_files();
+       
         if( is_null( $this->error)){
+            
             $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end);
             $this->iaga->add_meta("isgi_url", $this->isgi_url);
-            
+            if( $this->indice == "Qdays"){
+                // look if have the lastest month values
+                $code = substr( $this->end, 0, 7);
+                if( !preg_match('/^Qdays_([0-9\-]{7}_)?'.$code.'_D.dat$/', $this->files[0])){
+                    $this->iaga->add_meta("no_data", $code."-01");
+                }
+                    
+            }
             $this->result = $this->iaga->to_array();
 
             $this->clean_temporary_file();
@@ -246,6 +255,9 @@ Class  DataSearcher extends Searcher{
         }
         return http_build_query($data);
     }
+    private function no_data(){
+        
+    }
     private function extract_files(){
         //extract file
         if( !is_null($this->root.".zip")){
@@ -256,9 +268,11 @@ Class  DataSearcher extends Searcher{
                   for($i = 0; $i < $zip->numFiles; $i++) {
                       $filename = $zip->getNameIndex($i);
                       array_push( $this->files, $root. "/" . $filename);
+                     
                      // $fileinfo = pathinfo($filename);
                      // copy("zip://".$path."#".$filename, "/your/new/destination/".$fileinfo['basename']);
-                  }   
+                  } 
+                
                   $zip->close();
                   return true;
             } else {
