@@ -6,7 +6,9 @@ function replace_code( &$item, $key,$obs){
 }
 Class Iaga
 {
-    private $code;
+    private $code; //for observatory code (BCMT)
+    private $indice; // for isgi indice
+    
     private $start = null;
     private $end = null;
     private $ftp = null;
@@ -16,8 +18,9 @@ Class Iaga
     public $data = array();
     public $meta = array();
     
-    public function __construct( $files, $code, $start=null, $end=null,$ftp= null, $ismin=false){
+    public function __construct( $files, $code, $start=null, $end=null, $indice=null, $ftp= null, $ismin=false){
         $this->code = strtoupper($code);
+        $this->indice = $indice;
         if( empty( $this->code)){
             $this->isgi = true;
         }
@@ -93,7 +96,9 @@ Class Iaga
             }else if (preg_match($this->pattern, $line, $matches)){
                 // data lines
                 $data = preg_split('/\s+/',$line);
+        
                 if(!empty($data) && $this->isRequired( $data[0])){
+                    
                     if( $this->isgi){
                         //keep only the index value
                         $data = array_splice( $data, 0, $length );
@@ -164,7 +169,12 @@ Class Iaga
              }
             // $this->pattern = "/^[0-9\-]{10}\s([0-9]{2}):00:00/";
          }else{
-             $this->pattern =  "/^[0-9\-]{10}\s[0-9]{2}:00:00/";
+            // $this->pattern =  "/^[0-9\-]{10}\s[0-9]{2}:00:00/";
+            if( $this->indice == "SC" || $this->indice == "SFE"){
+                $this->pattern =  "/^[0-9\-]{10}\s[0-9]{2}/";
+            }else{
+                $this->pattern =  "/^[0-9\-]{10}\s[0-9]{2}:00:00/";
+            }
          }
      }
 }

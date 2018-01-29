@@ -200,14 +200,27 @@ Class  DataSearcher extends Searcher{
        
         if( is_null( $this->error)){
             
-            $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end);
+           
+            $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end, $this->indice);
             $this->iaga->add_meta("isgi_url", $this->isgi_url);
             if( $this->indice == "Qdays"){
                 // look if have the lastest month values
                 $code = substr( $this->end, 0, 7);
-                if( !preg_match('/^Qdays_([0-9\-]{7}_)?'.$code.'_D.dat$/', $this->files[0])){
-                    $this->iaga->add_meta("no_data", $code."-01");
+                if( preg_match('/^.*Qdays_([0-9\-]{7})?_?([0-9\-]{7})_D.dat$/', $this->files[0], $matches)){
+                    if( $matches[2] != $code){
+                        $date = explode("-", $matches[2]);
+                        $year = intVal($date[0]);
+                        $month = intVal($date[1]);
+                        if( $month == 12){
+                            $year++;
+                            $month = 1;
+                        }else{
+                            $month++;
+                        }
+                        $this->iaga->add_meta("no_data", $year."-".str_pad($month, 2, '0', STR_PAD_LEFT)."-01");
+                    }
                 }
+               
                     
             }
             $this->result = $this->iaga->to_array();
@@ -297,8 +310,13 @@ Class  DataSearcher extends Searcher{
                 break;
             case "zip":
                 $filename = get_zip_filename( $http_response_header);
+                if(!file_exists( Config::$upload_dir ."/" . $filename . ".zip")){
+                    $this->root = $filename;
+                }else{
+                    $this->root = "isgi_".microtime();
+                }
                 $this->root = $filename;
-                file_put_contents( Config::$upload_dir ."/" . $filename . ".zip" , $content);
+                file_put_contents( Config::$upload_dir ."/" . $this->root . ".zip" , $content);
                 $this->extract_files();
                 break;
             default:

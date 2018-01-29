@@ -387,7 +387,7 @@ Class DataSearcher extends Searcher{
            $ismin = $this->diff->days + 1;
        }
        $ftp = "ftp://" . Config::FTP_USER .":" . Config::FTP_PWD . "@" . Config::FTP_SERVER;
-       $this->iaga = new \Iaga( $this->files, $this->observatory, $this->start->format("Y-m-d"),$this->end->format("Y-m-d"), $ftp, $ismin);
+       $this->iaga = new \Iaga( $this->files, $this->observatory, $this->start->format("Y-m-d"),$this->end->format("Y-m-d"), null, $ftp, $ismin);
        
        $this->result = $this->iaga->to_array();
    }
