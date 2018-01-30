@@ -85,7 +85,13 @@ Class Iaga
                 if($this->isgi){
                     $length = 4;
                     if( substr($fields[4], 0,2) == "Kp"){
-                        $length = 5;
+                        //only if diff days <30
+                        $start = new \DateTime( $this->start);
+                        $end = new \DateTime( $this->end);
+                        $diff = $start->diff( $end);
+                        if( $diff->days <= 31){
+                            $length = 5;
+                        }
                     }
                     $fields = array_splice( $fields, 0, $length);
                 }else{
