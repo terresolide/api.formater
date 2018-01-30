@@ -84,7 +84,7 @@ Class Iaga
                 $fields = preg_split('/\s+/', $line);
                 if($this->isgi){
                     $length = 4;
-                    if( substr($fields[4], 0,2) == "Kp"){
+                    if( $this->indice == "Kp" || substr($fields[4], 0,2) == "Kp"){
                         //only if diff days <30
                         $start = new \DateTime( $this->start);
                         $end = new \DateTime( $this->end);
@@ -92,6 +92,12 @@ Class Iaga
                         if( $diff->days <= 31){
                             $length = 5;
                         }
+                    }
+                    if( $this->indice == "Kp" && $length == 4){
+                        $fields = array_splice( $fields, 0,5);
+                        unset( $fields[3]);
+                        $fields = array_values( $fields);
+                        
                     }
                     $fields = array_splice( $fields, 0, $length);
                 }else{
@@ -107,6 +113,10 @@ Class Iaga
                     
                     if( $this->isgi){
                         //keep only the index value
+                        if( $this->indice == "Kp" && $length == 4){
+                            unset( $data[3]);
+                            $data = array_values( $data);
+                        }
                         $data = array_splice( $data, 0, $length );
                         if(!empty( $data[3]) && $data[3]!= "9999" && $data[3]!="999.00"){
                             
