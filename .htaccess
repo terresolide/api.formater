@@ -4,8 +4,9 @@ Options +FollowSymlinks
 RewriteEngine On
 
 RewriteBase /
-
+RewriteRule ^api.*$ api.php?%{QUERY_STRING} 
 RewriteRule ^cds/(bcmt|isgi)/(obs|data|indices).*$ /center/$1.php?%{QUERY_STRING} [L]
+RewriteRule ^api.*$ api.php?%{QUERY_STRING} [L]
 </IfModule>
 
 
