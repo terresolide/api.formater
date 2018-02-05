@@ -7,7 +7,7 @@ $result2->features = [];
 //connexion to bcmt 
 foreach( $result->features as $obs){
     $feature = new StdClass();
-    $feature->type = "feature";
+    $feature->type = "Feature";
     $feature->geometry = $obs->geometry;
     $feature->properties = new StdClass();
     $feature->properties->name = new StdClass();
