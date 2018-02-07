@@ -310,6 +310,7 @@ Class DataSearcher extends Searcher{
     public $observatory = null;
     public $start;
     public $end;
+    public $dataType = null;
     public $files = array();
     private $diff = null;
     private $iaga = array();
@@ -340,6 +341,7 @@ Class DataSearcher extends Searcher{
     * @return boolean
     */
    protected function extract_param( $get ){
+   
        if( is_null($get) || (!isset( $get["start"]) && !isset($get["end"]))){
            $this->start = new \DateTime(" -". Config::$default_days . " day");
            $this->end = new \DateTime();
@@ -368,43 +370,81 @@ Class DataSearcher extends Searcher{
            $this->error = "INCONSISTENT_DATE";
            return false;
        }
-       
+       if( isset( $get["type"]) && in_array( $get["type"], ["VARIATION", "DEFINITIVE", "QUASI_DEFINITIVE"])){
+           $this->dataType = $get["type"];
+           
+       }
        $this->compute_type();
        return true;
        
    }
+
    protected function treatment(){
-       $ismin = false;
-       $directory0 = "/DEFINITIVE/".$this->observatory."/".$this->type;
-       $directory1 = "/QUASI_DEFINITIVE/".$this->observatory."/".$this->type;
-       $this->files = $this->search_files( $directory0,"d");
-       
-       if(empty( $this->files)){
-           $this->search_files( $directory1,"q");
-       }
-       if( empty( $this->files)){
-           $this->search_files_variation();
-           $ismin = $this->diff->days + 1;
+       if(  is_null( $this->dataType ) ){
+           $ismin = false;
+           $directory0 = "/DEFINITIVE/".$this->observatory."/".$this->type;
+           $directory1 = "/QUASI_DEFINITIVE/".$this->observatory."/".$this->type;
+           $this->files = $this->search_files( $directory0,"d");
+           
+           if(empty( $this->files)){
+               $this->search_files( $directory1,"q");
+           }
+           if( empty( $this->files)){
+               $this->search_files_variation();
+               $ismin = $this->diff->days + 1;
+           }
+      
+       }else{
+           switch( $this->dataType){
+               case "DEFINITIVE":
+               case "QUASI_DEFINITIVE":
+                   $ismin = false;
+                   $directory0 = "/".$this->dataType."/".$this->observatory."/".$this->type;
+                   $this->search_files( $directory0, $this->shortname());
+                   break;
+               case "VARIATION":
+                   $this->search_files_variation();
+                   $ismin = $this->diff->days + 1;
+                   break;
+           }
        }
        $ftp = "ftp://" . Config::FTP_USER .":" . Config::FTP_PWD . "@" . Config::FTP_SERVER;
        $this->iaga = new \Iaga( $this->files, $this->observatory, $this->start->format("Y-m-d"),$this->end->format("Y-m-d"), null, $ftp, $ismin);
        
        $this->result = $this->iaga->to_array();
    }
+   private function shortname(){
+       switch( $this->dataType){
+           case "DEFINITIVE":
+               return "d";
+               break;
+           case "QUASI_DEFINITIVE":
+               return "q";
+               break;
+           default:
+               return "v";
+               break;
+       }
+   }
     private function compute_type(){
-        if($this->diff->y > 15){
-            $this->type = "yea";
-            
-        }else if( $this->diff->y >= 1){
-            //search month data
-            $this->type ="mon";
-        }else if( $this->diff->days > 15 ){
-            //search days data
-            $this->type = "day";
+        if( $this->dataType == "VARIATION"){
+            $this->type = "min";
         }else{
-            //search hor data
-            $this->type = "hor";
+            if($this->diff->y > 15){
+                $this->type = "yea";
+                
+            }else if( $this->diff->y >= 1){
+                //search month data
+                $this->type ="mon";
+            }else if( $this->diff->days > 15 ){
+                //search days data
+                $this->type = "day";
+            }else{
+                //search hor data
+                $this->type = "hor";
+            }
         }
+        
     }
  
   
