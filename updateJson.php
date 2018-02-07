@@ -41,47 +41,70 @@ function search_infos(&$obs, $code, $dataType){
     }
     $obs->observedProperty->timeResolution = [];
     foreach( $resolutions as $resolution){
+        
         array_push( $obs->observedProperty->timeResolution, extract_resolution( $resolution));
     }
-    $directory ="/".$dataType."/".strtolower( $code)."/min/";
+    $base = "/".$dataType."/".strtolower( $code);
+    if(in_array(  $base."/min", $resolutions)){
+        $res = "min";
+    }else{
+        $res = "hor";
+    }
+
+    $directory = $base."/".$res."/";
     
     $list1 = ftp_nlist ( $conn_id , $directory);
-    // var_dump($list1);
     if($list1 != false){
-        //  var_dump("ici");
-        $startDirectory = $list1[0];
-        $listStart= ftp_nlist( $conn_id, $startDirectory);
-        if( count( $listStart) == 0){
-            $startDirectory = $list1[1];
-            $listStart = ftp_nlist( $conn_id, $startDirectory);
-        }
-        //parcours du premier dossier
-       
-        //extract date
-        $truc = str_replace("/", "\/", $startDirectory);
-        //var_dump($truc);
-        //var_dump( $list1[0]);
-      
-        $pattern = "/^".$truc."\/[a-z]{3}([0-9]{4})([0-9]{2})([0-9]{2}).*$/";
-        // var_dump($pattern);
-        $ok = preg_match($pattern,$listStart[0], $matches);
-        // var_dump($matches);
-        $startDate = $matches[1]."-".$matches[2]."-".$matches[3];
-        // var_dump( $startDate);
-        $obs->temporalExtents->start = $startDate;
+        if($res == "hor"){
+           //premier fichier
+            $truc = str_replace("/", "\/", $base."/".$res);
+            $pattern = "/^".$truc."\/[a-z]{3}([0-9]{4})([0-9]{2}).*$/";
+            
+            $ok = preg_match($pattern,$list1[0], $matches);
+            $startDate = $matches[1]."-".$matches[2]."-01";
+            $ok = preg_match($pattern,$list1[ count($list1)-1], $matches);
+            $endDate = $matches[1]."-".$matches[2]."-01";
+            
+        }else{
 
-        $endDirectory = $list1[ count($list1)-1];
-        $listEnd = ftp_nlist( $conn_id, $endDirectory);
-        if( count( $listEnd) == 0){
-            $endDirectory = $list1[ count($list1)-2];
+            //  var_dump("ici");
+            $startDirectory = $list1[0];
+            $listStart= ftp_nlist( $conn_id, $startDirectory);
+            if( count( $listStart) == 0){
+                $startDirectory = $list1[1];
+                $listStart = ftp_nlist( $conn_id, $startDirectory);
+            }
+            //parcours du premier dossier
+           
+            //extract date
+            $truc = str_replace("/", "\/", $startDirectory);
+            //var_dump($truc);
+            //var_dump( $list1[0]);
+          
+            $pattern = "/^".$truc."\/[a-z]{3}([0-9]{4})([0-9]{2})([0-9]{2})?.*$/";
+            // var_dump($pattern);
+            
+            $ok = preg_match($pattern,$listStart[0], $matches);
+
+            $startDate = $matches[1]."-".$matches[2]."-".$matches[3];
+       
+            // var_dump( $startDate);
+            $obs->temporalExtents->start = $startDate;
+    
+            $endDirectory = $list1[ count($list1)-1];
             $listEnd = ftp_nlist( $conn_id, $endDirectory);
+            if( count( $listEnd) == 0){
+                $endDirectory = $list1[ count($list1)-2];
+                $listEnd = ftp_nlist( $conn_id, $endDirectory);
+            }
+            $truc = str_replace("/", "\/", $endDirectory);
+            $pattern = "/^".$truc."\/[a-z]{3}([0-9]{4})([0-9]{2})([0-9]{2}).*$/";
+            
+            preg_match($pattern, $listEnd[ count($listEnd)-1], $matches);
+            
+            $endDate = $matches[1]."-".$matches[2]."-".$matches[3];
+           
         }
-        $truc = str_replace("/", "\/", $endDirectory);
-        $pattern = "/^".$truc."\/[a-z]{3}([0-9]{4})([0-9]{2})([0-9]{2}).*$/";
-        
-        preg_match($pattern, $listEnd[ count($listEnd)-1], $matches);
-        $endDate = $matches[1]."-".$matches[2]."-".$matches[3];
-        
         if( $dataType == "VARIATION"){
             $now = new DateTime();
             $end = new DateTime( $endDate);
@@ -93,9 +116,12 @@ function search_infos(&$obs, $code, $dataType){
             unset($obs->procedure->method);
         }
        
-        
+        $obs->api =  new StdClass();
+        $obs->api->url = "http://formater.art-sciences.fr/cds/bcmt/data/".strtolower($code);
+        $obs->api->parameters = array( "type" => $dataType);
         $obs->temporalExtents->end = $endDate;
         return true;
+        
     }else{
         return false;
     }
