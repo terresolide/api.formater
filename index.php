@@ -51,14 +51,11 @@
     </div>
 
  
-<p>Search Observatories</p>
+<p>Search Features of Interest</p>
 
-<pre><code>http://formater.art-sciences.fr/cds/bcmt/obs?start=2011-05-01&end=2018-01-01&bbox=-20,-50,70,90
+<pre><code>http://formater.art-sciences.fr/api?start=2011-05-01&end=2018-01-01&bbox=-20,-50,70,90
 </code></pre>
-<div>where <ul>
-<li><code>bcmt</code> is a data center,</li>
-<li> <code>obs</code> is for observatories</li>
-</ul>
+
 <div>the parameters
 <ul>
 <li><code>2011-11-05</code> is the start date </li>
@@ -66,10 +63,10 @@
 <li><code>-20,-50,70,90</code> is used to describe bbox (longitude min, latitude min, longitude max, latitude max)</li>
 </ul>
 </div>
-</div>
-<p>Search Data for one observatory</p>
 
-<pre><code>http://formater.art-sciences.fr/cds/bcmt/data/ams?start=2011-05-01&end=2018-01-01
+<p>Search Data for one BCMT observatory</p>
+
+<pre><code>http://formater.art-sciences.fr/cds/bcmt/data/ams?start=2017-11-01&end=2018-01-01
 </code></pre>
 <div>where <ul>
 <li><code>bcmt</code> is a data center,</li>
@@ -81,6 +78,24 @@
 <li><code>2011-11-05</code> is the start date </li>
 <li><code>2018-01-01</code> is the end date</li>
 </ul>
+</div>
+</div>
+
+<p>Search Data for one ISGI indice</p>
+
+<pre><code>http://formater.art-sciences.fr/cds/isgi/data/aa?start=2018-01-01&end=2018-01-25
+</code></pre>
+<div>where <ul>
+<li><code>isgi</code> is a data center,</li>
+<li> <code>data</code> is for search data</li>
+<li><code>aa</code> code of the indice</li>
+</ul>
+<div>the parameters
+<ul>
+<li><code>2018-01-01</code> is the start date </li>
+<li><code>2018-01-25</code> is the end date</li>
+</ul>
+</div>
 </div>
 </div>
 </body>
