@@ -24,6 +24,7 @@ Class Iaga
         if( empty( $this->code)){
             $this->isgi = true;
         }
+        
         $this->start = $start;
         $this->end = $end;
         $this->ftp = $ftp;
@@ -189,7 +190,7 @@ Class Iaga
             if( $this->indice == "SC" || $this->indice == "SFE"){
                 $this->pattern =  "/^[0-9\-]{10}\s[0-9]{2}/";
             }else{
-                $this->pattern =  "/^[0-9\-]{10}\s[0-9]{2}:00:00/";
+                $this->pattern =  "/^[0-9\-]{10}\s[0-9]{2}:(0|3)0:00/";
             }
          }
      }

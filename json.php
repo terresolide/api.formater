@@ -261,7 +261,7 @@ foreach( $result->features as $obs){
                 $abstract->fr = "Série temporelle définitive des données géomagnétiques (latence 1an), orientation ".$orientation;
                 $abstract->en = "Definitive Temporal Serie of geomagnetic data (latency 1year), orientation ".$orientation;
                 break;
-            case "QUASI-DEFINITIVE":
+            case "QUASI_DEFINITIVE":
                 $abstract->fr = "Série temporelle quasi-définitive des données géomagnétiques (latence 1 mois), orientation ".$orientation;
                 $abstract->en = "Quasi-definitive Temporal Serie of geomagnetic data (latency 1 month), orientation ".$orientation;
                 

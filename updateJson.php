@@ -36,6 +36,7 @@ function search_infos(&$obs, $code, $dataType){
     //var_dump($code);
     $directory = "/".$dataType."/".strtolower( $code);
     $resolutions = ftp_nlist( $conn_id, $directory);
+ 
     if( $resolutions === false){
         return false;
     }
@@ -105,8 +106,9 @@ function search_infos(&$obs, $code, $dataType){
             $endDate = $matches[1]."-".$matches[2]."-".$matches[3];
            
         }
+        $now = new DateTime();
         if( $dataType == "VARIATION"){
-            $now = new DateTime();
+            
             $end = new DateTime( $endDate);
             
             $diff = $end->diff( $now);
@@ -115,7 +117,7 @@ function search_infos(&$obs, $code, $dataType){
             }
             unset($obs->procedure->method);
         }
-       
+        $obs->metadataLastUpdate = $now->format("Y-m-d");
         $obs->api =  new StdClass();
         $obs->api->url = "http://formater.art-sciences.fr/cds/bcmt/data/".strtolower($code);
         $obs->api->parameters = array( "type" => $dataType);
