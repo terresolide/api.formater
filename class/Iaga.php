@@ -29,20 +29,31 @@ Class Iaga
         $this->end = $end;
         $this->ftp = $ftp;
         $this->ismin = $ismin;
+       
        // $this->ismin = true;
         $this->pattern();
         if(!$ftp ){
             foreach($files as $file){
+            	$provisional = false;
+            	if( $this->indice == "SC" || $this->indice == "SFE"){
+            		//CHECK IF IT'S DEFINITIVE OR PROVISIONAL DATA
+            		$pattern = "/^.*\/(?:SFE|SC)_([0-9]{4})_P\.dat$/";
+            		$provisional = preg_match( $pattern, $file, $matches);
+            	}
                 $flx = fopen( $file, "r+b");
                 if( !$flx===false){
-                    $this->read( $flx);
+                	if( ! $provisional){
+                    	$this->read( $flx);
+                	}else{
+                		$this->readProvisional( $flx, $matches[1]);
+                	}
                     fclose( $flx);
                 }
             }
-            
+         
         }else{
             foreach( $files as $file){
-                
+
                 $url = $this->ftp.$file;
                 $ctx = stream_context_create(array('ftp' => array('resume_pos' => 0)));
                 $flx = fopen($url, 'r', false, $ctx);
@@ -68,8 +79,9 @@ Class Iaga
             return true;
         }
     }
+    
     public function read( $resource){
-        @ob_end_clean(); 
+        //@ob_end_clean(); 
         $i=0;
         // search line that do not start with a space
         $pattern = "/^(?![ D]{1})/";
@@ -155,12 +167,59 @@ Class Iaga
             }
             $i++;
         }
-        //echo "nombre de lignes ". $i;
-      
-        //return array
+    }
+    public function readProvisional( $resource, $year){
+    	//@ob_end_clean();
+    	$i=0;
+
+    	$answer = array();
+    	$matches = array();
+    	$months = array();
+    	$first = empty( $this->meta);
+    	$this->add_meta("provisional", "1");
+    	
+    	while (!feof($resource)) {
+    		//line start with numeric character
+    		$line = fgets($resource);
+    		if( preg_match(  "/^[0-9]{4}.*$/", $line) ){
+    			$date = str_replace(" ", "-", substr( $line, 0, 10));
+    			if( $this->isRequired( $date)){
+    				$time = str_replace(" ", ":",substr($line, 12, 5)).":00";
+    			
+	    			$data = array(
+	    					"DATE" => $date,
+	    					"TIME"=> $time,
+	    					"PROVI"	=> 1
+	    			);
+	    			$this->data[] = $data;
+    			}
+    			
+    		}else if( preg_match(  "/^([A-Z]+).*$/", $line, $matches) ){
+    			array_push( $months, $matches[1] );
+    		}
+    		$i++;
+    	}
+    	if( count($months)<12){
+    		//add the last month without data in meta
+    		$date = $year ."-".count($months)."-01";
+    		if( $this->isRequired( $date)){
+    			$this->meta[] = array("name" => "no_data" ,
+    								  "content"=> $date);
+    		}
+    	}
     }
     public function add_meta( $name, $content){
         $this->meta[] = array( "name" => $name, "content" => $content);
+    }
+    
+    public function get_meta( $name){
+    	foreach( $this->meta as $meta){
+
+    		if( $meta["name"] == $name){
+    			return $meta;
+    		}
+    	}
+    	return null;
     }
     public function to_array(){
         if(!empty( $this->meta)){

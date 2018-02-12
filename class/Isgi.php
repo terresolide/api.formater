@@ -219,9 +219,18 @@ Class  DataSearcher extends Searcher{
                         }
                         $this->iaga->add_meta("no_data", $year."-".str_pad($month, 2, '0', STR_PAD_LEFT)."-01");
                     }
-                }
-               
-                    
+                }    
+            }
+            if( $this->indice == "SC" || $this->indice == "SFE"){
+            	// look if have the lastest year values
+            	$year = substr( $this->end, 0, 4);
+            	
+            	if( is_null($this->iaga->get_meta("no_data")) && preg_match('/^.*'.$this->indice.'_([0-9]{4})_(?:D|P).dat$/', $this->files[ count($this->files)-1], $matches)){
+            		if( $matches[1] != $year){
+            			
+            			$this->iaga->add_meta("no_data", $year."-01-01");
+            		}
+            	}    
             }
             $this->result = $this->iaga->to_array();
 
