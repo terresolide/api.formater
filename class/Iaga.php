@@ -171,7 +171,7 @@ Class Iaga
     public function readProvisional( $resource, $year){
     	//@ob_end_clean();
     	$i=0;
-
+    
     	$answer = array();
     	$matches = array();
     	$months = array();
@@ -194,14 +194,15 @@ Class Iaga
 	    			$this->data[] = $data;
     			}
     			
-    		}else if( preg_match(  "/^([A-Z]+).*$/", $line, $matches) ){
+    		}else if( preg_match(  "/^(?!NONE)([A-Z]+).*$/", $line, $matches) ){
     			array_push( $months, $matches[1] );
     		}
     		$i++;
     	}
     	if( count($months)<12){
+    	
     		//add the last month without data in meta
-    		$date = $year ."-".count($months)."-01";
+    		$date = $year ."-".(count($months)+1)."-01";
     		if( $this->isRequired( $date)){
     			$this->meta[] = array("name" => "no_data" ,
     								  "content"=> $date);
