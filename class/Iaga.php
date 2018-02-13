@@ -117,10 +117,12 @@ Class Iaga
                         
                     }
                     $fields = array_splice( $fields, 0, $length);
+
  					
  					//    Particular case melting Provisional and Definitive in 2 files
                     if( $this->indice == "asigma" && $data_type == "Provisional"){
                     	array_walk( $fields,function(&$value, $key) { if( !in_array($value,["DATE", "TIME", "DOY"])) $value .= '_P'; }) ;   	
+
                     }
                     
                 }else{
