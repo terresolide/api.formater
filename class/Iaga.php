@@ -87,19 +87,22 @@ Class Iaga
         $pattern = "/^(?![ D]{1})/";
         $answer = array();
         $matches = array();
-        $first = empty( $this->meta);
-       
+     	$first = empty( $this->meta);
+        $data_type = "Definitive";
         while (!feof($resource)) {
             //line start by D
             $line = fgets($resource);
-           
+          
+            if( $this->indice == "asigma" && preg_match( "/^\s*Data\s+Type\s+Provisional\s+\|$/", $line)){
+            	$data_type = "Provisional";
+            }
+
             if( preg_match(  "/^D/", $line) ){ 
                 $fields = preg_split('/\s+/', $line);
                 if($this->isgi){
                     $length = 4;
                     if( $this->indice == "asigma"){
                     	$length = 7;
-                    	$data_type = $this->get_meta("Data Type");
                     }
                     if( $this->indice == "Kp" || substr($fields[4], 0,2) == "Kp"){
                         //only if diff days <30
