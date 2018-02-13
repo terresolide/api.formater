@@ -99,6 +99,7 @@ Class Iaga
                     $length = 4;
                     if( $this->indice == "asigma"){
                     	$length = 7;
+                    	$data_type = $this->get_meta("Data Type");
                     }
                     if( $this->indice == "Kp" || substr($fields[4], 0,2) == "Kp"){
                         //only if diff days <30
@@ -116,6 +117,12 @@ Class Iaga
                         
                     }
                     $fields = array_splice( $fields, 0, $length);
+                  
+                    if( $this->indice == "asigma" && $data_type == "Provisional"){
+                    	array_walk( $fields,function(&$value, $key) { if( !in_array($value,["DATE", "TIME", "DOY"])) $value .= '_P'; }) ;
+                    	
+                    }
+                    
                 }else{
                     array_pop( $fields);
                     array_pop( $fields);
@@ -218,7 +225,7 @@ Class Iaga
     	foreach( $this->meta as $meta){
 
     		if( $meta["name"] == $name){
-    			return $meta;
+    			return $meta["content"];
     		}
     	}
     	return null;
