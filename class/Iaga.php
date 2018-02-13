@@ -97,6 +97,9 @@ Class Iaga
                 $fields = preg_split('/\s+/', $line);
                 if($this->isgi){
                     $length = 4;
+                    if( $this->indice == "asigma"){
+                    	$length = 7;
+                    }
                     if( $this->indice == "Kp" || substr($fields[4], 0,2) == "Kp"){
                         //only if diff days <30
                         $start = new \DateTime( $this->start);
@@ -200,7 +203,6 @@ Class Iaga
     		$i++;
     	}
     	if( count($months)<12){
-    	
     		//add the last month without data in meta
     		$date = $year ."-".str_pad(count($months)+1, 2, '0', STR_PAD_LEFT)."-01";
     		if( $this->isRequired( $date)){

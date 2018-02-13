@@ -39,7 +39,7 @@ Class Config{
     public static $pattern_indices = "/^\/cds\/isgi\/indices\/?(.*)$/";
     public static $pattern_indices_indice = "/^([a-zA-Z]{2,6})\/?(.?)$/";
     public static $pattern_data = "/^\/cds\/isgi\/data\/([a-zA-Z]{2,6})\/?(.*)$/";
-    public static $indices = array( "aa", "am", "Kp", "Dst", "PC", "AE", "SC", "SFE", "Qdays", "CKdays");
+    public static $indices = array( "aa", "am", "Kp", "Dst", "PC", "AE", "SC", "SFE", "Qdays", "CKdays", "asigma");
     public static function is_code_indice( $indice ){
         if( in_array( $indice, self::$indices)){
             return true;
