@@ -202,10 +202,9 @@ Class Iaga
     	if( count($months)<12){
     	
     		//add the last month without data in meta
-    		$date = $year ."-".(count($months)+1)."-01";
+    		$date = $year ."-".str_pad(count($months)+1, 2, '0', STR_PAD_LEFT)."-01";
     		if( $this->isRequired( $date)){
-    			$this->meta[] = array("name" => "no_data" ,
-    								  "content"=> $date);
+    			$this->add_meta("no_data", $date);
     		}
     	}
     }
