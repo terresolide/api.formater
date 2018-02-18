@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="robots" content="noindex, nofollow">
   <meta http-equiv="Content-Language" content="en-us" />
   <meta http-equiv="imagetoolbar" content="false" />
   <meta name="MSSmartTagsPreventParsing" content="true" />
@@ -28,7 +29,7 @@
     <nav class="site-header-nav">
      
       <a class="site-header-nav-item" href="https://www.poleterresolide.fr/">Portal</a>
-      
+       <a class="site-header-nav-item" href="http://formater.art-sciences.fr/tests">Tests</a>
       <a class="site-header-nav-item" href="https://github.com/terresolide/api.formater/wiki">API Docs</a>
        <a class="site-header-nav-item" href="https://github.com/terresolide/api.formater/">On GitHub</a>
     
