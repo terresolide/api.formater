@@ -203,10 +203,10 @@ Class  DataSearcher extends Searcher{
            
             $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end, $this->indice);
             $this->iaga->add_meta("isgi_url", $this->isgi_url);
-            if( $this->indice == "Qdays"){
+            if( $this->indice == "Qdays" || $this->indice == "CKdays"){
                 // look if have the lastest month values
                 $code = substr( $this->end, 0, 7);
-                if( preg_match('/^.*Qdays_([0-9\-]{7})?_?([0-9\-]{7})_D.dat$/', $this->files[0], $matches)){
+                if( preg_match('/^.*'.$this->indice.'_([0-9\-]{7})?_?([0-9\-]{7})_D.dat$/', $this->files[0], $matches)){
                     if( $matches[2] != $code){
                         $date = explode("-", $matches[2]);
                         $year = intVal($date[0]);
@@ -217,6 +217,7 @@ Class  DataSearcher extends Searcher{
                         }else{
                             $month++;
                         }
+                        //if have not the last month value, add the first day of this month in meta no_data
                         $this->iaga->add_meta("no_data", $year."-".str_pad($month, 2, '0', STR_PAD_LEFT)."-01");
                     }
                 }    

@@ -104,7 +104,10 @@ Class Iaga
                     if( $this->indice == "asigma"){
                     	$length = 7;
                     }
-                    if( $this->indice == "Kp" || substr($fields[4], 0,2) == "Kp"){
+                    if( $this->indice == "CKdays"){
+                        $length = 5;
+                    }
+                    if( $this->indice == "Kp" || substr($fields[4], 0,2) == "Kp" ){
                         //only if diff days <30
                         $start = new \DateTime( $this->start);
                         $end = new \DateTime( $this->end);
