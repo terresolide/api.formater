@@ -120,6 +120,7 @@ function search_infos(&$obs, $code, $dataType){
         $obs->metadataLastUpdate = $now->format("Y-m-d");
         $obs->api =  new StdClass();
         $obs->api->url = "http://formater.art-sciences.fr/cds/bcmt/data/".strtolower($code);
+        $obs->api->name = "BCMT";
         $obs->api->parameters = array( "type" => $dataType);
         $obs->temporalExtents->end = $endDate;
         return true;

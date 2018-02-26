@@ -13,7 +13,7 @@ include_once "../functions.php";
 include_once "Iaga.php";
 
 Class Config{
-  const FTP_SERVER = "ftp.bcmt.fr";
+  const FTP_SERVER = "ftp2.bcmt.fr";
   const FTP_USER = "bcmt_public";
   const FTP_PWD = "bcmt";
   public static $conn_id = false;
