@@ -30,8 +30,7 @@ Class Config{
   
   public static function get_connexion(){
       if(! self::$conn_id ){
-          self::$conn_id = ftp_connect(self::FTP_SERVER);
-          // or die('{ "error": "NO_FTP_CONNEXION"}');
+          self::$conn_id = ftp_connect(self::FTP_SERVER);// or die('{ "error": "NO_FTP_CONNEXION"}');
           if( ! self::$conn_id || ! @ftp_login( self::$conn_id, self::FTP_USER, self::FTP_PWD) ){
               
               return false;
