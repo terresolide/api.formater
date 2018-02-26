@@ -3,10 +3,12 @@ Options +FollowSymlinks
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
-RewriteBase /
-RewriteRule ^api.*$ api.php?%{QUERY_STRING} 
+RewriteBase / 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api$ feature.php [L] 
 RewriteRule ^cds/(bcmt|isgi)/(obs|data|indices).*$ /center/$1.php?%{QUERY_STRING} [L]
-RewriteRule ^api.*$ api.php?%{QUERY_STRING} [L]
+RewriteRule ^api.*$ feature.php?%{QUERY_STRING} [L]
 </IfModule>
 
 
