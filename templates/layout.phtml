@@ -1,0 +1,33 @@
+<?php
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <?php include APP_DIR.'/templates/meta.phtml';?>
+  <title><?=$title?></title>
+  
+   <link href="<?=APP_URL?>/images/formater_favicon-40x40.png" rel="icon" sizes="32x32">
+   
+   <?php include TEMPLATE_DIR.'/scripts.phtml';?>
+  
+</head>
+
+
+<body class="api ">
+  
+<?php include APP_DIR.'/templates/header.phtml';?>
+
+
+  <div class="container">
+    <div class=" mt-5 mb-3">
+    <h1><?=$title?></h1>
+    <?php include $content;?>
+</div>
+</div>
+</body>
+</html>
+
+
+
+

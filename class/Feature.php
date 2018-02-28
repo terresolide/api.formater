@@ -173,7 +173,7 @@ Class FeatureSearcher extends Searcher{
         
     }
     private function load_file(){
-        $content = file_get_contents( "data/geojson_catalog2.json");
+        $content = file_get_contents( DATA_FILE);
         $result = json_decode( $content);
         return $result->features;
     }

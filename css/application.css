@@ -22,3 +22,18 @@
 h3{
 	margin-top:10px;
 }
+ul.formater-ul{
+	position:relative;
+    list-style-type:disc;
+	
+}
+ul.formater-ul li{
+	display:block;
+
+}
+ul.formater-ul li::before{
+	content:"\2022";
+}
+h2{
+	margin-top:40px;
+}

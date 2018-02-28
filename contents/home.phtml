@@ -1,0 +1,61 @@
+<?php
+?>
+
+<!--<ul>
+
+   <li><a href="/v3/" class="active">Reference</a></li>
+<li><a href="/v3/guides/">Guides</a></li>
+<li><a href="/v3/libraries/">Libraries</a></li>
+
+</ul>-->
+
+
+<div>
+    <h2>Search Features of Interest</h2>
+    
+    <pre><code><?=APP_URL?>/api?start=2011-05-01&end=2018-01-01&bbox=-20,-50,70,90</code></pre>
+    
+    <div>the parameters
+        <ul class="formater-ul">
+            <li><code>2011-11-05</code> is the start date </li>
+            <li><code>2018-01-01</code> is the end date</li>
+            <li><code>-20,-50,70,90</code> is used to describe bbox (longitude min, latitude min, longitude max, latitude max)</li>
+        </ul>
+    </div>
+</div>
+<h2>Search Data for one BCMT observatory</h2>
+
+<pre><code><?=APP_URL?>/cds/bcmt/data/ams?start=2017-11-01&end=2018-01-01
+</code></pre>
+<div>where
+     <ul class="formater-ul">
+        <li><code>bcmt</code> is a data center,</li>
+        <li><code>data</code> is for search data</li>
+        <li><code>ams</code> code of the observatory</li>
+    </ul>
+</div>
+<div >the parameters
+    <ul class="formater-ul">
+        <li><code>2011-11-05</code> is the start date </li>
+        <li><code>2018-01-01</code> is the end date</li>
+    </ul>
+</div>
+
+
+<h2>Search Data for one ISGI indice</h2>
+
+<pre><code><?=APP_URL?>/cds/isgi/data/aa?start=2018-01-01&end=2018-01-25
+</code></pre>
+<div>where 
+    <ul class="formater-ul">
+        <li><code>isgi</code> is a data center,</li>
+        <li><code>data</code> is for search data</li>
+        <li><code>aa</code> code of the indice</li>
+    </ul>
+</div>
+<div>the parameters
+    <ul class="formater-ul">
+        <li><code>2018-01-01</code> is the start date </li>
+        <li><code>2018-01-25</code> is the end date</li>
+    </ul>
+</div>
