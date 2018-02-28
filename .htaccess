@@ -4,6 +4,9 @@ Options +FollowSymlinks
 RewriteEngine On
 
 RewriteBase / 
+RewriteCond %{SERVER_PORT} ^80$ [OR]
+RewriteCond %{HTTPS} =off
+RewriteRule ^(.*)$ https://api.poleterresolide.fr/$1 [R=301,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^api$ feature.php [L] 
