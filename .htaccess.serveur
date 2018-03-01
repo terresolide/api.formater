@@ -1,0 +1,19 @@
+Options +FollowSymlinks
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+RewriteBase / 
+RewriteCond %{SERVER_PORT} ^80$ [OR]
+RewriteCond %{HTTPS} =off
+RewriteRule ^(.*)$ https://api.poleterresolide.fr/$1 [R=301,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api$ feature.php [L] 
+RewriteRule ^cds/(bcmt|isgi)/(obs|data|indices).*$ /center/$1.php?%{QUERY_STRING} [L]
+RewriteRule ^api.*$ feature.php?%{QUERY_STRING} [L]
+</IfModule>
+
+
+ErrorDocument 404 /404.php
+
