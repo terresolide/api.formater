@@ -309,12 +309,25 @@ Class  DataSearcher extends Searcher{
 
     private function search_files(){
         $this->isgi_url = Config::API_URL."?" . $this->prepare_get();
-        $content = file_get_contents($this->isgi_url );
+        $ctx = stream_context_create(array('http'=>
+        		array(
+        				'timeout' => 30,  //1/2 minute
+        		)
+        ));
+       
+        	
+        $content = @file_get_contents($this->isgi_url, false, $ctx);
+        if( $content === false){
+        	$this->error ="FAILED OPEN RESPONSE";
+        	return;
+        }
+        
         // the decoded content of your zip file
 
        // $content_type = get_response_header("Content-type", $http_response_header);
         //var_dump($content_type);
         switch( get_http_content_type( $http_response_header)){
+        	
             case "text":
                 $this->error = $this->extract_error($content);
                 break;
@@ -330,7 +343,7 @@ Class  DataSearcher extends Searcher{
                 $this->extract_files();
                 break;
             default:
-                $this->error = "UNKNOWN_ERROR";
+                $this->error = "FAILED";
         }
        
     }
