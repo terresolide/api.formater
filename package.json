@@ -1,0 +1,30 @@
+{
+  "name": "api.formater",
+  "version": "1.0.0",
+  "description": "api pour formater",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "default"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terresolide/api.formater.git"
+  },
+  "keywords": [
+    "api",
+    "php"
+  ],
+  "author": "epointal",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/terresolide/api.formater/issues"
+  },
+  "homepage": "https://github.com/terresolide/api.formater#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-uncss": "^1.0.6"
+  }
+}
