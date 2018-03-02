@@ -318,7 +318,7 @@ Class  DataSearcher extends Searcher{
         	
         $content = @file_get_contents($this->isgi_url, false, $ctx);
         if( $content === false){
-        	$this->error ="FAILED OPEN RESPONSE";
+        	$this->error ="SERVER_ISGI_HS";
         	return;
         }
         
