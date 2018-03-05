@@ -75,9 +75,9 @@ Class Config{
             $this->request = $request;
             $this->parseRequest();
             switch( $this->type){
-                case "observatories":
-                    $this->searcher = new ObservatoriesSearcher( $this->ob);
-                    break;
+//                 case "observatories":
+//                     $this->searcher = new ObservatoriesSearcher( $this->ob);
+//                     break;
                 case "data":
                     $this->searcher = new DataSearcher( $this->ob );
                     break;
@@ -103,17 +103,17 @@ Class Config{
                 //root
                 $this->type = "root";
                 $this->request ="";
-            }else if( preg_match( Config::$pattern_obs, $this->request, $matches)){
-                //search observatories
-                $this->type = "observatories";
-                $this->request = $matches[1];
-                if( preg_match( Config::$pattern_obs_ob, $this->request, $matches)){
-                    if(Config::is_code_obs($matches[1])){
-                        $this->ob = strtolower( $matches[1]);
-                    }else{
-                        $this->type = "404";
-                    }
-                }
+//             }else if( preg_match( Config::$pattern_obs, $this->request, $matches)){
+//                 //search observatories
+//                 $this->type = "observatories";
+//                 $this->request = $matches[1];
+//                 if( preg_match( Config::$pattern_obs_ob, $this->request, $matches)){
+//                     if(Config::is_code_obs($matches[1])){
+//                         $this->ob = strtolower( $matches[1]);
+//                     }else{
+//                         $this->type = "404";
+//                     }
+//                 }
             }else if( preg_match( Config::$pattern_data , $this->request, $matches)){
                 //search geomagnetic data for one observatory
                 if( Config::is_code_obs( $matches[1])){
@@ -162,148 +162,148 @@ Class  Searcher{
         $this->result = array("error" => "NOT_FOUND");
     }
 }
-Class ObservatoriesSearcher extends Searcher{
-    public $observatory = null;
-    public $start = null;
-    public $end = null;
-    public $north = null;//lat max
-    public $south = null;//lat min
-    public $east = null; //lng max
-    public $west = null; //lng min
-    //correstion for bbox
-    private  $add = 360;
+// Class ObservatoriesSearcher extends Searcher{
+//     public $observatory = null;
+//     public $start = null;
+//     public $end = null;
+//     public $north = null;//lat max
+//     public $south = null;//lat min
+//     public $east = null; //lng max
+//     public $west = null; //lng min
+//     //correstion for bbox
+//     private  $add = 360;
   
-    protected function extract_params( $get = array() ){
+//     protected function extract_params( $get = array() ){
       
-        if(isset( $get["start"])){
-            if( valid_date( $get["start"])){
-                $this->start = $get["start"];
-            }else{
-                $this->error = "INVALID_DATE";
-            }
-        }
-        if(isset( $get["end"])){
-            if( valid_date( $get["end"])){
-                $this->end = $get["end"];
-                if( !is_null( $this->start) && $this->start > $this->end){
-                    $this->error = "INCONSITENT_DATE";
-                }
-            }else{
-                $this->error = "INVALID_DATE";
-            }
-        }else{
-            $end = new \DateTime();
-            $this->end =$end->format("Y-m-d");
-        }
-        if( isset($get["bbox"])){
-            $this->parse_bbox( $get["bbox"]);
-        }
-    }
-    protected function treatment(){
-        $observatories = $this->load_file();
-       $result = array();
-        foreach( $observatories as $obs){
-            $obs = $this->is_selected($obs);
-            if( $obs){
-                array_push($result, $obs);
-            }
-        }
-        if( count($result)>1){
+//         if(isset( $get["start"])){
+//             if( valid_date( $get["start"])){
+//                 $this->start = $get["start"];
+//             }else{
+//                 $this->error = "INVALID_DATE";
+//             }
+//         }
+//         if(isset( $get["end"])){
+//             if( valid_date( $get["end"])){
+//                 $this->end = $get["end"];
+//                 if( !is_null( $this->start) && $this->start > $this->end){
+//                     $this->error = "INCONSITENT_DATE";
+//                 }
+//             }else{
+//                 $this->error = "INVALID_DATE";
+//             }
+//         }else{
+//             $end = new \DateTime();
+//             $this->end =$end->format("Y-m-d");
+//         }
+//         if( isset($get["bbox"])){
+//             $this->parse_bbox( $get["bbox"]);
+//         }
+//     }
+//     protected function treatment(){
+//         $observatories = $this->load_file();
+//        $result = array();
+//         foreach( $observatories as $obs){
+//             $obs = $this->is_selected($obs);
+//             if( $obs){
+//                 array_push($result, $obs);
+//             }
+//         }
+//         if( count($result)>1){
            
-            $this->result = array("type" => "FeatureCollection", "features" => $result);
-        }else if( count( $result) == 1){
-            $this->result = $result[0];
-        }else{
-            $this->error = "NO_OBSERVATORY";
-        }
+//             $this->result = array("type" => "FeatureCollection", "features" => $result);
+//         }else if( count( $result) == 1){
+//             $this->result = $result[0];
+//         }else{
+//             $this->error = "NO_OBSERVATORY";
+//         }
         
-        return $this->result;
-    }
-    private  function is_selected( $obs){
-        if( !is_null( $this->observatory) ){
-            if($this->observatory == strtolower( $obs->properties->code)){
-                return $obs;
-            }else{
-                return false;
-            }
-        }else{
-            $startTime = $obs->properties->temporalExtents->start;
-            if( $obs->properties->temporalExtents->end == "now"){
-                $end = new \DateTime();
-                $endTime = $end->format("Y-m-d");
-            }else{
-                $endTime = $obs->properties->temporalExtents->end;
-            }
-            if( (is_null( $this->start) || $this->start <= $endTime) 
-                && (is_null( $this->end ) || $this->end >= $startTime)){
-                    $obs = $this->in_bbox( $obs);
-                    return $obs;
-            }else{
-                return false;
-            }
+//         return $this->result;
+//     }
+//     private  function is_selected( $obs){
+//         if( !is_null( $this->observatory) ){
+//             if($this->observatory == strtolower( $obs->properties->code)){
+//                 return $obs;
+//             }else{
+//                 return false;
+//             }
+//         }else{
+//             $startTime = $obs->properties->temporalExtents->start;
+//             if( $obs->properties->temporalExtents->end == "now"){
+//                 $end = new \DateTime();
+//                 $endTime = $end->format("Y-m-d");
+//             }else{
+//                 $endTime = $obs->properties->temporalExtents->end;
+//             }
+//             if( (is_null( $this->start) || $this->start <= $endTime) 
+//                 && (is_null( $this->end ) || $this->end >= $startTime)){
+//                     $obs = $this->in_bbox( $obs);
+//                     return $obs;
+//             }else{
+//                 return false;
+//             }
            
             
-        }
+//         }
         
       
-    }
-    /**
-     * Check if $obs is in the bounds bbox
-     * correct values lng if necesserary (modulo 360)
-     * @param GeojsonFeature $obs
-     * @return GeojsonFeature|boolean
-     */
-    private function in_bbox( $obs){
-        if( is_null( $this->south)){
-            return $obs;
-        }
-        $lat = $obs->geometry->coordinates[1];
-        $lng = $obs->geometry->coordinates[0];
-        if( $lat >= $this->south && $lat <= $this->north ){
-            if( $lng >= $this->west && $lng <= $this->east){
+//     }
+//     /**
+//      * Check if $obs is in the bounds bbox
+//      * correct values lng if necesserary (modulo 360)
+//      * @param GeojsonFeature $obs
+//      * @return GeojsonFeature|boolean
+//      */
+//     private function in_bbox( $obs){
+//         if( is_null( $this->south)){
+//             return $obs;
+//         }
+//         $lat = $obs->geometry->coordinates[1];
+//         $lng = $obs->geometry->coordinates[0];
+//         if( $lat >= $this->south && $lat <= $this->north ){
+//             if( $lng >= $this->west && $lng <= $this->east){
                 
-                return $obs;
+//                 return $obs;
                 
-            }else if( $this->add>0 && $lng + $this->add >= $this->west && $lng + $this->add <= $this->east){
-                $obs->geometry->coordinates[0] = $lng + $this->add;
-                return $obs;
-            }
-        }else{
-            return false;
-        }
-    }
-    private function parse_bbox( $str_bbox ){
-        $values = explode(",", $str_bbox);
+//             }else if( $this->add>0 && $lng + $this->add >= $this->west && $lng + $this->add <= $this->east){
+//                 $obs->geometry->coordinates[0] = $lng + $this->add;
+//                 return $obs;
+//             }
+//         }else{
+//             return false;
+//         }
+//     }
+//     private function parse_bbox( $str_bbox ){
+//         $values = explode(",", $str_bbox);
         
-        if(count($values) == 4){
-            $values = array_map("floatVal", $values);
-            $keys = array("west", "south", "east", "north");
+//         if(count($values) == 4){
+//             $values = array_map("floatVal", $values);
+//             $keys = array("west", "south", "east", "north");
 
-            $result = array_combine( $keys, $values);
+//             $result = array_combine( $keys, $values);
   
-            if($result["north"] >90 || $result["south"] < -90 || $result["north"] < $result["south"]){
-                $this->error = "INVALID_BBOX";
-                return;
-            }
-            foreach ( $result as $key => $value){
-                $this->{ $key } = $value;
-            }
-            if( $this->west > $this->east){
-                $this->east = $this->east + 360;
-                $this->add = 360;
+//             if($result["north"] >90 || $result["south"] < -90 || $result["north"] < $result["south"]){
+//                 $this->error = "INVALID_BBOX";
+//                 return;
+//             }
+//             foreach ( $result as $key => $value){
+//                 $this->{ $key } = $value;
+//             }
+//             if( $this->west > $this->east){
+//                 $this->east = $this->east + 360;
+//                 $this->add = 360;
                 
-            }
-        }else{
-            $this->error = "INVALID_BBOX";
-        }
+//             }
+//         }else{
+//             $this->error = "INVALID_BBOX";
+//         }
         
-    }
-    private function load_file(){
-        $content = file_get_contents( "../data/geojson_observatories.json");
-        $result = json_decode( $content);
-        return $result->features;
-    }
-}
+//     }
+//     private function load_file(){
+//         $content = file_get_contents( "../data/geojson_observatories.json");
+//         $result = json_decode( $content);
+//         return $result->features;
+//     }
+// }
 
 Class DataSearcher extends Searcher{
     
@@ -381,6 +381,7 @@ Class DataSearcher extends Searcher{
    }
 
    protected function treatment(){
+   	$this->ftp = "ftp://" . Config::FTP_USER .":" . Config::FTP_PWD . "@" . Config::FTP_SERVER;
        if(  is_null( $this->dataType ) ){
            $ismin = false;
            $directory0 = "/DEFINITIVE/".$this->observatory."/".$this->type;
@@ -399,18 +400,20 @@ Class DataSearcher extends Searcher{
            switch( $this->dataType){
                case "DEFINITIVE":
                case "QUASI_DEFINITIVE":
+               case "VARIATION":
                    $ismin = false;
                    $directory0 = "/".$this->dataType."/".$this->observatory."/".$this->type;
                    $this->search_files( $directory0, $this->shortname());
                    break;
-               case "VARIATION":
-                   $this->search_files_variation();
-                   $ismin = $this->diff->days + 1;
-                   break;
+//                case "VARIATION":
+//                    $this->search_files_variation();
+//                    $ismin = $this->diff->days + 1;
+//                    break;
            }
        }
-       $ftp = "ftp://" . Config::FTP_USER .":" . Config::FTP_PWD . "@" . Config::FTP_SERVER;
-       $this->iaga = new \Iaga( $this->files, $this->observatory, $this->start->format("Y-m-d"),$this->end->format("Y-m-d"), null, $ftp, $ismin);
+       
+       $this->iaga = new \Iaga( $this->files, $this->observatory, $this->start->format("Y-m-d"),$this->end->format("Y-m-d"), null, $this->ftp, $ismin);
+       $this->iaga->add_meta( "FTP_DOWNLOAD_LINK", $this->files_meta);
        
        $this->result = $this->iaga->to_array();
    }
@@ -464,40 +467,98 @@ Class DataSearcher extends Searcher{
             return;
         }
 
-        $files = ftp_nlist ( $conn_id , $directory);
-        $results = array();
-        
+       
+        $result_meta = array();
+        $directories = array();
         switch( $this->type){
             case "yea":
             case "mon":
             case "day":
+            	$files = ftp_nlist ( $conn_id , $directory);
+            	$results = array();
                 $start_year = intVal($this->start->format("Y"));
                 $end_year = intVal( $this->end->format("Y"));
+                array_push( $directories, $this->ftp.$directory);
                 for($i= $start_year; $i<= $end_year; $i++){
                     $file = $directory."/".$this->observatory . $i. $prefix . $this->type.".".$this->type;
                     
                     if(in_array( $file, $files)){
                         array_push( $results, $file);
+                        array_push( $result_meta, $this->ftp.$file);
                     }
                 }
                 break;
             case "hor":
+            	$files = ftp_nlist ( $conn_id , $directory);
+            	$results = array();
                 $current = new \DateTime( $this->start->format("Y-m-d"));
-                
+                array_push( $directories, $this->ftp.$directory);
                 while( $current<= $this->end){
                     
                     $file = $directory."/".$this->observatory . $current->format("Ym"). $prefix . $this->type.".".$this->type;
                     
                     if(in_array( $file, $files)){
                         array_push( $results, $file);
+                        array_push( $result_meta, $this->ftp.$file);
                         // array_push( $done, $current->format("Ym"));
                     }
                     $current->modify( 'first day of next month' );
                     
                 }
                 break;
+            case "min":
+            	
+            	$results = array();
+            	$current = new \DateTime( $this->start->format("Y-m-d"));
+            	$last = false;
+            	$directory0 = "";
+            	while( $current< $this->end && !$last){
+            		$directory = "/VARIATION/" . $this->observatory . "/min/".$current->format("Y");
+            		//read directory if not done
+            		if( $directory != $directory0){
+            			$directory0 =  $directory;
+            			array_push( $directories, $this->ftp.$directory);
+            			$files = ftp_nlist ( $conn_id , $directory0);
+            			
+            		}
+            		$file = $directory."/".$this->observatory . $current->format("Ymd"). "vmin.min";
+            		
+            		if(in_array( $file, $files)){
+            			array_push( $results, $file);
+            			array_push( $result_meta, $this->ftp.$file);
+            			// array_push( $done, $current->format("Ym"));
+            		}
+            		
+            		$current->modify( '+1 days' );
+            		
+            	}
+            	//last day
+            	$directory = "/VARIATION/". $this->observatory ."/min/".$this->end->format("Y");
+            	if( $directory != $directory0){
+            		$directory0 =  $directory;
+            		array_push( $directories, $this->ftp.$directory);
+            		$files = ftp_nlist ( $conn_id , $directory0);
+            		
+            	}
+            	$file = $directory."/". $this->observatory . $this->end->format("Ymd"). "vmin.min";
+            	if(!in_array($file,$results) && in_array( $file, $files)){
+            		array_push( $results, $file);
+            		array_push( $result_meta, $this->ftp.$file);
+            		// array_push( $done, $current->format("Ym"));
+            	}
+            	//si plus de 3 fichiers, on garde les 3 derniers seulement
+            	if( count($results)>3){
+            		$results = array_slice( $results, count($results)-3);
+            	}
+            	break;
         }
         $this->files = $results;
+        if( count( $result_meta)>15 ){
+        	$this->files_meta = $directories;
+        
+        }else{
+        	$this->files_meta = $result_meta;
+        }
         return $results;
     }
     private function search_files_variation( ){

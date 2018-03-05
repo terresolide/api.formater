@@ -52,6 +52,7 @@ Class Iaga
             }
          
         }else{
+        	
             foreach( $files as $file){
 
                 $url = $this->ftp.$file;
@@ -252,6 +253,21 @@ Class Iaga
             return '{ "error": "NO_DATA"}';
          }
      }
+     /** add ftp adress of files in meta data*/
+    /* private function add_meta_files($files, $ftp){
+     	if(!$ftp){
+     		return 0;
+     	}
+     	$ftp_files = array();
+     	$n =0 ;
+     	foreach($files as $file){
+     		array_push( $ftp_files, $ftp.$file);
+     		$n++;
+     	}
+     	$this->add_meta( "ftp" ,$ftp_files);
+     	return $n;
+     	
+     }*/
      private function pattern(){
          if( $this->ismin){
             
