@@ -1,4 +1,5 @@
 <?php
+/** il faut sans doute changer les noms de fichies!!*/
 include "config_ft.php";
 define('OUTPUT_FILE', APP_DIR.'/data/geojson_bcmt_ft.json');
 
@@ -15,12 +16,15 @@ foreach($lieux as $key => $lieu ){
     	//récupération de l'image
     	$imageurl = $obs->quicklook[0]->url;
     	//var_dump( $imageurl);
-    	$contents=file_get_contents($imageurl);
+    	//$contents=file_get_contents($imageurl);
     	$save_path= APP_DIR."/images/bcmt/".basename($imageurl);
     	$newurl = APP_URL."/images/bcmt/".basename($imageurl);
     	//var_dump( $save_path);
-    	file_put_contents($save_path,$contents);
+    	//file_put_contents($save_path,$contents);
     	$obs->quicklook[0]->url = $newurl;
+    	$obs->observedProperty->type = "time series";
+    	$obs->observedProperty->name= "Geomagnetic Field";
+    	$obs->domainOfInterest = array( "SOLID_EARTH", "GEOMAGNETISM");
     }
 }
 
