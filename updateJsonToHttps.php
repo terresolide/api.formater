@@ -1,5 +1,6 @@
 <?php
-/** il faut sans doute changer les noms de fichies!!*/
+/** il faut sans doute changer les noms de fichies!!
+ * DATA_FILE est le fichier de départ */
 include "config_ft.php";
 define('OUTPUT_FILE', APP_DIR.'/data/geojson_bcmt_ft.json');
 
@@ -11,11 +12,13 @@ foreach($lieux as $key => $lieu ){
    // var_dump( $lieu->properties->code);
    $code = $lieu->properties->code;
     $obs2 = [];
+    $start = "2018-03-06";
     foreach( $lieu->properties->observations as $obs){
     	$obs->api->url = APP_URL."/cds/bcmt/data/".strtolower($code);
     	//récupération de l'image
     	$imageurl = $obs->quicklook[0]->url;
     	//var_dump( $imageurl);
+    
     	//$contents=file_get_contents($imageurl);
     	$save_path= APP_DIR."/images/bcmt/".basename($imageurl);
     	$newurl = APP_URL."/images/bcmt/".basename($imageurl);
