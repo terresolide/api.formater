@@ -386,13 +386,15 @@ Class DataSearcher extends Searcher{
            $ismin = false;
            $directory0 = "/DEFINITIVE/".$this->observatory."/".$this->type;
            $directory1 = "/QUASI_DEFINITIVE/".$this->observatory."/".$this->type;
+           $directory2 = "/VARIATION/".$this->observatory."/min";
            $this->files = $this->search_files( $directory0,"d");
            
            if(empty( $this->files)){
                $this->search_files( $directory1,"q");
            }
            if( empty( $this->files)){
-               $this->search_files_variation();
+           	 $this->type = "min";
+               $this->search_files( $directory2, "v");
                $ismin = $this->diff->days + 1;
            }
       
@@ -401,6 +403,7 @@ Class DataSearcher extends Searcher{
                case "DEFINITIVE":
                case "QUASI_DEFINITIVE":
                case "VARIATION":
+               
                    $ismin = false;
                    $directory0 = "/".$this->dataType."/".$this->observatory."/".$this->type;
                    $this->search_files( $directory0, $this->shortname());
@@ -474,32 +477,37 @@ Class DataSearcher extends Searcher{
             case "yea":
             case "mon":
             case "day":
+            	
             	$files = ftp_nlist ( $conn_id , $directory);
             	$results = array();
                 $start_year = intVal($this->start->format("Y"));
                 $end_year = intVal( $this->end->format("Y"));
-                array_push( $directories, $this->ftp.$directory);
+                self::push_ftp_url( $directories, $this->ftp.$directory);
                 for($i= $start_year; $i<= $end_year; $i++){
                     $file = $directory."/".$this->observatory . $i. $prefix . $this->type.".".$this->type;
                     
                     if(in_array( $file, $files)){
                         array_push( $results, $file);
-                        array_push( $result_meta, $this->ftp.$file);
+                        self::push_ftp_url( $result_meta, $this->ftp.$file);
+                        
                     }
                 }
                 break;
             case "hor":
+            	
             	$files = ftp_nlist ( $conn_id , $directory);
             	$results = array();
                 $current = new \DateTime( $this->start->format("Y-m-d"));
-                array_push( $directories, $this->ftp.$directory);
+                self::push_ftp_url( $directories, $this->ftp.$directory);
                 while( $current<= $this->end){
-                    
+                   
                     $file = $directory."/".$this->observatory . $current->format("Ym"). $prefix . $this->type.".".$this->type;
                     
                     if(in_array( $file, $files)){
+                    	
                         array_push( $results, $file);
-                        array_push( $result_meta, $this->ftp.$file);
+                        self::push_ftp_url( $result_meta,$this->ftp.$file);
+                        
                         // array_push( $done, $current->format("Ym"));
                     }
                     $current->modify( 'first day of next month' );
@@ -517,15 +525,18 @@ Class DataSearcher extends Searcher{
             		//read directory if not done
             		if( $directory != $directory0){
             			$directory0 =  $directory;
-            			array_push( $directories, $this->ftp.$directory);
+            			self::push_ftp_url( $directories, $this->ftp.$directory);
             			$files = ftp_nlist ( $conn_id , $directory0);
             			
             		}
             		$file = $directory."/".$this->observatory . $current->format("Ymd"). "vmin.min";
             		
             		if(in_array( $file, $files)){
+            		
             			array_push( $results, $file);
-            			array_push( $result_meta, $this->ftp.$file);
+            			self::push_ftp_url( $result_meta,  $this->ftp.$file);
+            					
+            			
             			// array_push( $done, $current->format("Ym"));
             		}
             		
@@ -536,15 +547,16 @@ Class DataSearcher extends Searcher{
             	$directory = "/VARIATION/". $this->observatory ."/min/".$this->end->format("Y");
             	if( $directory != $directory0){
             		$directory0 =  $directory;
-            		array_push( $directories, $this->ftp.$directory);
+            		self::push_ftp_url( $directories, $this->ftp.$directory);
             		$files = ftp_nlist ( $conn_id , $directory0);
             		
             	}
             	$file = $directory."/". $this->observatory . $this->end->format("Ymd"). "vmin.min";
             	if(!in_array($file,$results) && in_array( $file, $files)){
             		array_push( $results, $file);
-            		array_push( $result_meta, $this->ftp.$file);
-            		// array_push( $done, $current->format("Ym"));
+            		self::push_ftp_url( $result_meta, $this->ftp.$file);
+            		
+            		
             	}
             	//si plus de 3 fichiers, on garde les 3 derniers seulement
             	if( count($results)>3){
@@ -552,61 +564,71 @@ Class DataSearcher extends Searcher{
             	}
             	break;
         }
+       
         $this->files = $results;
-        if( count( $result_meta)>15 ){
+        if( count( $result_meta)>3 ){
         	$this->files_meta = $directories;
         
         }else{
+        	
         	$this->files_meta = $result_meta;
         }
         return $results;
     }
-    private function search_files_variation( ){
-        $conn_id = Config::get_connexion();
-        if(!$conn_id){
-            $this->error = "FTP_FAILED";
-            return;
-        }
-        $directory0 = "";
-        $results = array();
-        $days = $this->diff->days;
-        $current = new \DateTime( $this->start->format("Y-m-d"));
-        $files = array();
-        $step = steppify( $days/15);
-        $cumul = 1;
-        $last = false;
-        while( $current< $this->end && !$last){
-            $directory = "/VARIATION/" . $this->observatory . "/min/".$current->format("Y");
-            //read directory if not done
-            if( $directory != $directory0){
-                $directory0 =  $directory;
-                $files = ftp_nlist ( $conn_id , $directory0);
-                
-            }
-            $file = $directory."/".$this->observatory . $current->format("Ymd"). "vmin.min";
-            
-            if(in_array( $file, $files)){
-                array_push( $results, $file);
-                // array_push( $done, $current->format("Ym"));
-            }
-            
-            $current->modify( '+'.$step.' days' );
-            
-        }
-        //last day
-        $directory = "/VARIATION/". $this->observatory ."/min/".$this->end->format("Y");
-        if( $directory != $directory0){
-            $directory0 =  $directory;
-            $files = ftp_nlist ( $conn_id , $directory0);
-            
-        }
-        $file = $directory."/". $this->observatory . $this->end->format("Ymd"). "vmin.min";
-        
-        if(!in_array($file,$results) && in_array( $file, $files)){
-            array_push( $results, $file);
-            // array_push( $done, $current->format("Ym"));
-        }
-        $this->files = $results;
-        return $results;
+    private static function push_ftp_url( &$list, $url){
+    	array_push( $list,
+    			array( "url" => $url,
+    					"type"=> "FTP_DOWNLOAD_LINK",
+    					"description" => array( "en" => basename( $url), "fr"=>basename($url)))
+    			);
+    	return $list;
     }
+//     private function search_files_variation( ){
+//         $conn_id = Config::get_connexion();
+//         if(!$conn_id){
+//             $this->error = "FTP_FAILED";
+//             return;
+//         }
+//         $directory0 = "";
+//         $results = array();
+//         $days = $this->diff->days;
+//         $current = new \DateTime( $this->start->format("Y-m-d"));
+//         $files = array();
+//         $step = steppify( $days/15);
+//         $cumul = 1;
+//         $last = false;
+//         while( $current< $this->end && !$last){
+//             $directory = "/VARIATION/" . $this->observatory . "/min/".$current->format("Y");
+//             //read directory if not done
+//             if( $directory != $directory0){
+//                 $directory0 =  $directory;
+//                 $files = ftp_nlist ( $conn_id , $directory0);
+                
+//             }
+//             $file = $directory."/".$this->observatory . $current->format("Ymd"). "vmin.min";
+            
+//             if(in_array( $file, $files)){
+//                 array_push( $results, $file);
+//                 // array_push( $done, $current->format("Ym"));
+//             }
+            
+//             $current->modify( '+'.$step.' days' );
+            
+//         }
+//         //last day
+//         $directory = "/VARIATION/". $this->observatory ."/min/".$this->end->format("Y");
+//         if( $directory != $directory0){
+//             $directory0 =  $directory;
+//             $files = ftp_nlist ( $conn_id , $directory0);
+            
+//         }
+//         $file = $directory."/". $this->observatory . $this->end->format("Ymd"). "vmin.min";
+        
+//         if(!in_array($file,$results) && in_array( $file, $files)){
+//             array_push( $results, $file);
+//             // array_push( $done, $current->format("Ym"));
+//         }
+//         $this->files = $results;
+//         return $results;
+//     }
 }
