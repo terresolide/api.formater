@@ -34,3 +34,9 @@ ul.formater-ul li::before{
 h2{
 	margin-top:40px;
 }
+
+.container.ft-catalogue{
+	width:90%;
+	margin:auto;
+	max-width:100%;
+}
