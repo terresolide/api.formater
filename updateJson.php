@@ -20,9 +20,9 @@ foreach($lieux as $key => $lieu ){
     foreach( $lieu->properties->observations as $obs){
     	$obs->observedProperty->name = array( "en" => "Geomagnetic Field", "fr" => "Champ magnétique terrestre");
     	if( strpos(  $obs->identifiers->customId, "QUASI_DEFINITIVE")){
-    		$type = "DEFINITIVE";
+    		$type = "QUASI_DEFINITIVE";
     	}elseif( strpos(  $obs->identifiers->customId, "-DEFINITIVE")){
-    	    $type = "QUASI_DEFINITIVE";
+    	    $type = "DEFINITIVE";
     	}else{
     		$type = "VARIATION";
     	}
