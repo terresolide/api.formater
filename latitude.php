@@ -24,10 +24,11 @@ class XX_CGM{
             $line = fgets($flx);
             $this->extract( $line );
         }
-        $this->normalize();
+        
     }
     
     public function to_geojson(){
+    	$this->normalize();
     	$result = array(
     			"type" => "Feature",
     			 "geometry" => array(
@@ -37,7 +38,7 @@ class XX_CGM{
     			"properties"=> $this->options
     		
     	);
-    	return json_encode($result, JSON_NUMERIC_CHECK);
+    	return json_encode($result, JSON_FORCE_OBJECT);
     }
     
     private function normalize(){
@@ -74,7 +75,17 @@ class XX_CGM{
     
 }
 
-$truc = new XX_CGM( "2010_29CGM_N.dat", array("name" => "latitude 29 N"));
+$truc29 = new XX_CGM( "2010_29CGM_N.dat", array("name" => "latitude 29 N"));
 //var_dump( $truc->data);
-header("Content-Type: application/json");
-echo $truc->to_geojson();
+$truc35 = new XX_CGM( "2010_35CGM_N.dat", array("name"=> "latitude 35N"));
+$data30 = array();
+foreach($truc29->data as $i => $value29){
+	$line = array();
+	foreach( $value29 as $key=> $value){
+		$line[$key] = $value + ($truc35->data[$i][$key] - $value)/6;
+	}
+	array_push( $data30, $line);
+}
+var_dump($data30);
+//header("Content-Type: application/json");
+//echo $truc->to_geojson();
