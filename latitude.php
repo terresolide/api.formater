@@ -37,7 +37,7 @@ class XX_CGM{
     			"properties"=> $this->options
     		
     	);
-    	return json_encode($result);
+    	return json_encode($result, JSON_NUMERIC_CHECK);
     }
     
     private function normalize(){
