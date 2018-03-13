@@ -64,6 +64,11 @@ Class FeatureSearcher extends Searcher{
         if( isset($get["bbox"])){
             $this->parse_bbox( $get["bbox"]);
         }
+        if( isset( $get["isgi"])){
+        	$this->cds = "isgi";
+        }else{
+        	$this->cds = "bcmt";
+        }
     }
     protected function treatment(){
         $observatories = $this->load_file();
@@ -131,19 +136,34 @@ Class FeatureSearcher extends Searcher{
         if( is_null( $this->south)){
             return $obs;
         }
-        $lat = $obs->geometry->coordinates[1];
-        $lng = $obs->geometry->coordinates[0];
-        if( $lat >= $this->south && $lat <= $this->north ){
-            if( $lng >= $this->west && $lng <= $this->east){
-                
-                return $obs;
-                
-            }else if( $this->add>0 && $lng + $this->add >= $this->west && $lng + $this->add <= $this->east){
-                $obs->geometry->coordinates[0] = $lng + $this->add;
-                return $obs;
-            }
-        }else{
-            return false;
+        switch( $obs->geometry->type){
+        	case "Point":
+		        $lat = $obs->geometry->coordinates[1];
+		        $lng = $obs->geometry->coordinates[0];
+		        if( $lat >= $this->south && $lat <= $this->north ){
+		            if( $lng >= $this->west && $lng <= $this->east){
+		                
+		                return $obs;
+		                
+		            }else if( $this->add>0 && $lng + $this->add >= $this->west && $lng + $this->add <= $this->east){
+		                $obs->geometry->coordinates[0] = $lng + $this->add;
+		                return $obs;
+		            }
+		        }else{
+		            return false;
+		        }
+		        break;
+        	case "Polygon":
+        		$bbox = $obs->properties->bbox[0];
+        		if( $bbox->south > $this->north || $bbox->north < $this->south){
+        			
+        			return false;
+        		}
+        		if( $bbox->east > $this->west || $bbox->west < $this->east){
+        			return false;
+        		}
+        		return true;
+        		break;
         }
     }
     private function parse_bbox( $str_bbox ){
@@ -173,8 +193,20 @@ Class FeatureSearcher extends Searcher{
         
     }
     private function load_file(){
-        $content = file_get_contents( DATA_FILE);
+    	switch( $this->cds){
+    		case "isgi":
+    			$content = file_get_contents( DATA_FILE_ISGI);
+    			break;
+    		case "bcmt":
+    			$content = file_get_contents( DATA_FILE_BCMT);
+    	}
+       
         $result = json_decode( $content);
-        return $result->features;
+
+        if( $result->type == "FeatureCollection"){
+        	return $result->features;
+        }else{
+        	return array( $result);
+        }
     }
 }
