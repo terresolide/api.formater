@@ -6,19 +6,27 @@ class XX_CGM{
     public $data = array();
     public $options = array();
     public $coordinates = array();
-    public function __construct( $file, $options=array()){
-    	$this->options["name"]= $file;
-    	$this->options["filename"]= $file;
-    	$this->options = array_merge( $this->options, $options);
+    public function __construct( $data, $options=array()){
+    	
+    
+   
+    	switch( gettype($data)){
+    		case "string":
+    			$this->build_from_file( $data, $options);
+    			break;
+    		case "array":
+				$this->build_from_data( $data, $options);
+				break;
+    	}
 
-       $this->dir = __DIR__ ."/latitudesGeomagnetiques/";
-       $this->file = $this->dir.$file; 
-  
-       $this->read( );
+    
     }
     
     public function read( ){
         $flx = fopen( $this->file, "r+b");
+        if(!$flx){
+        	return;
+        }
         while (!feof($flx)) {
             //line start by D
             $line = fgets($flx);
@@ -38,9 +46,34 @@ class XX_CGM{
     			"properties"=> $this->options
     		
     	);
-    	return json_encode($result, JSON_FORCE_OBJECT);
+    	return json_encode($result, JSON_NUMERIC_CHECK);
+    }
+    private function add_point0(){
+    	if( count($this->coordinates)<3){
+    		return;
+    	}
+    	$pointi = $this->coordinates[0];
+    	$pointf = end($this->coordinates);
+    	$point0_lat = (-180-$pointi[0])*($pointf[1] - $pointi[1])/($pointf[0] -360 - $pointi[0]) + $pointi[1];
+    	array_unshift( $this->coordinates, array( -180, $point0_lat));
+
+    }
+    private function build_from_file( $file, $options=array()){
+    	$this->options["name"]= $file;
+    	$this->options["filename"]= $file;
+    	$this->options = array_merge( $this->options, $options);
+    	$this->dir = __DIR__ ."/latitudesGeomagnetiques/";
+    	$this->file = $this->dir.$file;
+    	
+    	$this->read( );
     }
     
+    private function build_from_data( $data, $options=array()){
+
+    	$this->options =  $options;
+        $this->data = $data;
+    	
+    }
     private function normalize(){
     	foreach( $this->data as $key=>$values){
     		if( $values["lat"]>90){
@@ -63,6 +96,7 @@ class XX_CGM{
     	foreach( $this->data as $value){
     		$this->coordinates[] = array(  $value["lng"], $value["lat"]);
     	}
+    	$this->add_point0();
     }
     private function extract( $line){
         $result = preg_split( "/\s+/", $line);
@@ -75,17 +109,21 @@ class XX_CGM{
     
 }
 
-$truc29 = new XX_CGM( "2010_29CGM_N.dat", array("name" => "latitude 29 N"));
+$truc29 = new XX_CGM( "2010_29CGM_S.dat", array("name" => "latitude 29S"));
 //var_dump( $truc->data);
-$truc35 = new XX_CGM( "2010_35CGM_N.dat", array("name"=> "latitude 35N"));
+$truc35 = new XX_CGM( "2010_35CGM_S.dat", array("name"=> "latitude 35S"));
 $data30 = array();
 foreach($truc29->data as $i => $value29){
 	$line = array();
 	foreach( $value29 as $key=> $value){
-		$line[$key] = $value + ($truc35->data[$i][$key] - $value)/6;
+		$line[$key] = round($value + ($truc35->data[$i][$key] - $value)/6 , 5);
 	}
 	array_push( $data30, $line);
 }
-var_dump($data30);
-//header("Content-Type: application/json");
-//echo $truc->to_geojson();
+//var_dump($data30);
+$truc30 = new XX_CGM( $data30, array("name" => "latitude 30S"));
+//var_dump( $truc30->data);
+//
+
+header("Content-Type: application/json");
+echo $truc35->to_geojson();
