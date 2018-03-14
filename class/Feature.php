@@ -1,4 +1,5 @@
 <?php
+$list_cds = array( "bcmt", "isgi");
 
 Class  Searcher{
     public $observatory = null;
@@ -40,6 +41,7 @@ Class FeatureSearcher extends Searcher{
     private  $add = 360;
     
     protected function extract_params( $get = array() ){
+        global $list_cds;
         
         if(isset( $get["start"])){
             if( valid_date( $get["start"])){
@@ -64,8 +66,8 @@ Class FeatureSearcher extends Searcher{
         if( isset($get["bbox"])){
             $this->parse_bbox( $get["bbox"]);
         }
-        if( isset( $get["isgi"])){
-        	$this->cds = "isgi";
+        if( isset( $get["cds"]) && in_array( $get["cds"], $list_cds)){
+        	$this->cds = $get["cds"];
         }else{
         	$this->cds = "bcmt";
         }
