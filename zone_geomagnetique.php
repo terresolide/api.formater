@@ -128,7 +128,11 @@ $geojson = array(
 							    		"telephone" =>	"33 (0)3 68 85 01 25",
 							    		"roles" =>	array( "pointOfContact"),
 							    		"orcId" =>	"0000-0001-8793-1315"
-							    )
+							    ),
+								"api" => array(
+										"url" => "https://api.poleterresolide.fr/cds/isgi/data/Dst",
+										"name"=> "ISGI"
+								)
 										
 							
 
@@ -215,7 +219,11 @@ $geojson = array(
 										"telephone" =>	"33 (0)3 68 85 01 25",
 										"roles" =>	array( "pointOfContact"),
 										"orcId" =>	"0000-0001-8793-1315"
-								)	
+								),
+								"api" => array(
+										"url" => "https://api.poleterresolide.fr/cds/isgi/data/asigma",
+										"name"=> "ISGI"
+								)
 						)
 				)
 		)
