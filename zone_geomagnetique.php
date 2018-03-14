@@ -81,7 +81,7 @@ $geojson = array(
 										"code" => "TS-ANO-4/SNO2",
 										"name" => "ISGI"
 								),
-								"formats"=> array( "IAGA2002"),
+								"formats"=> array(  array("name" => "IAGA2002")),
 								"processingLevel" => "L4",
 								"licence"=> array(
 										"code" =>"NO"
@@ -90,7 +90,7 @@ $geojson = array(
 										"start" => "1957-01-01",
 										"end"   => "now"
 								),
-								"quicklooks" => array( 
+								"quicklook" => array( 
 										array( "url" => "https://api.poleterresolide.fr/images/isgi/reseau_Dst.jpg")
 								),
 								"links" => array(
@@ -113,6 +113,7 @@ $geojson = array(
 							    ),
 								"distribution" => array(),
 							    "contacts" =>array(
+							    		array(
 							    		"name" =>	"Aude Chambodut",
 							    		"email"=>	"aude.chambodut@unistra.fr",
 							    		"organisation"=>	"Ecole et Observatoire de la Terre",
@@ -128,6 +129,7 @@ $geojson = array(
 							    		"telephone" =>	"33 (0)3 68 85 01 25",
 							    		"roles" =>	array( "pointOfContact"),
 							    		"orcId" =>	"0000-0001-8793-1315"
+							    		)
 							    ),
 								"api" => array(
 										"url" => "https://api.poleterresolide.fr/cds/isgi/data/Dst",
@@ -172,7 +174,7 @@ $geojson = array(
 										"code" => "TS-ANO-4/SNO2",
 										"name" => "ISGI"
 								),
-								"formats"=> array( "IAGA2002"),
+								"formats"=> array(  array("name" => "IAGA2002")),
 								"processingLevel" => "L4",
 								"licence"=> array(
 										"code" =>	"CC BY-NC 4.0",
@@ -182,7 +184,7 @@ $geojson = array(
 										"start" => "1959-01-01",
 										"end"   => "now"
 								),
-								"quicklooks" => array(
+								"quicklook" => array(
 										array( "url" => "https://api.poleterresolide.fr/images/isgi/reseau_am.jpg")
 								),
 								"links" => array(
@@ -204,21 +206,23 @@ $geojson = array(
 								),
 								"distribution" => array(),
 								"contacts" =>array(
-										"name" =>	"Aude Chambodut",
-										"email"=>	"aude.chambodut@unistra.fr",
-										"organisation"=>	"Ecole et Observatoire de la Terre",
-										"address" =>	array(
-												"streetAddress"=>	array(
-														"Service des observatoires magnétiques",
-														"5, rue René Descartes"
-												),
-												"postalCode" =>	67000,
-												"addressLocality" =>	"Strasbourg",
-												"addressCountry"=>	"FRANCE"
-										),
-										"telephone" =>	"33 (0)3 68 85 01 25",
-										"roles" =>	array( "pointOfContact"),
-										"orcId" =>	"0000-0001-8793-1315"
+										array(
+											"name" =>	"Aude Chambodut",
+											"email"=>	"aude.chambodut@unistra.fr",
+											"organisation"=>	"Ecole et Observatoire de la Terre",
+											"address" =>	array(
+													"streetAddress"=>	array(
+															"Service des observatoires magnétiques",
+															"5, rue René Descartes"
+													),
+													"postalCode" =>	67000,
+													"addressLocality" =>	"Strasbourg",
+													"addressCountry"=>	"FRANCE"
+											),
+											"telephone" =>	"33 (0)3 68 85 01 25",
+											"roles" =>	array( "pointOfContact"),
+											"orcId" =>	"0000-0001-8793-1315"
+										)
 								),
 								"api" => array(
 										"url" => "https://api.poleterresolide.fr/cds/isgi/data/asigma",
