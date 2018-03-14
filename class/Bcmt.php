@@ -26,7 +26,7 @@ Class Config{
   //examples /cds/bcmt/data/aae or /cds/bcmt/data/aae?start=2011-01-01&end=2011-01-10
   // the observatory code is captured
   public static $pattern_data = "/^\/cds\/bcmt\/data\/([a-zA-Z]{3})\/?(.*)$/"; 
-  public static $code_obs = array( "aae", "ams", "bng", "box", "clf", "czt", "dlt", "dmc", "drv", "ipm", "kou", "lzh", "mbo", "paf", "phu", "ppt", "psm", "tan", "tam", "vlj");
+  public static $code_obs = array( "aae", "ams", "bng", "box", "clf", "czt", "dlt", "dmc", "drv", "ipm", "kou", "lzh", "mbo", "paf", "phu", "ppt", "psm", "qsb", "tan", "tam", "vlj");
   
   public static function get_connexion(){
       if(! self::$conn_id ){

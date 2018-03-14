@@ -28,6 +28,12 @@ $geojson = array(
 				"coordinates" => array($coordinates)
 				),
 		"properties"=> array(
+				"style"=> array(
+						"fill" => "#66ccff",
+						"stroke" => "#1ab2ff",
+						"stroke-width"=> "1",
+						"fill-opacity" => "0.3"
+				),
 				"name" => array( 
 						"fr" => "Zone géomagnétique équatoriale",
 						"en" => "Equatorial geomagnetic zone"
@@ -44,7 +50,7 @@ $geojson = array(
 						//DST
 						array(
 								"id" => null,
-								"metadataLastUpdate" => $now->format("YYYY-MM-DD"),
+								"metadataLastUpdate" => $now->format("Y-m-d"),
 								"dataLastUpdate" => "",
 								"title" => array( 
 										"fr" => "Indice géomagnétique Dst",
