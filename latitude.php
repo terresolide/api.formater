@@ -109,21 +109,21 @@ class XX_CGM{
     
 }
 
-$truc29 = new XX_CGM( "2010_29CGM_S.dat", array("name" => "latitude 29S"));
+$truc74 = new XX_CGM( "2010_74CGM_S.dat", array("name" => "latitude 74S"));
 //var_dump( $truc->data);
-$truc35 = new XX_CGM( "2010_35CGM_S.dat", array("name"=> "latitude 35S"));
-$data30 = array();
-foreach($truc29->data as $i => $value29){
+$truc64 = new XX_CGM( "2010_64CGM_N.dat", array("name"=> "latitude 64N"));
+$data58 = array();
+foreach($truc74->data as $i => $value55){
 	$line = array();
-	foreach( $value29 as $key=> $value){
-		$line[$key] = round($value + ($truc35->data[$i][$key] - $value)/6 , 5);
+	foreach( $value55 as $key=> $value){
+		$line[$key] = $value + ($truc64->data[$i][$key] - $value)/3;
 	}
-	array_push( $data30, $line);
+	array_push( $data58, $line);
 }
 //var_dump($data30);
-$truc30 = new XX_CGM( $data30, array("name" => "latitude 30S"));
+$truc58 = new XX_CGM( $data58, array("name" => "latitude 58N"));
 //var_dump( $truc30->data);
 //
 
 header("Content-Type: application/json");
-echo $truc35->to_geojson();
+echo $truc74->to_geojson();
