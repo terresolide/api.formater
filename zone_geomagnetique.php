@@ -109,6 +109,7 @@ $geojson = array(
 									
 								),
 							    "identifiers" => array(
+							    		"customId" => "Dst",
 							    		"DOI" => "10.17593/14515-74000"
 							    ),
 								"distribution" => array(),
@@ -202,6 +203,7 @@ $geojson = array(
 												
 								),
 								"identifiers" => array(
+										"customId" => "asigma"
 										//"DOI" => "10.17593/14515-74000"
 								),
 								"distribution" => array(),
