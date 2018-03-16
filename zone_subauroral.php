@@ -57,11 +57,12 @@ $geojson = array(
 						"fill-opacity" => "0.3"
 				),
 				"name" => array( 
-						"fr" => "Zone géomagnétique équatoriale",
-						"en" => "Equatorial geomagnetic zone"
+						"fr" => "Zone géomagnétique subaurorale",
+						"en" => "Subauroral geomagnetic zone"
 				),
 			    "bbox" => array( 
-			    		array( "south" => -43.55, "north" => 38.3, "east" => -180, "west"=>180),
+			    		array( "south" => 18.21, "north" => 63.58, "east" => -180, "west"=>180),
+			    		array( "south" => -72.9, "north" => -18.13, "east" => -180, "west"=>180),
 			    ),
 				"description" => array(
 						"fr" => "Il s'agit de la zone comprise entre les latitudes magnétiques -30° et 30°. Année 2010",
@@ -69,17 +70,17 @@ $geojson = array(
 				),
 				"identifiers" => array(),
 				"observations" => array(
-						//DST
+						//aa
 						array(
 								"id" => null,
 								"metadataLastUpdate" => $now->format("Y-m-d"),
 								"dataLastUpdate" => "",
 								"title" => array( 
-										"fr" => "Indice géomagnétique Dst",
-										"en" => "Dst geomagnetic index"
+										"fr" => "Indice géomagnétique aa",
+										"en" => "aa geomagnetic index"
 								),
 								"abstract"=> array(
-										"fr" => "L'indice Dst mesure les perturbations géomagnétiques horizontales dans la zone équatoriale",
+										"fr" => "L'indice aa mesure les perturbations géomagnétiques horizontales dans la zone équatoriale",
 										"en" => "Equatorial index horizontal component disturbances"
 								),
 								"description" => array(
@@ -87,8 +88,8 @@ $geojson = array(
 										"en" => "To monitor the axis-symmetric magnetic signature of magnetosphere currents, including mainly the ring current, the tail currents and also the magnetopause Chapman-Ferraro current."
 								),
 								"observedProperty" => array(
-										"name" => "Disturbance storm-time",
-										"shortName" => "DST INDEX",
+										"name" => "aa INDEX",
+										"shortName" => "aa",
 										"type" => "time series",
 										"timeResolution" => array( "hour"),
 										"unit" => "nT"
@@ -96,7 +97,7 @@ $geojson = array(
 								"domainOfInterest" => array( "GEOMAGNETISM"),
 								"keywords" => array(array(
 										"codeSpace" => "GMD",
-										"code" => "cdb4b514-75c4-4a1f-a4ad-1855fbd396ab")),
+										"code" => "5fd5ccc2-5edb-4823-940d-03a290a5c5fc")),
 								"pole"  => "formater",
 								"status"=> "public",
 								"formaterDataCenter" => array(
@@ -106,19 +107,20 @@ $geojson = array(
 								"formats"=> array(  array("name" => "IAGA2002")),
 								"processingLevel" => "L4",
 								"licence"=> array(
-										"code" =>"NO"
+										"code" =>	"CC BY-NC 4.0",
+										"url" =>	"https://creativecommons.org/licenses/by-nc/4.0/"
 								),
 								"temporalExtents" => array(
-										"start" => "1957-01-01",
+										"start" => "1868-01-01",
 										"end"   => "now"
 								),
 								"quicklook" => array( 
-										array( "url" => "https://api.poleterresolide.fr/images/isgi/reseau_Dst.jpg")
+										array( "url" => "https://api.poleterresolide.fr/images/isgi/reseau_aa.jpg")
 								),
 								"links" => array(
 										array(
 												"type" => "INFORMATION_LINK",
-												"url"  => "http://isgi.unistra.fr/indices_dst.php",
+												"url"  => "http://isgi.unistra.fr/indices_aa.php",
 												"description" => array(
 														"fr" => "page de l'indice",
 														"en" => "Index page"

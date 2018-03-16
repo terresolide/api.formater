@@ -156,15 +156,21 @@ Class FeatureSearcher extends Searcher{
 		        }
 		        break;
         	case "Polygon":
-        		$bbox = $obs->properties->bbox[0];
-        		if( $bbox->south > $this->north || $bbox->north < $this->south){
-        			
-        			return false;
+        	case "MultiPolygon":
+        		
+        		$bbox = $obs->properties->bbox;
+        		$i = 0;
+        		$find = false;
+        		while( !$find && $i < count($bbox)){
+	        		if( $bbox[$i]->south < $this->north && $bbox[$i]->north > $this->south
+	        				&&  $bbox[$i]->east < $this->west && $bbox[$i]->west > $this->east){
+	        			
+	        			$find = true;
+	        		}
+	        		$i++;
+	        		
         		}
-        		if( $bbox->east > $this->west || $bbox->west < $this->east){
-        			return false;
-        		}
-        		return true;
+        		return $find;
         		break;
         }
     }

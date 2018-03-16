@@ -37,7 +37,11 @@ $coordinates1 = array_reverse( $coordinates1);
 $coordinates2 = $result2->geometry->coordinates;
 array_push($coordinates2, [ $coordinates2[0][0]+360, $coordinates2[0][1]]);
 
-
+foreach( $coordinates2 as $coord){
+	if($coord[1] < -90){
+		$coord[1] = -90;
+	}
+}
 $coordinates = array_merge($coordinates2, $coordinates1);
 array_push( $coordinates, $coordinates2[0]);
 
@@ -51,17 +55,18 @@ $geojson = array(
 				),
 		"properties"=> array(
 				"style"=> array(
-						"fill" => "#98d7ff",
+						"fill" => "#c0e6ff",
 						"stroke" => "#1ab2ff",
 						"stroke-width"=> "1",
 						"fill-opacity" => "0.3"
 				),
 				"name" => array( 
-						"fr" => "Zone géomagnétique équatoriale",
-						"en" => "Equatorial geomagnetic zone"
+						"fr" => "Zone géomagnétique aurorale",
+						"en" => "Auroral geomagnetic zone"
 				),
 			    "bbox" => array( 
-			    		array( "south" => -43.55, "north" => 38.3, "east" => -180, "west"=>180),
+			    		array( "south" => 47.83, "north" => 79.41, "east" => -180, "west"=>180),
+			    		array( "south" => -90, "north" => -44.45, "east" => -180, "west"=>180),
 			    ),
 				"description" => array(
 						"fr" => "Il s'agit de la zone comprise entre les latitudes magnétiques -30° et 30°. Année 2010",
@@ -75,28 +80,28 @@ $geojson = array(
 								"metadataLastUpdate" => $now->format("Y-m-d"),
 								"dataLastUpdate" => "",
 								"title" => array( 
-										"fr" => "Indice géomagnétique Dst",
-										"en" => "Dst geomagnetic index"
+										"fr" => "Indice géomagnétique AE",
+										"en" => "AE geomagnetic indice"
 								),
 								"abstract"=> array(
-										"fr" => "L'indice Dst mesure les perturbations géomagnétiques horizontales dans la zone équatoriale",
-										"en" => "Equatorial index horizontal component disturbances"
+										"fr" => "L'indice Dst mesure les perturbations géomagnétiques horizontales dans la zone auroral",
+										"en" => "Auroral index horizontal component disturbances"
 								),
 								"description" => array(
-										"fr" => "L'indice Dst permet de surveiller la signature magnétique axisymétrique des courants de la magnétosphère, y compris principalement le courant de l'anneau, les courants de queue et aussi le courant de la magnétopause Chapman-Ferraro",
-										"en" => "To monitor the axis-symmetric magnetic signature of magnetosphere currents, including mainly the ring current, the tail currents and also the magnetopause Chapman-Ferraro current."
+										"fr" => "L'indice Dst permet de surveiller la signature magnétique des électrojets auroraux orientés vers l'est et l'ouest dans l'hémisphère nord",
+										"en" => "AE indice helps to monitor the magnetic signature of the eastward and westward auroral electrojets in the Northern hemisphere."
 								),
 								"observedProperty" => array(
 										"name" => "Disturbance storm-time",
-										"shortName" => "DST INDEX",
+										"shortName" => "AE INDEX",
 										"type" => "time series",
-										"timeResolution" => array( "hour"),
+										"timeResolution" => array( "min"),
 										"unit" => "nT"
 								),
 								"domainOfInterest" => array( "GEOMAGNETISM"),
 								"keywords" => array(array(
 										"codeSpace" => "GMD",
-										"code" => "cdb4b514-75c4-4a1f-a4ad-1855fbd396ab")),
+										"code" => "31f77d6b-72f7-45e6-93be-8ac5fd5dc373")),
 								"pole"  => "formater",
 								"status"=> "public",
 								"formaterDataCenter" => array(
@@ -113,12 +118,12 @@ $geojson = array(
 										"end"   => "now"
 								),
 								"quicklook" => array( 
-										array( "url" => "https://api.poleterresolide.fr/images/isgi/reseau_Dst.jpg")
+										array( "url" => "https://api.poleterresolide.fr/images/isgi/reseau_AE.jpg")
 								),
 								"links" => array(
 										array(
 												"type" => "INFORMATION_LINK",
-												"url"  => "http://isgi.unistra.fr/indices_dst.php",
+												"url"  => "http://isgi.unistra.fr/indices_ae.php",
 												"description" => array(
 														"fr" => "page de l'indice",
 														"en" => "Index page"
@@ -131,8 +136,8 @@ $geojson = array(
 									
 								),
 							    "identifiers" => array(
-							    		"customId" => "Dst",
-							    		"DOI" => "10.17593/14515-74000"
+							    		"customId" => "AE",
+							    		"DOI" => "10.17593/15031-54800"
 							    ),
 								"distribution" => array(),
 							    "contacts" =>array(
@@ -155,7 +160,7 @@ $geojson = array(
 							    		)
 							    ),
 								"api" => array(
-										"url" => "https://api.poleterresolide.fr/cds/isgi/data/Dst",
+										"url" => "https://api.poleterresolide.fr/cds/isgi/data/AE",
 										"name"=> "ISGI"
 								)
 										
