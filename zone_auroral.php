@@ -74,7 +74,7 @@ $geojson = array(
 				),
 				"identifiers" => array(),
 				"observations" => array(
-						//DST
+						//AE
 						array(
 								"id" => null,
 								"metadataLastUpdate" => $now->format("Y-m-d"),
@@ -84,7 +84,7 @@ $geojson = array(
 										"en" => "AE geomagnetic indice"
 								),
 								"abstract"=> array(
-										"fr" => "L'indice Dst mesure les perturbations géomagnétiques horizontales dans la zone auroral",
+										"fr" => "L'indice AE mesure les perturbations géomagnétiques horizontales dans la zone auroral",
 										"en" => "Auroral index horizontal component disturbances"
 								),
 								"description" => array(
@@ -169,95 +169,95 @@ $geojson = array(
 								
 						),
 						//asigma
-						array(
-								"id" => null,
-								"metadataLastUpdate" => $now->format("YYYY-MM-DD"),
-								"dataLastUpdate" => "",
-								"title" => array(
-										"fr" => "Indices Asigma",
-										"en" => "Asigma index"
-								),
-								"abstract"=> array(
-										"fr" => "Fournir une caractérisation de l'activité géomagnétique locale dans 4 secteurs de longitudes et d'éventuelles divergences hémisphériques",
-										"en" => "To provide a characterization of local geomagnetic activity in 4 longitudes sectors and possible hemispheric discrepancies "
-								),
-								"description" => array(
-										"fr" => "Fournir une caractérisation de l'activité géomagnétique locale dans 4 secteurs de longitudes et d'éventuelles divergences hémisphériques",
-										"en" => "To provide a characterization of local geomagnetic activity in 4 longitudes sectors and possible hemispheric discrepancies "
-								),
-								"observedProperty" => array(
-										"name" => "asigma",
-										"shortName" => "asigma",
-										"type" => "time series",
-										"timeResolution" => array( "hour"),
-										"unit" => "nT"
-								),
-								"domainOfInterest" => array( "GEOMAGNETISM"),
-								"keywords" => array(array(
-										"codeSpace" => "GMD",
-										"code" => "ae35f430-6534-49de-8b4c-edfc1e98870a")),
-								"pole"  => "formater",
-								"status"=> "public",
-								"formaterDataCenter" => array(
-										"code" => "TS-ANO-4/SNO2",
-										"name" => "ISGI"
-								),
-								"formats"=> array(  array("name" => "IAGA2002")),
-								"processingLevel" => "L4",
-								"licence"=> array(
-										"code" =>	"CC BY-NC 4.0",
-										"url" =>	"https://creativecommons.org/licenses/by-nc/4.0/"
-								),
-								"temporalExtents" => array(
-										"start" => "1959-01-01",
-										"end"   => "now"
-								),
-								"quicklook" => array(
-										array( "url" => "https://api.poleterresolide.fr/images/isgi/reseau_am.jpg")
-								),
-								"links" => array(
-										array(
-												"type" => "INFORMATION_LINK",
-												"url"  => "http://isgi.unistra.fr/indices_asigma.php",
-												"description" => array(
-														"fr" => "page de l'indice",
-														"en" => "Index page"
-												)),
-										array(
-												"type" => "HTTP_DOWNLOAD_LINK",
-												"url" => "http://isgi.unistra.fr/oi_data_download.php"
-										)
+// 						array(
+// 								"id" => null,
+// 								"metadataLastUpdate" => $now->format("YYYY-MM-DD"),
+// 								"dataLastUpdate" => "",
+// 								"title" => array(
+// 										"fr" => "Indices Asigma",
+// 										"en" => "Asigma index"
+// 								),
+// 								"abstract"=> array(
+// 										"fr" => "Fournir une caractérisation de l'activité géomagnétique locale dans 4 secteurs de longitudes et d'éventuelles divergences hémisphériques",
+// 										"en" => "To provide a characterization of local geomagnetic activity in 4 longitudes sectors and possible hemispheric discrepancies "
+// 								),
+// 								"description" => array(
+// 										"fr" => "Fournir une caractérisation de l'activité géomagnétique locale dans 4 secteurs de longitudes et d'éventuelles divergences hémisphériques",
+// 										"en" => "To provide a characterization of local geomagnetic activity in 4 longitudes sectors and possible hemispheric discrepancies "
+// 								),
+// 								"observedProperty" => array(
+// 										"name" => "asigma",
+// 										"shortName" => "asigma",
+// 										"type" => "time series",
+// 										"timeResolution" => array( "hour"),
+// 										"unit" => "nT"
+// 								),
+// 								"domainOfInterest" => array( "GEOMAGNETISM"),
+// 								"keywords" => array(array(
+// 										"codeSpace" => "GMD",
+// 										"code" => "ae35f430-6534-49de-8b4c-edfc1e98870a")),
+// 								"pole"  => "formater",
+// 								"status"=> "public",
+// 								"formaterDataCenter" => array(
+// 										"code" => "TS-ANO-4/SNO2",
+// 										"name" => "ISGI"
+// 								),
+// 								"formats"=> array(  array("name" => "IAGA2002")),
+// 								"processingLevel" => "L4",
+// 								"licence"=> array(
+// 										"code" =>	"CC BY-NC 4.0",
+// 										"url" =>	"https://creativecommons.org/licenses/by-nc/4.0/"
+// 								),
+// 								"temporalExtents" => array(
+// 										"start" => "1959-01-01",
+// 										"end"   => "now"
+// 								),
+// 								"quicklook" => array(
+// 										array( "url" => "https://api.poleterresolide.fr/images/isgi/reseau_am.jpg")
+// 								),
+// 								"links" => array(
+// 										array(
+// 												"type" => "INFORMATION_LINK",
+// 												"url"  => "http://isgi.unistra.fr/indices_asigma.php",
+// 												"description" => array(
+// 														"fr" => "page de l'indice",
+// 														"en" => "Index page"
+// 												)),
+// 										array(
+// 												"type" => "HTTP_DOWNLOAD_LINK",
+// 												"url" => "http://isgi.unistra.fr/oi_data_download.php"
+// 										)
 												
-								),
-								"identifiers" => array(
-										"customId" => "asigma"
-										//"DOI" => "10.17593/14515-74000"
-								),
-								"distribution" => array(),
-								"contacts" =>array(
-										array(
-											"name" =>	"Aude Chambodut",
-											"email"=>	"aude.chambodut@unistra.fr",
-											"organisation"=>	"Ecole et Observatoire de la Terre",
-											"address" =>	array(
-													"streetAddress"=>	array(
-															"Service des observatoires magnétiques",
-															"5, rue René Descartes"
-													),
-													"postalCode" =>	67000,
-													"addressLocality" =>	"Strasbourg",
-													"addressCountry"=>	"FRANCE"
-											),
-											"telephone" =>	"33 (0)3 68 85 01 25",
-											"roles" =>	array( "pointOfContact"),
-											"orcId" =>	"0000-0001-8793-1315"
-										)
-								),
-								"api" => array(
-										"url" => "https://api.poleterresolide.fr/cds/isgi/data/asigma",
-										"name"=> "ISGI"
-								)
-						)
+// 								),
+// 								"identifiers" => array(
+// 										"customId" => "asigma"
+// 										//"DOI" => "10.17593/14515-74000"
+// 								),
+// 								"distribution" => array(),
+// 								"contacts" =>array(
+// 										array(
+// 											"name" =>	"Aude Chambodut",
+// 											"email"=>	"aude.chambodut@unistra.fr",
+// 											"organisation"=>	"Ecole et Observatoire de la Terre",
+// 											"address" =>	array(
+// 													"streetAddress"=>	array(
+// 															"Service des observatoires magnétiques",
+// 															"5, rue René Descartes"
+// 													),
+// 													"postalCode" =>	67000,
+// 													"addressLocality" =>	"Strasbourg",
+// 													"addressCountry"=>	"FRANCE"
+// 											),
+// 											"telephone" =>	"33 (0)3 68 85 01 25",
+// 											"roles" =>	array( "pointOfContact"),
+// 											"orcId" =>	"0000-0001-8793-1315"
+// 										)
+// 								),
+// 								"api" => array(
+// 										"url" => "https://api.poleterresolide.fr/cds/isgi/data/asigma",
+// 										"name"=> "ISGI"
+// 								)
+// 						)
 				)
 		)
 );

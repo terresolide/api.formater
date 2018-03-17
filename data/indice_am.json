@@ -1,0 +1,97 @@
+{
+    "id":null,
+    "metadataLastUpdate":"2018-03-17",
+    "dataLastUpdate":"",
+    "title":{
+        "fr":"Indice géomagnétique am",
+        "en":"am geomagnetic index"},
+    "abstract":{
+        "fr":"L'indice aa fournit une caractérisation de l'activité géomagnétique globale en utilisant un grand ensemble de stations représentant toutes les longitudes et les éventuelles discordances hémisphériques.",
+        "en":"The am index provides a characterization of global geomagnetic activity using a large set of stations representing all longitudes and possible hemispheric discrepancies."
+    },
+    "description":{
+        "fr":"L'indice aa fournit une caractérisation de l'activité géomagnétique globale en utilisant un grand ensemble de stations représentant toutes les longitudes et les éventuelles discordances hémisphériques.",
+        "en":"The am index provides a characterization of global geomagnetic activity using a large set of stations representing all longitudes and possible hemispheric discrepancies."
+    },
+    "observedProperty":{
+        "name":"am INDEX",
+        "shortName":"am",
+        "type":"time series",
+        "timeResolution":["hour","day"],
+        "unit":"nT"
+    },
+    "domainOfInterest":["GEOMAGNETISM"],
+    "keywords":[
+        {
+            "codeSpace":"GMD",
+            "code":"b3283844-d867-4c2f-9917-a72bc06fd9ef"
+        }
+    ],
+    "pole":"formater",
+    "status":"public",
+    "formaterDataCenter":{
+        "code":"TS-ANO-4\/SNO2",
+        "name":"ISGI"
+    },
+    "formats":[
+        {"name":"IAGA2002"}
+    ],
+    "processingLevel":"L4",
+    "licence":{
+        "code":"CC BY-NC 4.0",
+        "url":"https:\/\/creativecommons.org\/licenses\/by-nc\/4.0\/"
+    },
+    "temporalExtents":{
+        "start":"1868-01-01",
+        "end":"now"
+    },
+    "procedure":{
+        "method":{
+            "fr":"Dans chaque secteur de longitude, les K mis à l'échelle pour chaque station sont moyennés et le résultat est converti en amplitude en utilisant des amplitudes de classe moyenne pour L9 = 500 nT (L9 étant la limite inférieure K = 9, table de conversion K2aK).La moyenne pondérée des amplitudes ainsi obtenues donne les indices hémisphériques a (Nord) et (Sud), les facteurs de pondération expliquant les différences d'extension des secteurs de longitude dans chaque hémisphère.",
+            "en":"In each longitude sector, the K scaled for each station, are averaged, and the result is converted into amplitude using mid-class amplitudes for L9 = 500 nT (L9 being the K=9 lower limit; conversion table K2aK). The weighted average of the so-obtained amplitudes give rise to the hemispheric indices an (North) and as (South), the weighting factors accounting for the differences in the longitude sector extents in each hemisphere. The planetary index am is equal to (an + as) / 2. "
+        }
+    },
+    "quicklook":[
+        {
+        "url":"https:\/\/api.poleterresolide.fr\/images\/isgi\/reseau_am.jpg"
+        }
+    ],
+    "links":[
+        {
+            "type":"INFORMATION_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/indices_am.php",
+            "description":{
+                "fr":"page de l'indice",
+                "en":"Index page"
+            }
+        },
+        {
+            "type":"HTTP_DOWNLOAD_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/data_download.php"
+        }
+    ],
+    "identifiers":{
+            "customId": "am"
+     },
+      "distribution":[],
+    "contacts":[
+        {
+            "name":"Aude Chambodut",
+            "email":"aude.chambodut@unistra.fr",
+            "organisation":"Ecole et Observatoire de la Terre",
+            "address":{
+            "streetAddress":["Service des observatoires magn\u00e9tiques","5, rue Ren\u00e9 Descartes"],
+            "postalCode":67000,
+            "addressLocality":"Strasbourg",
+            "addressCountry":"FRANCE"},
+            "telephone":"33 (0)3 68 85 01 25",
+            "roles":["pointOfContact"],
+            "orcId":"0000-0001-8793-1315"
+        }
+    ],
+    "api":
+    {
+        "url":"https:\/\/api.poleterresolide.fr\/cds\/isgi\/data\/am",
+        "name":"ISGI"
+    }
+}

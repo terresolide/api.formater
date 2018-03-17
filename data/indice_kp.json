@@ -1,0 +1,97 @@
+{
+    "id":null,
+    "metadataLastUpdate":"2018-03-17",
+    "dataLastUpdate":"",
+    "title":{
+        "fr":"Indice géomagnétique Kp",
+        "en":"Kp geomagnetic index"},
+    "abstract":{
+        "fr":"L'indice Kp caractérise l'intensité de l'activité géomagnétique à l'échelle planétaire (mais en raison du contexte historique au moment de sa création, le réseau Kp est fortement pondéré vers l'Europe et l'Amérique du Nord)",
+        "en":"The Kp index characterizes the intensity of geomagnetic activity on a planetary scale (however because of the historical context at the time of its creation, the Kp network is heavily weighted towards Europe and Northern America)"
+    },
+    "description":{
+        "fr":"L'indice Kp caractérise l'intensité de l'activité géomagnétique à l'échelle planétaire (mais en raison du contexte historique au moment de sa création, le réseau Kp est fortement pondéré vers l'Europe et l'Amérique du Nord)",
+        "en":"The Kp index characterizes the intensity of geomagnetic activity on a planetary scale (however because of the historical context at the time of its creation, the Kp network is heavily weighted towards Europe and Northern America)"
+     },
+    "observedProperty":{
+        "name":"Kp INDEX",
+        "shortName":"Kp",
+        "type":"time series",
+        "timeResolution":["hour"],
+        "unit":"quasi-logarithmic scale as a third of K units (28 values):0o, 0+, 1-, 1o, 1+, 2-, ... , 8+, 9-, 9o."
+    },
+    "domainOfInterest":["GEOMAGNETISM"],
+    "keywords":[
+        {
+            "codeSpace":"GMD",
+            "code":"40386eea-beb0-4b83-906b-75c6bfa24b73"
+        }
+    ],
+    "pole":"formater",
+    "status":"public",
+    "formaterDataCenter":{
+        "code":"TS-ANO-4\/SNO2",
+        "name":"ISGI"
+    },
+    "formats":[
+        {"name":"IAGA2002"}
+    ],
+    "processingLevel":"L4",
+    "licence":{
+        "code":"CC BY-NC 4.0",
+        "url":"https:\/\/creativecommons.org\/licenses\/by-nc\/4.0\/"
+    },
+    "temporalExtents":{
+        "start":"1932-01-01",
+        "end":"now"
+    },
+    "procedure":{
+        "method":{
+            "fr":"Kp est la moyenne arithmétique des indices K normalisés de 3 heures pour les observatoires de 13 Kp.<br />La standardisation est réalisée à l'aide de tableaux de normalisation pour chaque observatoire définis par Bartels (1949). Ils visent à éliminer les variations UT et saisonnières des perturbations géomagnétiques.",
+            "en":"Kp is the arithmetic mean of the 3-hour standardized K-indices for the 13 Kp-observatories.<br />The standardization is achieved using standardization tables for each observatory that were defined by Bartels (1949). They aim at removing the UT and seasonal variations in the geomagnetic disturbances."
+        }
+    },
+    "quicklook":[
+        {
+        "url":"https:\/\/api.poleterresolide.fr\/images\/isgi\/reseau_Kp.jpg"
+        }
+    ],
+    "links":[
+        {
+            "type":"INFORMATION_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/indices_kp.php",
+            "description":{
+                "fr":"page de l'indice",
+                "en":"Index page"
+            }
+        },
+        {
+            "type":"HTTP_DOWNLOAD_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/data_download.php"
+        }
+    ],
+     "identifiers":{
+            "customId": "Kp"
+     },
+      "distribution":[],
+    "contacts":[
+        {
+            "name":"Aude Chambodut",
+            "email":"aude.chambodut@unistra.fr",
+            "organisation":"Ecole et Observatoire de la Terre",
+            "address":{
+            "streetAddress":["Service des observatoires magn\u00e9tiques","5, rue Ren\u00e9 Descartes"],
+            "postalCode":67000,
+            "addressLocality":"Strasbourg",
+            "addressCountry":"FRANCE"},
+            "telephone":"33 (0)3 68 85 01 25",
+            "roles":["pointOfContact"],
+            "orcId":"0000-0001-8793-1315"
+        }
+    ],
+    "api":
+    {
+        "url":"https:\/\/api.poleterresolide.fr\/cds\/isgi\/data\/Kp",
+        "name":"ISGI"
+    }
+}

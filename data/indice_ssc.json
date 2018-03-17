@@ -1,0 +1,94 @@
+{
+    "id":null,
+    "metadataLastUpdate":"2018-03-17",
+    "dataLastUpdate":"",
+    "title":{
+        "fr":"Evénements magnétiques SC",
+        "en":"SC magnetic events"},
+    "abstract":{
+        "fr":"SC fournit une liste de référence des événements liés à la compression de la magnétosphère causée par une forte augmentation de la pression dynamique du vent solaire.",
+        "en":"SC provides reference list of events related to magnetosphere compression caused by a sharp increase in the solar wind dynamic pressure."
+    },
+    "description":{
+        "fr":"SC fournit une liste de référence des événements liés à la compression de la magnétosphère causée par une forte augmentation de la pression dynamique du vent solaire.",
+        "en":"SC provides reference list of events related to magnetosphere compression caused by a sharp increase in the solar wind dynamic pressure."
+    },
+    "observedProperty":{
+        "name":"Sudden Commencements",
+        "shortName":"SC"
+    },
+    "domainOfInterest":["GEOMAGNETISM"],
+    "keywords":[
+        {
+            "codeSpace":"GMD",
+            "code":"4b7decec-e378-4824-aecf-9fe509392efd"
+        }
+    ],
+    "pole":"formater",
+    "status":"public",
+    "formaterDataCenter":{
+        "code":"TS-ANO-4\/SNO2",
+        "name":"ISGI"
+    },
+    "formats":[
+        {"name":"IAGA2002"}
+    ],
+    "processingLevel":"L4",
+    "licence":{
+        "code":"CC BY-NC 4.0",
+        "url":"https:\/\/creativecommons.org\/licenses\/by-nc\/4.0\/"
+    },
+    "temporalExtents":{
+        "start":"1869-01-01",
+        "end":"now"
+    },
+    "procedure":{
+        "method":{
+            "fr":"Un SC est fondamentalement une forte augmentation inattendue de la composante magnétique Nord (X) d'un observatoire considéré. Habituellement, mais pas toujours, un SC est le précurseur d'une tempête géomagnétique (définie, par exemple, par un minimum de l'indice Dst). Il est à noter que l'accent est davantage mis sur le changement de rythme dans l'activité magnétique que sur l'amplitude de l'éventuelle tempête magnétique.Les listes préliminaires de SC sont établies sur la base des rapports établis par les observatoires par inspection morphologique de leurs magnétogrammes.Les listes définitives de SC sont établies sur la base d'une inspection visuelle des magnétogrammes de 5 observatoires sélectionnés à basse latitude.",
+            "en":"A SC is basically an unexpected sharp increase in the Northern (X) magnetic component of a considered observatory. Usually, but not always a SC is the precursor to a geomagnetic storm (defined by, for example, a minimum of the Dst index). It has to be noted that more emphasis is put on the change of rhythm in the magnetic activity than on the amplitude of the possible succeeding magnetic storm.<br />Preliminary lists of SC are compiled on the basis of the reports made by observatories by morphological inspection of their magnetograms.<br />Definitive lists of SC are made on the basis of visual inspection of magnetograms from 5 selected low latitude observatories. "
+        }
+    },
+    "quicklook":[
+        {
+        "url":"https:\/\/api.poleterresolide.fr\/images\/isgi\/reseau_SC.jpg"
+        }
+    ],
+    "links":[
+        {
+            "type":"INFORMATION_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/indices_sc.php",
+            "description":{
+                "fr":"page de l'indice",
+                "en":"Index page"
+            }
+        },
+        {
+            "type":"HTTP_DOWNLOAD_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/data_download.php"
+        }
+    ],
+    "identifiers":{
+            "customId": "SC"
+     },
+      "distribution":[],
+    "contacts":[
+        {
+            "name":"Aude Chambodut",
+            "email":"aude.chambodut@unistra.fr",
+            "organisation":"Ecole et Observatoire de la Terre",
+            "address":{
+            "streetAddress":["Service des observatoires magn\u00e9tiques","5, rue Ren\u00e9 Descartes"],
+            "postalCode":67000,
+            "addressLocality":"Strasbourg",
+            "addressCountry":"FRANCE"},
+            "telephone":"33 (0)3 68 85 01 25",
+            "roles":["pointOfContact"],
+            "orcId":"0000-0001-8793-1315"
+        }
+    ],
+    "api":
+    {
+        "url":"https:\/\/api.poleterresolide.fr\/cds\/isgi\/data\/SC",
+        "name":"ISGI"
+    }
+}

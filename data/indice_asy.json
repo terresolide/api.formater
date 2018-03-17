@@ -1,0 +1,91 @@
+{
+    "id":null,
+    "metadataLastUpdate":"2018-03-17",
+    "dataLastUpdate":"",
+    "title":{
+        "fr":"Indice géomagnétique ASY/SYM",
+        "en":"ASY/SYM geomagnetic index"},
+    "abstract":{
+        "fr":"ASY/SYM décrivent les perturbations géomagnétiques aux latitudes moyennes en termes de perturbations longitudinales asymétriques (ASY) et symétriques (SYM) pour les composantes H et D respectivement parallèles et perpendiculaires à l'axe dipolaire.SYM-H est essentiellement le même que l'index Dst avec une résolution temporelle différente.",
+        "en":"ASY/SYM describe the geomagnetic disturbances at mid-latitudes in terms of longitudinally asymmetric (ASY) and symmetric (SYM) disturbances for both H and D components respectively parallel and perpendicular to the dipole axis. SYM-H is essentially the same as the Dst index with a different time resolution."
+   },
+    "description":{
+        "fr":"ASY/SYM décrivent les perturbations géomagnétiques aux latitudes moyennes en termes de perturbations longitudinales asymétriques (ASY) et symétriques (SYM) pour les composantes H et D respectivement parallèles et perpendiculaires à l'axe dipolaire.SYM-H est essentiellement le même que l'index Dst avec une résolution temporelle différente.",
+        "en":"ASY/SYM describe the geomagnetic disturbances at mid-latitudes in terms of longitudinally asymmetric (ASY) and symmetric (SYM) disturbances for both H and D components respectively parallel and perpendicular to the dipole axis. SYM-H is essentially the same as the Dst index with a different time resolution."
+     },
+    "observedProperty":{
+        "name":"ASY-D, ASY-H, SYM-D, SYM-H",
+        "shortName":"ASY-D, ASY-H, SYM-D, SYM-H",
+        "type":"time series",
+        "timeResolution":["min"],
+        "unit":"nT"
+    },
+    "domainOfInterest":["GEOMAGNETISM"],
+    "keywords":[
+        {
+            "codeSpace":"GMD",
+            "code":"ae35f430-6534-49de-8b4c-edfc1e98870a"
+        }
+    ],
+    "pole":"formater",
+    "status":"public",
+    "formaterDataCenter":{
+        "code":"TS-ANO-4\/SNO2",
+        "name":"ISGI"
+    },
+    "formats":[
+    ],
+    "processingLevel":"L4",
+    "licence":{
+        "code":"CC BY-NC 4.0",
+        "url":"https:\/\/creativecommons.org\/licenses\/by-nc\/4.0\/"
+    },
+    "temporalExtents":{
+        "start":"1981-01-01",
+        "end":"now"
+    },
+    "procedure":{
+        "method":{
+            "fr":"Les indices ASY / SYM sont dérivés d'une procédure en quatre étapes: <ol> <li> Soustraction du champ principal géomagnétique et du champ de variation solaire calme quotidienne pour obtenir la composante de champ de perturbation. </li> <li> Transformation de coordonnées en un système de coordonnées dipolaires. </li> <li> Calcul de la composante longitudinalement symétrique (ie six stations moyennes) et de la composante asymétrique (ie champ de perturbation moins la composante symétrique). </li> <li> Dérivation des indices asymétriques (c'est-à-dire la plage entre les champs asymétriques maximum et minimum). </li> </ol>",
+            "en":"The ASY/SYM indices are derived in a four-steps procedure:<ol><li>Subtraction of the geomagnetic main field and the solar quiet daily variation field to obtain the disturbance field component.</li><li>Coordinate transformation to a dipole coordinate system.</li><li>Calculation of the longitudinally symmetric component (i.e. six station average) and the asymmetric component (i.e. disturbance field minus the symmetric component).</li><li>Derivation of the asymmetric indices (i.e. the range between the maximum and the minimum asymmetric fields).</li></ol>"
+   }
+    },
+    "quicklook":[
+        {
+        "url":"https:\/\/api.poleterresolide.fr\/images\/isgi\/reseau_ASY.jpg"
+        }
+    ],
+    "links":[
+        {
+            "type":"INFORMATION_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/indices_asy.php",
+            "description":{
+                "fr":"page de l'indice",
+                "en":"Index page"
+            }
+        },
+        {
+            "type":"HTTP_DOWNLOAD_LINK",
+            "url":"http://isgi.unistra.fr/oi_data_download.php"
+        }
+    ],
+     "identifiers":{
+            "customId": "ASY"
+     },
+      "distribution":[],
+    "contacts":[
+        {
+            "name":"Aude Chambodut",
+            "email":"aude.chambodut@unistra.fr",
+            "organisation":"Ecole et Observatoire de la Terre",
+            "address":{
+            "streetAddress":["Service des observatoires magn\u00e9tiques","5, rue Ren\u00e9 Descartes"],
+            "postalCode":67000,
+            "addressLocality":"Strasbourg",
+            "addressCountry":"FRANCE"},
+            "telephone":"33 (0)3 68 85 01 25",
+            "roles":["pointOfContact"],
+            "orcId":"0000-0001-8793-1315"
+        }
+    ]
+}

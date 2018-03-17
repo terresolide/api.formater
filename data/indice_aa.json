@@ -1,0 +1,92 @@
+{
+    "id":null,
+    "metadataLastUpdate":"2018-03-17",
+    "dataLastUpdate":"",
+    "title":{
+        "fr":"Indice géomagnétique aa",
+        "en":"aa geomagnetic index"},
+    "abstract":{
+        "fr":"L'indice aa mesure les perturbations géomagnétiques horizontales dans la zone \u00e9quatoriale",
+        "en":"Aa index measure the equatorial index horizontal component disturbances"},"description":{"fr":"L'indice aa permet de mesurer l'amplitude de l'activit\u00e9 g\u00e9omagn\u00e9tique globale pendant des intervalles de trois heures normalis\u00e9s \u00e0 une latitude g\u00e9omagn\u00e9tique de \u00b1 50 \u00b0. aa a \u00e9t\u00e9 introduit pour surveiller l'activit\u00e9 g\u00e9omagn\u00e9tique sur la p\u00e9riode de temps la plus longue possible.","en":"The aa purpose is to measure the amplitude of global geomagnetic activity during 3-hour intervals normalized to geomagnetic latitude \u00b150\u00b0. aa was introduced to monitor geomagnetic activity over the longest possible time period."},
+    "observedProperty":{
+        "name":"aa INDEX",
+        "shortName":"aa",
+        "type":"time series",
+        "timeResolution":["hour","day"],
+        "unit":"nT"
+    },
+    "domainOfInterest":["GEOMAGNETISM"],
+    "keywords":[
+        {
+            "codeSpace":"GMD",
+            "code":"5fd5ccc2-5edb-4823-940d-03a290a5c5fc"
+        }
+    ],
+    "pole":"formater",
+    "status":"public",
+    "formaterDataCenter":{
+        "code":"TS-ANO-4\/SNO2",
+        "name":"ISGI"
+    },
+    "formats":[
+        {"name":"IAGA2002"}
+    ],
+    "processingLevel":"L4",
+    "licence":{
+        "code":"CC BY-NC 4.0",
+        "url":"https:\/\/creativecommons.org\/licenses\/by-nc\/4.0\/"
+    },
+    "temporalExtents":{
+        "start":"1868-01-01",
+        "end":"now"
+    },
+    "procedure":{
+        "method":{
+            "fr":"aa est d\u00e9riv\u00e9 des indices K mesur\u00e9s sur 2 observatoires antipodaux. Les indices K sont converties en amplitudes en utilisant des amplitudes de classe moyenne (K2aK) puis moyenn\u00e9es avec des facteurs de pond\u00e9ration qui tiennent compte de l\u00e9g\u00e8res variations d'intensit\u00e9 des perturbations g\u00e9omagn\u00e9tiques entre aa-observatoires du Nord et du Sud successifs.",
+            "en":"aa is derived from the K indices measured at two antipodal observatories. The K indices are converted into amplitudes using mid-class amplitudes (K2aK) then averaged with weighting factors that account for slight changes in geomagnetic disturbance intensities between successive Northern and Southern aa-observatories."
+        }
+    },
+    "quicklook":[
+        {
+        "url":"https:\/\/api.poleterresolide.fr\/images\/isgi\/reseau_aa.jpg"
+        }
+    ],
+    "links":[
+        {
+            "type":"INFORMATION_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/indices_aa.php",
+            "description":{
+                "fr":"page de l'indice",
+                "en":"Index page"
+            }
+        },
+        {
+            "type":"HTTP_DOWNLOAD_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/data_download.php"
+        }
+    ],
+    "identifiers":{
+            "customId": "aa"
+     },
+    "distribution":[],
+    "contacts":[
+        {
+            "name":"Aude Chambodut",
+            "email":"aude.chambodut@unistra.fr",
+            "organisation":"Ecole et Observatoire de la Terre",
+            "address":{
+            "streetAddress":["Service des observatoires magn\u00e9tiques","5, rue Ren\u00e9 Descartes"],
+            "postalCode":67000,
+            "addressLocality":"Strasbourg",
+            "addressCountry":"FRANCE"},
+            "telephone":"33 (0)3 68 85 01 25",
+            "roles":["pointOfContact"],
+            "orcId":"0000-0001-8793-1315"
+        }
+    ],
+    "api":
+    {
+        "url":"https:\/\/api.poleterresolide.fr\/cds\/isgi\/data\/aa",
+        "name":"ISGI"
+    }
+}

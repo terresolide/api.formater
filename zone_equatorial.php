@@ -21,6 +21,8 @@ array_push($coordinates2, [ $coordinates2[0][0]+360, $coordinates2[0][1]]);
 $coordinates = array_merge($coordinates2, $coordinates1);
 array_push( $coordinates, $coordinates2[0]);
 $now = new DateTime();
+$content = file_get_contents(__DIR__."/data/indice_asy.json");
+$indice_asy = json_decode( $content);
 $geojson = array(
 		"type" => "Feature",
 		"geometry" => array(
@@ -141,7 +143,8 @@ $geojson = array(
 
 								
 						),
-						//asigma
+						//asy/sym
+						$indice_asy
 // 						array(
 // 								"id" => null,
 // 								"metadataLastUpdate" => $now->format("YYYY-MM-DD"),
