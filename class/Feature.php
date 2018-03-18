@@ -159,20 +159,26 @@ Class FeatureSearcher extends Searcher{
         	case "MultiPolygon":
         		
         		$bbox = $obs->properties->bbox;
+        		
         		$i = 0;
         		$find = false;
         		while( !$find && $i < count($bbox)){
-	        		if( $bbox[$i]->south < $this->north && $bbox[$i]->north > $this->south
-	        				&&  $bbox[$i]->east < $this->west && $bbox[$i]->west > $this->east){
-	        			
-	        			$find = true;
-	        		}
+        		   $find = $this->cut_bbox( $bbox[$i]);
 	        		$i++;
 	        		
         		}
         		return $find;
         		break;
         }
+    }
+    private function cut_bbox( $bbox){
+        if( $bbox->south > $this->north || $bbox->north < $this->south){
+           return false;
+        }
+        if( $bbox->east > $this->west || $bbox->west < $this->east){
+            return false;
+        }
+        return true;
     }
     private function parse_bbox( $str_bbox ){
         $values = explode(",", $str_bbox);
@@ -190,11 +196,7 @@ Class FeatureSearcher extends Searcher{
             foreach ( $result as $key => $value){
                 $this->{ $key } = $value;
             }
-            if( $this->west > $this->east){
-                $this->east = $this->east + 360;
-                $this->add = 360;
-                
-            }
+            
         }else{
             $this->error = "INVALID_BBOX";
         }
