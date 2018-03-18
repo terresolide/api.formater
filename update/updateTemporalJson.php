@@ -1,15 +1,16 @@
 <?php
-/** Search last date of modification files*/
-/** change source file if needed*/
-// ftp connexion
-const FTP_SERVER = "ftp.bcmt.fr";
-const FTP_USER = "bcmt_public";
-const FTP_PWD = "bcmt";
+/**
+ * MISE A JOUR BROUILLON DES DATES DES DONNEES
+ * MET LE RESULTAT DANS LE FICHIER geojson_bcmt_test2.json
+ */
 
-$infile =  "data/geojson_bcmt_ft_test.json";
-$outputfile = "data/geojson_bcmt_ft_test2.json";
-$conn_id = ftp_connect(FTP_SERVER) or die('{ "error": "NO_FTP_CONNEXION"}');
-if(  ! @ftp_login( $conn_id, FTP_USER, FTP_PWD) ){
+include "../config.php";
+// ftp connexion
+
+$infile =  DATA_FILE_BCMT;
+$outputfile = DATA_DIR."/geojson_bcmt_ft_test2.json";
+$conn_id = ftp_connect(BCMT_FTP_SERVER) or die('{ "error": "NO_FTP_CONNEXION"}');
+if(  ! @ftp_login( $conn_id, BCMT_FTP_USER, BCMT_FTP_PWD) ){
     echo "no connexion";
     exit;
 }
@@ -110,6 +111,7 @@ function search_infos(&$obs, $code, $dataType){
             $endDate = $matches[1]."-".$matches[2]."-".$matches[3];
            
         }
+        $obs->dataLastUpdate = $endDate;
         $now = new DateTime();
         if( $dataType == "VARIATION"){
             
@@ -125,6 +127,7 @@ function search_infos(&$obs, $code, $dataType){
        
         $obs->api->parameters = array( "type" => $dataType);
         $obs->temporalExtents->end = $endDate;
+        
         return true;
         
     }else{
@@ -183,7 +186,15 @@ $code = $lieu->properties->identifiers->customId;
     }
     $lieu->properties->observations = $obs2;
     $lieu->properties->temporalExtents = $temporal;
+    // si la date de fin du lieu est now, on met tous les observations avec now en date end
+    if( $lieu->properties->temporalExtents->end == "now"){
+        foreach($lieu->properties->observations as $obs){
+            $obs->temporalExtents->end = "now";
+        }
+    }
 }
+
+
 ftp_close($conn_id);
     file_put_contents($outputfile,json_encode( $result, JSON_NUMERIC_CHECK) );
    header("Content-Type: application/json");

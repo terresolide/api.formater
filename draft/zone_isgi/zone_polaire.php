@@ -1,9 +1,9 @@
 <?php
 
 // ZONE POLAIRE NORD
-
+include "../../config.php";
 //$file1 = __DIR__."/data/latitude-geomagnetique_58N.json";
-$file2 = __DIR__."/data/latitude-geomagnetique_74N.json";
+$file2 = DIR_LATITUDES."/latitude-geomagnetique_74N.json";
 // $content = file_get_contents( $file1);
 // $result1 = json_decode( $content);
 
@@ -24,7 +24,7 @@ $polygon1 = $coordinates;
 
 // ZONE AURORALE SUD
 //$file1 = __DIR__."/data/latitude-geomagnetique_58S.json";
-$file2 = __DIR__."/data/latitude-geomagnetique_74S.json";
+$file2 = DIR_LATITUDES."/latitude-geomagnetique_74S.json";
 // $content = file_get_contents( $file1);
 // $result1 = json_decode( $content);
 

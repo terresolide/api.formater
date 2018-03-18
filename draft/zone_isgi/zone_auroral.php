@@ -1,9 +1,10 @@
 <?php
 
 // ZONE AURORALE NORD
+include "../../config.php";
 
-$file1 = __DIR__."/data/latitude-geomagnetique_58N.json";
-$file2 = __DIR__."/data/latitude-geomagnetique_74N.json";
+$file1 = DIR_LATITUDES."/latitude-geomagnetique_58N.json";
+$file2 = DIR_LATITUDES."/latitude-geomagnetique_74N.json";
 $content = file_get_contents( $file1);
 $result1 = json_decode( $content);
 
@@ -23,8 +24,8 @@ $polygon1 = $coordinates;
 //var_dump( $coordinates);
 
 // ZONE AURORALE SUD
-$file1 = __DIR__."/data/latitude-geomagnetique_58S.json";
-$file2 = __DIR__."/data/latitude-geomagnetique_74S.json";
+$file1 = DIR_LATITUDES."/latitude-geomagnetique_58S.json";
+$file2 = DIR_LATITUDES."/latitude-geomagnetique_74S.json";
 $content = file_get_contents( $file1);
 $result1 = json_decode( $content);
 
@@ -56,7 +57,7 @@ $geojson = array(
 		"properties"=> array(
 				"style"=> array(
 						"fill" => "#c0e6ff",
-						"stroke" => "#1ab2ff",
+						"stroke" => "#c0e6ff",
 						"stroke-width"=> "1",
 						"fill-opacity" => "0.3"
 				),
@@ -69,8 +70,8 @@ $geojson = array(
 			    		array( "south" => -90, "north" => -44.45, "east" => -180, "west"=>180),
 			    ),
 				"description" => array(
-						"fr" => "Il s'agit de la zone comprise entre les latitudes magnétiques -30° et 30°. Année 2010",
-						"en" => "geomagnetic latitude between -30° et 30°"
+						"fr" => "Il s'agit de la zone de latitudes magnétiques autour de 69°. Année 2010",
+						"en" => "Geomagnetic latitude around 69° ( Year 2010)"
 				),
 				"identifiers" => array(),
 				"observations" => array(

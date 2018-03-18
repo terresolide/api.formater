@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * lit les fichier XX_CGM et créé un fichier json
+ * @author elisabeth
+ *
+ */
+include "../../config.php";
 class XX_CGM{
     public $dir = null;
     public $file = null;
@@ -62,8 +67,8 @@ class XX_CGM{
     	$this->options["name"]= $file;
     	$this->options["filename"]= $file;
     	$this->options = array_merge( $this->options, $options);
-    	$this->dir = __DIR__ ."/latitudesGeomagnetiques/";
-    	$this->file = $this->dir.$file;
+    	$this->dir = DIR_LATITUDES_XX_CGM;
+    	$this->file = $this->dir.'/'.$file;
     	
     	$this->read( );
     }

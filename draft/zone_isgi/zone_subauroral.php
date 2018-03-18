@@ -1,9 +1,9 @@
 <?php
 
 // ZONE SUBAURORALE NORD
-
-$file1 = __DIR__."/data/latitude-geomagnetique_29N.json";
-$file2 = __DIR__."/data/latitude-geomagnetique_58N.json";
+include "../../config.php";
+$file1 = DIR_LATITUDES."/latitude-geomagnetique_29N.json";
+$file2 = DIR_LATITUDES."/latitude-geomagnetique_58N.json";
 $content = file_get_contents( $file1);
 $result1 = json_decode( $content);
 
@@ -23,8 +23,8 @@ $polygon1 = $coordinates;
 //var_dump( $coordinates);
 
 // ZONE SUBAURORALE SUD
-$file1 = __DIR__."/data/latitude-geomagnetique_29S.json";
-$file2 = __DIR__."/data/latitude-geomagnetique_58S.json";
+$file1 = DIR_LATITUDES."/latitude-geomagnetique_29S.json";
+$file2 = DIR_LATITUDES."/latitude-geomagnetique_58S.json";
 $content = file_get_contents( $file1);
 $result1 = json_decode( $content);
 
@@ -43,11 +43,11 @@ array_push( $coordinates, $coordinates2[0]);
 
 $polygon2 = $coordinates;
 $now = new DateTime();
-$content = file_get_contents(__DIR__."/data/indice_aa.json");
+$content = file_get_contents(DIR_ISGI_INDICES."/indice_aa.json");
 $indice_aa = json_decode( $content);
-$content = file_get_contents(__DIR__."/data/indice_am.json");
+$content = file_get_contents(DIR_ISGI_INDICES."/indice_am.json");
 $indice_am = json_decode( $content);
-$content = file_get_contents(__DIR__."/data/indice_kp.json");
+$content = file_get_contents(DIR_ISGI_INDICES."/indice_kp.json");
 $indice_kp = json_decode( $content);
 $geojson = array(
 		"type" => "Feature",
@@ -58,7 +58,7 @@ $geojson = array(
 		"properties"=> array(
 				"style"=> array(
 						"fill" => "#98d7ff",
-						"stroke" => "#1ab2ff",
+						"stroke" => "#98d7ff",
 						"stroke-width"=> "1",
 						"fill-opacity" => "0.3"
 				),
@@ -71,8 +71,8 @@ $geojson = array(
 			    		array( "south" => -72.9, "north" => -18.13, "east" => -180, "west"=>180),
 			    ),
 				"description" => array(
-						"fr" => "Il s'agit de la zone comprise entre les latitudes magnétiques -30° et 30°. Année 2010",
-						"en" => "geomagnetic latitude between -30° et 30°"
+						"fr" => "Il s'agit de la zone comprise entre les latitudes magnétiques 29° et 58°.(Les données sont celles de l'Année 2010)",
+						"en" => "geomagnetic latitude between 29° and 58° (Data for year 2010)"
 				),
 				"identifiers" => array(),
 				"observations" => array(

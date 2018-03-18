@@ -1,17 +1,20 @@
 <?php
-$file = __DIR__."/data/geojson_isgi_auroral.json";
+/** creation du fichier des zones de latitudes magnétiques **/
+
+include "../../config.php";
+$file = DIR_ISGI_ZONES."/geojson_isgi_auroral.json";
 $content = file_get_contents( $file);
 $auroral = json_decode( $content);
 
-$file = __DIR__."/data/geojson_isgi_equatorial.json";
+$file = DIR_ISGI_ZONES."/geojson_isgi_equatorial.json";
 $content = file_get_contents( $file);
 $equatorial = json_decode( $content);
 
-$file = __DIR__."/data/geojson_isgi_polaire.json";
+$file = DIR_ISGI_ZONES."/geojson_isgi_polaire.json";
 $content = file_get_contents( $file);
 $polaire = json_decode( $content);
 
-$file = __DIR__."/data/geojson_isgi_subauroral.json";
+$file = DIR_ISGI_ZONES."/geojson_isgi_subauroral.json";
 $content = file_get_contents( $file);
 $subauroral = json_decode( $content);
 

@@ -1,0 +1,89 @@
+{
+    "id":null,
+    "metadataLastUpdate":"2018-03-17",
+    "dataLastUpdate":"",
+    "title":{
+        "fr":"CKdays",
+        "en":"Solar Flare Effects (SFE)"},
+    "abstract":{
+        "fr":"SFE fournit la liste de référence de la perturbation soudaine des éléments géomagnétiques qui suit l'éruption d'une éruption solaire.",
+        "en":"SFE provides the reference list of sudden perturbation in geomagnetic elements that follows the eruption of a solar flare. "
+     },
+    "description":{
+        "fr":"SFE fournit la liste de référence de la perturbation soudaine des éléments géomagnétiques qui suit l'éruption d'une éruption solaire.",
+        "en":"SFE provides the reference list of sudden perturbation in geomagnetic elements that follows the eruption of a solar flare. "
+    },
+    "observedProperty":{
+        "name":"Solar Flare Effects",
+        "shortName":"SFE"
+    },
+    "domainOfInterest":["GEOMAGNETISM"],
+    "keywords":[
+        {
+            "codeSpace":"GMD",
+            "code":"4b7decec-e378-4824-aecf-9fe509392efd"
+        }
+    ],
+    "pole":"formater",
+    "status":"public",
+    "formaterDataCenter":{
+        "code":"TS-ANO-4\/SNO2",
+        "name":"ISGI"
+    },
+    "formats":[
+        {"name":"IAGA2002"}
+    ],
+    "processingLevel":"L4",
+    "licence":{
+        "code":"CC BY-NC 4.0",
+        "url":"https:\/\/creativecommons.org\/licenses\/by-nc\/4.0\/"
+    },
+    "temporalExtents":{
+        "start":"1986-01-01",
+        "end":"now"
+    },
+    "procedure":{
+        "method":{
+            "fr":"Les SFE sont généralement perçus comme la signature sur les magnétogrammes des stations à basse et moyenne latitudes d'une augmentation de l'intensité du système à courant silencieux. Les événements sont caractérisés par l'analyse visuelle des conditions sur le Soleil. Quand une éruption solaire pointe vers la Terre, des événements SFE se produisent.Les listes préliminaires des événements SFE sont compilées sur la base de rapports établis par les observatoires par inspection morphologique de leurs magnétogrammes.Les listes définitives d'événements SFE sont basées sur des rapports d'observatoires en réponse à une liste de contrôle envoyée par Observatori de l'Ebre, Espagne.",
+            "en":"SFE are usually noticed as the signature on magnetograms at low and mid-latitude stations of an increase in the intensity of the Solar-quiet current system. The events are characterised by visual analysis of conditions on the Sun. When a solar flare points towards the Earth, SFE events occur.<br />Preliminary lists of SFE events are compiled on the basis of reports made by observatories by morphological inspection of their magnetograms.<br />Definitive lists of SFE events are based on reports from observatories in response to a checking list sent by Observatori de l'Ebre, Spain.  "
+        }
+    },
+    "links":[
+        {
+            "type":"INFORMATION_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/indices_sfe.php",
+            "description":{
+                "fr":"page de l'indice",
+                "en":"Index page"
+            }
+        },
+        {
+            "type":"HTTP_DOWNLOAD_LINK",
+            "url":"http:\/\/isgi.unistra.fr\/data_download.php"
+        }
+    ],
+    "identifiers":{
+            "customId": "SC"
+     },
+      "distribution":[],
+    "contacts":[
+        {
+            "name":"Aude Chambodut",
+            "email":"aude.chambodut@unistra.fr",
+            "organisation":"Ecole et Observatoire de la Terre",
+            "address":{
+            "streetAddress":["Service des observatoires magn\u00e9tiques","5, rue Ren\u00e9 Descartes"],
+            "postalCode":67000,
+            "addressLocality":"Strasbourg",
+            "addressCountry":"FRANCE"},
+            "telephone":"33 (0)3 68 85 01 25",
+            "roles":["pointOfContact"],
+            "orcId":"0000-0001-8793-1315"
+        }
+    ],
+    "api":
+    {
+        "url":"https:\/\/api.poleterresolide.fr\/cds\/isgi\/data\/SFE",
+        "name":"ISGI"
+    }
+}

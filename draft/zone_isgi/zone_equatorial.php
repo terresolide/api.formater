@@ -1,7 +1,7 @@
 <?php
 
 // ZONE EQUATORIALE
-
+include "../../config.php";
 $file1 = __DIR__."/data/latitude-geomagnetique_30N.json";
 $file2 = __DIR__."/data/latitude-geomagnetique_30S.json";
 

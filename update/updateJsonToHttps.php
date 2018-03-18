@@ -1,8 +1,8 @@
 <?php
-/** il faut sans doute changer les noms de fichies!!
+/** POUR CHANGER DES CONTENUS A LA CHAINE DANS LE FICHIER BCMT
  * DATA_FILE est le fichier de départ */
-include "config_ft.php";
-define('OUTPUT_FILE', APP_DIR.'/data/geojson_bcmt_ft.json');
+include "../config.php";
+define('OUTPUT_FILE', DATA_DIR.'/geojson_bcmt_ft.json');
 
 $content = file_get_contents( DATA_FILE);
 $result = json_decode( $content);
