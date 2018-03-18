@@ -3,19 +3,19 @@
     "metadataLastUpdate":"2018-03-17",
     "dataLastUpdate":"",
     "title":{
-        "fr":"CKdays",
-        "en":"Solar Flare Effects (SFE)"},
+        "fr":"Jours de calme magnetique CK-days",
+        "en":"Quietest magnetic days CK-days"},
     "abstract":{
-        "fr":"SFE fournit la liste de référence de la perturbation soudaine des éléments géomagnétiques qui suit l'éruption d'une éruption solaire.",
-        "en":"SFE provides the reference list of sudden perturbation in geomagnetic elements that follows the eruption of a solar flare. "
+        "fr":"CK-days définit des périodes de silence magnétique par rapport à l'activité géomagnétique irrégulière sur 24 heures ou 48 heures centrées sur le jour UT considéré.",
+        "en":"CK-days defines periods of magnetic quietness with regard to the irregular geomagnetic activity over 24 hours or 48 hours centered on the considered UT day."
      },
     "description":{
-        "fr":"SFE fournit la liste de référence de la perturbation soudaine des éléments géomagnétiques qui suit l'éruption d'une éruption solaire.",
-        "en":"SFE provides the reference list of sudden perturbation in geomagnetic elements that follows the eruption of a solar flare. "
-    },
+        "fr":"CK-days définit des périodes de silence magnétique par rapport à l'activité géomagnétique irrégulière sur 24 heures ou 48 heures centrées sur le jour UT considéré.",
+        "en":"CK-days defines periods of magnetic quietness with regard to the irregular geomagnetic activity over 24 hours or 48 hours centered on the considered UT day."
+   },
     "observedProperty":{
-        "name":"Solar Flare Effects",
-        "shortName":"SFE"
+        "name":"CK-days",
+        "shortName":"CKdays"
     },
     "domainOfInterest":["GEOMAGNETISM"],
     "keywords":[
@@ -39,19 +39,24 @@
         "url":"https:\/\/creativecommons.org\/licenses\/by-nc\/4.0\/"
     },
     "temporalExtents":{
-        "start":"1986-01-01",
+        "start":"1868-01-01",
         "end":"now"
     },
     "procedure":{
         "method":{
-            "fr":"Les SFE sont généralement perçus comme la signature sur les magnétogrammes des stations à basse et moyenne latitudes d'une augmentation de l'intensité du système à courant silencieux. Les événements sont caractérisés par l'analyse visuelle des conditions sur le Soleil. Quand une éruption solaire pointe vers la Terre, des événements SFE se produisent.Les listes préliminaires des événements SFE sont compilées sur la base de rapports établis par les observatoires par inspection morphologique de leurs magnétogrammes.Les listes définitives d'événements SFE sont basées sur des rapports d'observatoires en réponse à une liste de contrôle envoyée par Observatori de l'Ebre, Espagne.",
-            "en":"SFE are usually noticed as the signature on magnetograms at low and mid-latitude stations of an increase in the intensity of the Solar-quiet current system. The events are characterised by visual analysis of conditions on the Sun. When a solar flare points towards the Earth, SFE events occur.<br />Preliminary lists of SFE events are compiled on the basis of reports made by observatories by morphological inspection of their magnetograms.<br />Definitive lists of SFE events are based on reports from observatories in response to a checking list sent by Observatori de l'Ebre, Spain.  "
+            "fr":"Les jours \"Vraiment Calmes (C)\" et \"Calmes (K)\", sur 24 heures (CK24) ou 48 heures (CK48), sont déduits des indices aa sur la base de deux critères pour chaque jour UT: <ol> <li> La moyenne des valeurs aa. </li> <li> La somme des valeurs aa transformées en p weigth </li> </ol>",
+            "en":"\"Really Quiet (C)\" and \"Quiet (K)\" days, over 24 hours (CK24) or 48 hours (CK48), are deduced from the aa indices on the basis of two criteria for each UT day:<ol><li>The mean of the aa values.</li><li>The sum of the aa values transformed in p weigth</li></ol>"
         }
     },
+    "quicklook":[
+        {
+        "url":"https:\/\/api.poleterresolide.fr\/images\/isgi\/reseau_aa.jpg"
+        }
+    ],
     "links":[
         {
             "type":"INFORMATION_LINK",
-            "url":"http:\/\/isgi.unistra.fr\/indices_sfe.php",
+            "url":"http:\/\/isgi.unistra.fr\/indices_ckdays.php",
             "description":{
                 "fr":"page de l'indice",
                 "en":"Index page"
@@ -63,7 +68,7 @@
         }
     ],
     "identifiers":{
-            "customId": "SC"
+            "customId": "CKdays"
      },
       "distribution":[],
     "contacts":[
@@ -83,7 +88,7 @@
     ],
     "api":
     {
-        "url":"https:\/\/api.poleterresolide.fr\/cds\/isgi\/data\/SFE",
+        "url":"https:\/\/api.poleterresolide.fr\/cds\/isgi\/data\/CKdays",
         "name":"ISGI"
     }
 }
