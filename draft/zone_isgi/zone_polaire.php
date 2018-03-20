@@ -110,7 +110,7 @@ $geojson = array(
 								),
 								"formats"=> array(  array("name" => "IAGA2002")),
 								"processingLevel" => "L4",
-								"licence"=> array(
+								"license"=> array(
 										"code" =>	"CC BY-NC 4.0",
 										"url" =>	"https://creativecommons.org/licenses/by-nc/4.0/"
 								),

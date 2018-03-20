@@ -111,9 +111,6 @@ $geojson = array(
 								),
 								"formats"=> array(  array("name" => "IAGA2002")),
 								"processingLevel" => "L4",
-								"licence"=> array(
-										"code" =>"NO"
-								),
 								"temporalExtents" => array(
 										"start" => "1957-01-01",
 										"end"   => "now"
