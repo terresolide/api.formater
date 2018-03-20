@@ -120,6 +120,7 @@ function search_infos(&$obs, $code, $dataType){
             $diff = $end->diff( $now);
             if( $diff->days<4 ){
                 $endDate ="now";
+                $obs->dataLastUpdate = "now";
             }
             unset($obs->procedure->method);
         }

@@ -2,8 +2,8 @@
 
 // ZONE EQUATORIALE
 include "../../config.php";
-$file1 = __DIR__."/data/latitude-geomagnetique_30N.json";
-$file2 = __DIR__."/data/latitude-geomagnetique_30S.json";
+$file1 = DIR_LATITUDES."/latitude-geomagnetique_30N.json";
+$file2 = DIR_LATITUDES."/latitude-geomagnetique_30S.json";
 
 $content = file_get_contents( $file1);
 $result1 = json_decode( $content);
@@ -21,7 +21,7 @@ array_push($coordinates2, [ $coordinates2[0][0]+360, $coordinates2[0][1]]);
 $coordinates = array_merge($coordinates2, $coordinates1);
 array_push( $coordinates, $coordinates2[0]);
 $now = new DateTime();
-$content = file_get_contents(__DIR__."/data/indice_asy.json");
+$content = file_get_contents(DIR_ISGI_INDICES."/indice_asy.json");
 $indice_asy = json_decode( $content);
 $geojson = array(
 		"type" => "Feature",
