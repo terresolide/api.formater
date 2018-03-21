@@ -89,7 +89,7 @@ $geojson = array(
 										"en" => "Auroral index horizontal component disturbances"
 								),
 								"description" => array(
-										"fr" => "L'indice Dst permet de surveiller la signature magnétique des électrojets auroraux orientés vers l'est et l'ouest dans l'hémisphère nord",
+										"fr" => "L'indice AE permet de surveiller la signature magnétique des électrojets auroraux orientés vers l'est et l'ouest dans l'hémisphère Nord",
 										"en" => "AE indice helps to monitor the magnetic signature of the eastward and westward auroral electrojets in the Northern hemisphere."
 								),
 								"observedProperty" => array(
