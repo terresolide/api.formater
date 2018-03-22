@@ -1,5 +1,5 @@
 <?php
-define('APP_URL', 'https://api.formater');
+define('APP_URL', 'http://api.formater');
 define( 'APP_DIR', __DIR__);
 define( 'TEST_DIR', realpath( APP_DIR.'/tests'));
 define('TEMPLATE_DIR', realpath( APP_DIR.'/templates'));
