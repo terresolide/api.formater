@@ -1,5 +1,5 @@
 <?php
-$list_cds = array( "bcmt", "isgi");
+$list_cds = array( "bcmt", "isgi", "grenoble");
 
 Class  Searcher{
     public $observatory = null;
@@ -172,10 +172,11 @@ Class FeatureSearcher extends Searcher{
         }
     }
     private function cut_bbox( $bbox){
+    	
         if( $bbox->south > $this->north || $bbox->north < $this->south){
            return false;
         }
-        if( $bbox->east > $this->west || $bbox->west < $this->east){
+        if( $bbox->east < $this->west || $bbox->west > $this->east){
             return false;
         }
         return true;
@@ -209,6 +210,10 @@ Class FeatureSearcher extends Searcher{
     			break;
     		case "bcmt":
     			$content = file_get_contents( DATA_FILE_BCMT);
+    			break;
+    		case "grenoble":
+    			$content = file_get_contents( DATA_FILE_GRENOBLE);
+    			break;
     	}
        
         $result = json_decode( $content);

@@ -6,6 +6,9 @@ define('TEMPLATE_DIR', realpath( APP_DIR.'/templates'));
 define('DATA_DIR', APP_DIR. '/data');
 define('DATA_FILE_BCMT', APP_DIR.'/data/geojson_bcmt_ft_test.json');
 define('DATA_FILE_ISGI', APP_DIR.'/data/geojson_isgi_ft.json');
+define('DATA_FILE_GRENOBLE', APP_DIR.'/data/geojson_etalab_ft.json');
+define('GEOTIFF_DIR', APP_DIR.'/geotiff');
+define('GEOTIFF_URL', APP_URL.'/geotiff/');
 
 /** SERVEUR BCMT**/
 define('BCMT_FTP_SERVER' ,"ftp.bcmt.fr");
