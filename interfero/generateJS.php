@@ -60,7 +60,7 @@ $feature = array(
 						"pole" => "formater",
 						"formats" => array( array( "name" => "geotiff")),
 						"api" => array(
-								"url" => "https://api.poleterresolide.fr/cds/grenoble",
+								"url" => "https://api.poleterresolide.fr/cds/grenoble/data",
 								"name"=> "GRENOBLE"
 						),
 						"processingLevel" => "L4",
