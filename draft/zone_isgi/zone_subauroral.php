@@ -67,8 +67,8 @@ $geojson = array(
 						"en" => "Subauroral geomagnetic zone"
 				),
 			    "bbox" => array( 
-			    		array( "south" => 18.21, "north" => 63.58, "east" => -180, "west"=>180),
-			    		array( "south" => -72.9, "north" => -18.13, "east" => -180, "west"=>180),
+			    		array( "south" => 18.21, "north" => 63.58, "east" => 180, "west"=>-180),
+			    		array( "south" => -72.9, "north" => -18.13, "east" => 180, "west"=>-180),
 			    ),
 				"description" => array(
 						"fr" => "Il s'agit de la zone comprise entre les latitudes magnétiques 29° et 58°.(Les données sont celles de l'Année 2010)",

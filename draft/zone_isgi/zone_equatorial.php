@@ -41,7 +41,7 @@ $geojson = array(
 						"en" => "Equatorial geomagnetic zone"
 				),
 			    "bbox" => array( 
-			    		array( "south" => -43.55, "north" => 38.3, "east" => -180, "west"=>180),
+			    		array( "south" => -43.55, "north" => 38.3, "east" => 180, "west"=>-180),
 			    ),
 				"description" => array(
 						"fr" => "Il s'agit de la zone comprise entre les latitudes magnétiques -30° et 30°. Année 2010",

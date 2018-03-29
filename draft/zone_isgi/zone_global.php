@@ -30,7 +30,7 @@ $geojson = array(
 						"en" => "Global"
 				),
 			    "bbox" => array( 
-			    		array( "south" => -90, "north" => 90, "east" => -180, "west"=>180),
+			    		array( "south" => -90, "north" => 90, "east" => 180, "west"=>-180),
 			    ),
 				"description" => array(
 						"fr" => "Terre entière",

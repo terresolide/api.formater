@@ -66,8 +66,8 @@ $geojson = array(
 						"en" => "Auroral geomagnetic zone"
 				),
 			    "bbox" => array( 
-			    		array( "south" => 47.83, "north" => 79.41, "east" => -180, "west"=>180),
-			    		array( "south" => -90, "north" => -44.45, "east" => -180, "west"=>180),
+			    		array( "south" => 47.83, "north" => 79.41, "east" => 180, "west"=>-180),
+			    		array( "south" => -90, "north" => -44.45, "east" => 180, "west"=>-180),
 			    ),
 				"description" => array(
 						"fr" => "Il s'agit de la zone de latitudes magnétiques autour de 69°. Année 2010",

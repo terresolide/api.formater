@@ -65,8 +65,8 @@ $geojson = array(
 						"en" => "Equatorial geomagnetic zone"
 				),
 			    "bbox" => array( 
-			    		array( "south" => 64.67, "north" => 90, "east" => -180, "west"=>180),
-			    		array( "south" => -90, "north" => -59.08, "east" => -180, "west"=>180)
+			    		array( "south" => 64.67, "north" => 90, "east" => 180, "west"=>-180),
+			    		array( "south" => -90, "north" => -59.08, "east" => 180, "west"=>-180)
 			    ),
 				"description" => array(
 						"fr" => "Zones Nord et Sud de latitudes magnétiques supérieures à 74°. Avec les données de l'Année 2010",
