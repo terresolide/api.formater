@@ -475,10 +475,24 @@ Class DataSearcher extends Searcher{
         $directories = array();
         switch( $this->type){
             case "yea":
+            	
             case "mon":
             case "day":
             	
             	$files = ftp_nlist ( $conn_id , $directory);
+            	//si pas de réponse pour month cherche day
+            	if( $this->type == "mon" && count($files) == 0){
+            		$directory = str_replace("mon", "day", $directory);
+            		$this->type = "day";
+            		$files = ftp_nlist ( $conn_id , $directory);
+            	}
+            	//si pas de réponse pour year cherche month
+            	if( $this->type == "yea" && count($files) == 0){
+            		$directory = str_replace("yea", "mon", $directory);
+            		$this->type = "mon";
+            		$files = ftp_nlist ( $conn_id , $directory);
+            	}
+            	
             	$results = array();
                 $start_year = intVal($this->start->format("Y"));
                 $end_year = intVal( $this->end->format("Y"));
