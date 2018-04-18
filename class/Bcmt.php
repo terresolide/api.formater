@@ -520,11 +520,23 @@ Class DataSearcher extends Searcher{
             	$current = new \DateTime( $this->start->format("Y-m-d"));
             	$last = false;
             	$directory0 = "";
+            	
+            	$directory_min = "/VARIATION/" . $this->observatory . "/min";//.$current->format("Y");
+            	//find the first year
+            	$list1 = ftp_nlist ( $conn_id , $directory_min);
+            		
+            	$start = str_replace( $directory_min."/","",$list1[0]);
+            	
+            	if( $current->format("Y") < $start){
+            		$current->setDate( $start, 1,1);
+            	}
+            		
             	while( $current< $this->end && !$last){
             		$directory = "/VARIATION/" . $this->observatory . "/min/".$current->format("Y");
             		//read directory if not done
             		if( $directory != $directory0){
             			$directory0 =  $directory;
+            			
             			self::push_ftp_url( $directories, $this->ftp.$directory);
             			$files = ftp_nlist ( $conn_id , $directory0);
             			
