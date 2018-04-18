@@ -38,7 +38,7 @@ function extract_resolution( $url){
 }
 function search_infos(&$obs, $code, $dataType){
     global $conn_id;
-    //var_dump($code);
+
     $directory = "/".$dataType."/".strtolower( $code);
     $resolutions = ftp_nlist( $conn_id, $directory);
  

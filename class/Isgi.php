@@ -9,7 +9,7 @@
 namespace isgi;
 
 /** use treatment file IAGA*/
-
+include_once "../config.php";
 include_once "Iaga.php";
 
 include_once "../functions.php";
@@ -35,6 +35,7 @@ function get_zip_filename( $response_headers){
 }
 Class Config{
     const API_URL = "http://isgi.unistra.fr/ws";
+    
     public static $upload_dir = null;
     public static $pattern_indices = "/^\/cds\/isgi\/indices\/?(.*)$/";
     public static $pattern_indices_indice = "/^([a-zA-Z]{2,6})\/?(.?)$/";
@@ -122,7 +123,7 @@ Class  Searcher{
     public function __construct( $indice = null ){
         $this->indice = $indice;
     }
-    public function execute( $get ){
+    public function execute( $get=array()){
         $this->extract_params( $get );
         if( !is_null($this->error )){
             $this->result =  array( "error" => $this->error );
@@ -142,8 +143,36 @@ Class  Searcher{
     }
 }
 Class IndicesSearcher extends Searcher{
+	
+	protected function load_features(){
+		$content = file_get_contents( DATA_FILE_ISGI);
+		
+		return json_decode($content);
+	}
+	
     protected function treatment(){
-        $this->result = array("error" => "NOT_IMPLEMENTED");
+    	$obj = $this->load_features();
+       
+    	$find = false;
+    	$observation = null;
+    	$i =0;
+    	while( !$find && $i< count($obj->features)){
+    		
+    		$observations = $obj->features[$i]->properties->observations;
+    		$j=0;
+    		while( !$find && $j < count( $observations)){
+    			if( $this->indice == $observations[ $j]->identifiers->customId){
+    				$find = true;
+    				$observation = $observations[$j];
+    			}
+    			$j++;
+    		}
+    		$i++;
+    	}
+    	
+        $this->result = $observation;
+       
+        return $observation;
     }
 }
 Class  DataSearcher extends Searcher{
@@ -156,11 +185,13 @@ Class  DataSearcher extends Searcher{
     private $isgi_url = null;
     private $root = null;
     private $iaga = null;
+    private $indiceSearcher = null;
+    private $metadata = null;
     
     public function __construct( $indice = null ){
         $this->indice = $indice;
     }
-    public function execute( $get ){
+    public function execute( $get=array() ){
         $this->extract_params( $get );
         if( $this->error ){
             $this->result =  array( "error" => $this->error );
@@ -195,14 +226,63 @@ Class  DataSearcher extends Searcher{
             }
         }
     }
+  
+    protected function dates_filter(){
+    	
+    	//Filter dates start and end, with temporalExtents and dataLastUpdate
+    	//+Constraint Isgi: only one year data
+    	$temporal = $this->get_temporal();
+    	if( strtolower($temporal->end) == "now"){
+    		$now = new \DateTime();
+    		$temporal->end = $now->format("Y-m-d");
+    	}
+    	
+    	
+    	//change start and end
+    	if( $this->start < $temporal->start){
+    		$this->start = $temporal->start;
+    	}
+    	if( $this->end > $temporal->end){
+    		$this->end = $temporal->end;
+    	}
+    	$update = $this->get_update();
+    	if( !empty( $update) && $update < $this->end){
+    		$this->end = $update;
+    	}
+    	// diff between start and end
+    	$start = new \DateTime( $this->start);
+    	$end = new \DateTime( $this->end);
+    	$interval = $start->diff( $end);
+    	if( $interval->invert){
+    		//end < start
+    		$this->error = "NO_DATA";
+    	}else{
+	    	if( $interval->days > 365){
+	    		$start = clone $end;
+	    		$start->sub( new \DateInterval("P364D"));
+	    		$this->start = $start->format("Y-m-d");
+	    	}
+	    	
+    	}
+    	
+  
+    }
     protected function treatment(){
+    	$this->dates_filter();
+    	
+    	if( $this->error){
+    		$this->result = array("error" => $this->error);
+    		return;
+    	}
         $this->search_files();
        
         if( is_null( $this->error)){
             
-           
+        
+        	
             $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end, $this->indice);
             $this->iaga->add_meta("isgi_url", $this->isgi_url);
+            $this->iaga->add_meta("filesize", $this->filesize);
             if( $this->indice == "Qdays" || $this->indice == "CKdays"){
                 // look if have the lastest month values
                 $code = substr( $this->end, 0, 7);
@@ -240,6 +320,22 @@ Class  DataSearcher extends Searcher{
             $this->result = array("error" => $this->error);
         }
         
+    }
+    public function get_metadata(){
+    	if( is_null( $this->indiceSearcher) && is_null( $this->metadata)){
+    		$this->indiceSearcher = new IndicesSearcher($this->indice);
+    		$this->indiceSearcher->execute();
+    		$this->metadata = $this->indiceSearcher->result;
+   	    }
+   	    return $this->metadata;
+    }
+    private function get_temporal(){
+    	$metadata = $this->get_metadata();
+    	return $metadata->temporalExtents;
+    }
+    private function get_update(){
+    	$metadata = $this->get_metadata();
+    	return $metadata->dataLastUpdate;
     }
     private function extract_error( $content){
         
@@ -332,6 +428,8 @@ Class  DataSearcher extends Searcher{
                 $this->error = $this->extract_error($content);
                 break;
             case "zip":
+            	
+            	
                 $filename = get_zip_filename( $http_response_header);
                 if(!file_exists( Config::$upload_dir ."/" . $filename . ".zip")){
                     $this->root = $filename;
@@ -340,6 +438,8 @@ Class  DataSearcher extends Searcher{
                 }
                 $this->root = $filename;
                 file_put_contents( Config::$upload_dir ."/" . $this->root . ".zip" , $content);
+                $this->filesize = filesize(  Config::$upload_dir ."/" . $this->root . ".zip" );
+                
                 $this->extract_files();
                 break;
             default:

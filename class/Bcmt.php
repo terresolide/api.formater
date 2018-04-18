@@ -538,12 +538,13 @@ Class DataSearcher extends Searcher{
             	$directory_min = "/VARIATION/" . $this->observatory . "/min";//.$current->format("Y");
             	//find the first year
             	$list1 = ftp_nlist ( $conn_id , $directory_min);
-            		
-            	$start = str_replace( $directory_min."/","",$list1[0]);
+                
+            	$start_year = str_replace( $directory_min."/","",$list1[0]);
             	
-            	if( $current->format("Y") < $start){
-            		$current->setDate( $start, 1,1);
+            	if( $current->format("Y") < $start_year){
+            		$current->setDate( $start_year, 1,1);
             	}
+            	$end_year = str_replace($directory_min."/", "", $list1[ count($list1) -1]);
             		
             	while( $current< $this->end && !$last){
             		$directory = "/VARIATION/" . $this->observatory . "/min/".$current->format("Y");
@@ -565,12 +566,16 @@ Class DataSearcher extends Searcher{
             			
             			// array_push( $done, $current->format("Ym"));
             		}
+            		//$last = ($end_year < $current->format("Y"));
             		
             		$current->modify( '+1 days' );
+            		$last = ($end_year < $current->format("Y"));
             		
             	}
+            	
             	//last day
-            	$directory = "/VARIATION/". $this->observatory ."/min/".$this->end->format("Y");
+            	
+            	/*$directory = "/VARIATION/". $this->observatory ."/min/".$this->end->format("Y");
             	if( $directory != $directory0){
             		$directory0 =  $directory;
             		self::push_ftp_url( $directories, $this->ftp.$directory);
@@ -583,11 +588,12 @@ Class DataSearcher extends Searcher{
             		self::push_ftp_url( $result_meta, $this->ftp.$file);
             		
             		
-            	}
+            	}*/
             	//si plus de 3 fichiers, on garde les 3 derniers seulement
             	if( count($results)>3){
             		$results = array_slice( $results, count($results)-3);
             	}
+            	
             	break;
         }
        
