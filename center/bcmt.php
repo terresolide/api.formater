@@ -9,6 +9,6 @@ if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     
 }
-header("Content-Type: application/json");
+//header("Content-Type: application/json");
 
 echo $bcmt->to_json();

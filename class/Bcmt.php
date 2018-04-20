@@ -8,6 +8,7 @@
 
 namespace bcmt;
 
+include_once "../config.php";
 /** use treatment file IAGA*/
 include_once "../functions.php";
 include_once "Iaga.php";
@@ -135,32 +136,74 @@ Class Config{
         }
     }
 Class  Searcher{
-    public $observatory = null;
-    public $start = null;
-    public $end = null;
-    public $error = null;
-    public $result = array();
-    public function __construct( $obs = null ){
-        $this->observatory = $obs;
-    }
-    public function execute( $get ){
-        $this->extract_params( $get );
-        if( !is_null($this->error )){
-            $this->result =  array( "error" => $this->error );
-            return array( "error" => $this->error );
-        }
-        $this->treatment();
-    }
-    
-    public function to_json(){
-        return json_encode( $this->result );
-    }
-    protected function extract_params( $get = array() ){
-        return $get;
-    }
-    protected function treatment(){
-        $this->result = array("error" => "NOT_FOUND");
-    }
+	public $observatory = null;
+	public $start = null;
+	public $end = null;
+	public $error = null;
+	public $result = array();
+	public function __construct( $obs = null ){
+		$this->observatory = $obs;
+	}
+	public function execute( $get = array() ){
+		$this->extract_params( $get );
+		if( !is_null($this->error )){
+			$this->result =  array( "error" => $this->error );
+			return array( "error" => $this->error );
+		}
+		$this->treatment();
+	}
+	
+	public function to_json(){
+		return json_encode( $this->result );
+	}
+	protected function extract_params( $get = array() ){
+		return $get;
+	}
+	protected function treatment(){
+		$this->result = array("error" => "NOT_FOUND");
+	}
+}
+
+Class ObservationSearcher extends Searcher{
+	public $type = null;
+	public function __construct( $options){
+		if( isset( $options["observatory"]) && isset( $options["type"])){
+			$this->observatory = $options["observatory"];
+			$this->type = $options["type"];
+		}
+	}
+	protected function load_features(){
+		$content = file_get_contents( DATA_FILE_BCMT);
+		
+		return json_decode($content);
+	}
+	
+	protected function treatment(){
+		$obj = $this->load_features();
+		
+		$find = false;
+		$observation = null;
+		$i =0;
+		while( !$find && $i< count($obj->features)){
+		
+			if( $obj->features[$i]->properties->identifiers->customId == strtoupper($this->observatory) ){
+				$observations = $obj->features[$i]->properties->observations;
+				$j=0;
+				while( !$find && $j < count( $observations)){
+					if( strtoupper($this->observatory)."-".$this->type == $observations[ $j]->identifiers->customId){
+						$find = true;
+						$observation = $observations[$j];
+					}
+					$j++;
+				}
+			}
+			$i++;
+		}
+	
+		$this->result = $observation;
+		
+		return $observation;
+	}
 }
 // Class ObservatoriesSearcher extends Searcher{
 //     public $observatory = null;
@@ -315,13 +358,14 @@ Class DataSearcher extends Searcher{
     public $files = array();
     private $diff = null;
     private $iaga = array();
-    
+    private $observationSearcher = null;
+    private $metadata = null;
  
     public function __destruct(){
         //close connexion if exists
         Config::close_connexion();
     }
-    public function execute( $get ){
+    public function execute( $get = array()){
         $this->extract_param($get);
         if( $this->error ){
             $this->result =  array( "error" => $this->error );
@@ -374,12 +418,75 @@ Class DataSearcher extends Searcher{
        if( isset( $get["type"]) && in_array( $get["type"], ["VARIATION", "DEFINITIVE", "QUASI_DEFINITIVE"])){
            $this->dataType = $get["type"];
            
+       }else{
+       	   $this->dataType = "VARIATION";
        }
+ 	   $this->dates_filter();
        $this->compute_type();
+   
        return true;
        
    }
-
+   protected function dates_filter(){
+	   	
+	   	//Filter dates start and end, with temporalExtents and dataLastUpdate
+	
+	   	$temporal = $this->get_temporal();
+	   	if( strtolower($temporal->end) == "now"){
+	   		$now = new \DateTime();
+	   		$temporal->end = $now;
+	   	}
+	   	
+	   	
+	   	//change start and end
+	   	if( $this->start->format("Y-m-d") < $temporal->start){
+	   		$this->start = new \DateTime($temporal->start);
+	   	}
+	   	if( $this->end->format("Y-m-d") > $temporal->end){
+	   		$this->end = new \DateTime($temporal->end);
+	   	}
+	   	$update = $this->get_update();
+	   	if( ! is_null( $update) && $update < $this->end->format("Y-m-d")){
+	   		$this->end = new \DateTime( $update );
+	   	}
+	   	// diff between start and end
+	  
+	   	$this->diff = $this->start->diff( $this->end);
+	   	if( $this->diff->invert){
+	   		//end < start
+	   		$this->error = "NO_DATA";
+	   	}
+	   
+   }
+   	public function get_metadata(){
+   		if( is_null( $this->observationSearcher) && is_null( $this->metadata)){
+   			$this->observationSearcher = new ObservationSearcher(
+   					array(
+   							"observatory" => $this->observatory,
+   							"type" => $this->dataType
+   					));
+   			$this->observationSearcher->execute( );
+   			$this->metadata = $this->observationSearcher->result;
+   		}
+   		return $this->metadata;
+   	}
+   	private function get_temporal(){
+   		$metadata = $this->get_metadata();
+   		return isset($metadata->temporalExtents)? $metadata->temporalExtents: null;
+   	}
+   	private function get_update(){
+   		$metadata = $this->get_metadata();
+   		return isset($metadata->dataLastUpdate)?$metadata->dataLastUpdate:null;
+   	}
+   	private function get_time_resolution(){
+   		$metadata = $this->get_metadata();
+   		$resolutions = $metadata->observedProperty->timeResolution;
+   		$sub = function( $res){
+   			return substr( $res, 0, 3);
+   		};
+   		return array_map( $sub, $resolutions);
+   		
+   	}
    protected function treatment(){
    	$this->ftp = "ftp://" . Config::FTP_USER .":" . Config::FTP_PWD . "@" . Config::FTP_SERVER;
        if(  is_null( $this->dataType ) ){
@@ -434,9 +541,9 @@ Class DataSearcher extends Searcher{
        }
    }
     private function compute_type(){
-        if( $this->dataType == "VARIATION"){
-            $this->type = "min";
-        }else{
+      //  if( $this->dataType == "VARIATION"){
+         //   $this->type = "min";
+      //  }else{
             if($this->diff->y > 15){
                 $this->type = "yea";
                 
@@ -450,7 +557,11 @@ Class DataSearcher extends Searcher{
                 //search hor data
                 $this->type = "hor";
             }
-        }
+            $resolutions = $this->get_time_resolution();
+            if( !in_array( $this->type, $resolutions)){
+            	$this->type = "min";
+            }
+      //  }
         
     }
  
