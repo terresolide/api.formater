@@ -121,6 +121,7 @@ Class FeatureSearcher extends Searcher{
                 if( !empty( $observation->dataLastUpdate) && $observation->dataLastUpdate < $endTime){
                 	$endTime = $observation->dataLastUpdate;
                 }
+     
                 if( (is_null( $this->start) || $this->start <= $endTime)
                         && (is_null( $this->end ) || $this->end >= $startTime)){
                 			$observation->inTemporal = 1;
