@@ -29,6 +29,10 @@ Class  Searcher{
         $this->result = array("error" => "NOT_FOUND");
     }
 }
+
+// renvoie toutes les observations dans la bbox, quelque soit l'extension temporelle
+// compte pour chaque layer, le nombre d'obervations qui sont dans l'intervalle de temps
+// et ajoute une propriété au observation ( pour dire que dans l'intervalle ou pas)
 Class FeatureSearcher extends Searcher{
     public $observatory = null;
     public $start = null;
@@ -104,6 +108,7 @@ Class FeatureSearcher extends Searcher{
                 return false;
             }
             $return = [];
+            $obsInTemporal =0;
             foreach( $obs->properties->observations as $observation){
                 $startTime = $observation->temporalExtents->start;
                 if( $observation->temporalExtents->end == "now"){
@@ -111,14 +116,23 @@ Class FeatureSearcher extends Searcher{
                     $endTime = $end->format("Y-m-d");
                 }else{
                     $endTime = $observation->temporalExtents->end;
+                    
+                }
+                if( !empty( $observation->dataLastUpdate) && $observation->dataLastUpdate < $endTime){
+                	$endTime = $observation->dataLastUpdate;
                 }
                 if( (is_null( $this->start) || $this->start <= $endTime)
                         && (is_null( $this->end ) || $this->end >= $startTime)){
-                            $return[] = $observation;
+                			$observation->inTemporal = 1;
+                            //$return[] = $observation;
+                            $obsInTemporal ++;
+                            
                 }
+                $return[] = $observation;
             }
-           
+          
             if( count($return)>0){
+            	$obs->inTemporal = $obsInTemporal;
                 $obs->properties->observations =  $return;
                 return $obs;
             }else{
