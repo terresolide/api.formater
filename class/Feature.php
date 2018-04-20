@@ -132,7 +132,7 @@ Class FeatureSearcher extends Searcher{
             }
           
             if( count($return)>0){
-            	$obs->inTemporal = $obsInTemporal;
+            	$obs->properties->inTemporal = $obsInTemporal;
                 $obs->properties->observations =  $return;
                 return $obs;
             }else{
