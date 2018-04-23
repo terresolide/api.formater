@@ -33,8 +33,8 @@ $geojson = array(
 				"style"=> array(
 						"fill" => "#66ccff",
 						"stroke" => "#1ab2ff",
-						"stroke-width"=> "1",
-						"fill-opacity" => "0.3"
+						"strokeWidth"=> "1",
+						"fillOpacity" => "0.3"
 				),
 				"name" => array( 
 						"fr" => "Zone géomagnétique équatoriale",

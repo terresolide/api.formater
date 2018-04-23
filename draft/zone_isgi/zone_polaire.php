@@ -57,8 +57,8 @@ $geojson = array(
 				"style"=> array(
 						"fill" => "#eeffff",
 						"stroke" => "#eeffff",
-						"stroke-width"=> "1",
-						"fill-opacity" => "0.3"
+						"strokeWidth"=> "1",
+						"fillOpacity" => "0.5"
 				),
 				"name" => array( 
 						"fr" => "Zone géomagnétique polaire",

@@ -11,6 +11,13 @@ $feature = array(
 				"coordinates" => [[[-99.529022784,18.568748337], [-99.529022784, 19.963193897], [-98.467355268 , 19.963193897], [-98.467355268 , 18.568748337], [-99.529022784,18.568748337]]]
 		),
 		"properties" => array(
+			"style" => array(
+				"fill" =>	"#e7bc53",
+				"stroke"	=>"#e7bc53",
+				"strokeWidth"	=>	1,
+				"fillOpacity"	=>	0.4,
+				"border"	=> "triangle"
+			),
 			"name" => array( 
 					"fr" => "burst truc fauche x",
 					"en" => "burst truc fauche x"

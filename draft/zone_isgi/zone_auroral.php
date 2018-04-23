@@ -58,8 +58,8 @@ $geojson = array(
 				"style"=> array(
 						"fill" => "#c0e6ff",
 						"stroke" => "#c0e6ff",
-						"stroke-width"=> "1",
-						"fill-opacity" => "0.3"
+						"strokeWidth"=> "1",
+						"fillOpacity" => "0.3"
 				),
 				"name" => array( 
 						"fr" => "Zone géomagnétique aurorale",

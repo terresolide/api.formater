@@ -59,8 +59,8 @@ $geojson = array(
 				"style"=> array(
 						"fill" => "#98d7ff",
 						"stroke" => "#98d7ff",
-						"stroke-width"=> "1",
-						"fill-opacity" => "0.3"
+						"strokeWidth"=> "1",
+						"fillOpacity" => "0.5"
 				),
 				"name" => array( 
 						"fr" => "Zone géomagnétique subaurorale",
