@@ -37,8 +37,8 @@ $geojson = array(
 				"style"=> array(
 						"fill" => "#98d7ff",
 						"stroke" => "#98d7ff",
-						"stroke-width"=> "0",
-						"fill-opacity" => "0"
+						"strokeWidth"=> "0",
+						"fillOpacity" => "0"
 				),
 				"name" => array( 
 						"fr" => "Global",
