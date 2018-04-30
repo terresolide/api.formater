@@ -2,7 +2,7 @@
 /** Search last date of modification files*/
 /** change source file if needed*/
 $infile =  "../data/geojson_bcmt_ft_test.json";
-$outputfile = "../data/geojson_bcmt_ft_test2.json";
+$outputfile = "../data/geojson_bcmt_ft_test.json";
 
 $content = file_get_contents($infile);
 $result = json_decode( $content);
