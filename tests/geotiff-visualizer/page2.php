@@ -1,6 +1,6 @@
 <?php
 include_once '../../config.php';
-$title = "Intégration des geotiffs (version 2.20.2)";
+$title = "Intégration des geotiffs (version 2.20.3)";
 $content = APP_DIR."/contents/geotiff-page2.phtml";
 $class= "ft-catalogue";
 
