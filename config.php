@@ -4,6 +4,8 @@ define( 'APP_DIR', __DIR__);
 define( 'TEST_DIR', realpath( APP_DIR.'/tests'));
 define('TEMPLATE_DIR', realpath( APP_DIR.'/templates'));
 define('DATA_DIR', APP_DIR. '/data');
+define('LIB_DIR',  APP_DIR.'/lib');
+
 define('DATA_FILE_BCMT', APP_DIR.'/data/geojson_bcmt_ft_test.json');
 define('DATA_FILE_ISGI', APP_DIR.'/data/geojson_isgi_ft.json');
 define('DATA_FILE_GRENOBLE', APP_DIR.'/data/geojson_etalab_ft.json');
