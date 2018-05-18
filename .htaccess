@@ -9,7 +9,7 @@ RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^api$ feature.php [L] 
-RewriteRule ^cds/(bcmt|isgi|grenoble)/(obs|data|indices).*$ /center/$1.php?%{QUERY_STRING} [L]
+RewriteRule ^cds/(bcmt|isgi|grenoble)/(obs|data|indices|archive).*$ /center/$1.php?%{QUERY_STRING} [L]
 RewriteRule ^api.*$ feature.php?%{QUERY_STRING} [L]
 </IfModule>
 

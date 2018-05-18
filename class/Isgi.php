@@ -10,6 +10,7 @@ namespace isgi;
 
 /** use treatment file IAGA*/
 include_once "../config.php";
+include_once "../config_unistra.php";
 include_once "Iaga.php";
 
 include_once "../functions.php";
@@ -34,12 +35,12 @@ function get_zip_filename( $response_headers){
     }
 }
 Class Config{
-    const API_URL = "http://isgi.unistra.fr/ws";
+    
     
     public static $upload_dir = null;
     public static $pattern_indices = "/^\/cds\/isgi\/indices\/?(.*)$/";
     public static $pattern_indices_indice = "/^([a-zA-Z]{2,6})\/?(.?)$/";
-    public static $pattern_data = "/^\/cds\/isgi\/data\/([a-zA-Z]{2,6})\/?(.*)$/";
+    public static $pattern_data = "/^\/cds\/isgi\/(data|archive)\/([a-zA-Z]{2,6})\/?(.*)$/";
     public static $indices = array( "aa", "am", "Kp", "Dst", "PC", "AE", "SC", "SFE", "Qdays", "CKdays", "asigma");
     public static function is_code_indice( $indice ){
         if( in_array( $indice, self::$indices)){
@@ -73,6 +74,9 @@ Class Request{
             case "data":
                 $this->searcher = new DataSearcher( $this->indice );
                 break;
+            case "archive":
+            	$this->searcher = new ArchiveSearcher( $this->indice);
+            	break;
             default:
                 $this->searcher = new Searcher();
         }
@@ -83,6 +87,16 @@ Class Request{
     }
     public function get_response(){
         return $this->response;
+    }
+    public function is_archive(){
+    	if( isset( $this->searcher->result["archive"])){
+    		return $this->searcher->result["archive"];
+    	}else{
+    		return false;
+    	}
+    }
+    public function get_result(){
+    	return $this->searcher->result;
     }
     public function to_json(){
         return $this->searcher->to_json();
@@ -102,10 +116,10 @@ Class Request{
             }
         }else if( preg_match( Config::$pattern_data , $this->request, $matches)){
             //search geomagnetic data for one observatory
-            if( Config::is_code_indice( $matches[1])){
-                $this->indice =  $matches[1];
-                $this->request = $matches[2];
-                $this->type = "data";
+            if( Config::is_code_indice( $matches[2])){
+                $this->indice =  $matches[2];
+                $this->request = $matches[3];
+                $this->type = $matches[1];
             }else{
                 $this->type ="404";
            
@@ -141,6 +155,58 @@ Class  Searcher{
     protected function treatment(){
         $this->result = array("error" => "NOT_FOUND");
     }
+}
+
+Class ArchiveSearcher extends Searcher{
+	public function execute( $get=array()){
+		$this->extract_params( $get);
+		//create uri
+		$this->result = array(
+				"archive" => true,
+				"name" => $this->build_name(),
+				"url" => $this->build_query()
+				
+		);
+		
+	}
+
+	protected function extract_params( $get = array() ){
+		if(isset( $get["StartTime"])){
+			if( valid_date( $get["StartTime"])){
+				$this->start = $get["StartTime"];
+			}else{
+				$this->error = "INVALID_DATE";
+			}
+		}
+		if(isset( $get["EndTime"])){
+			if( valid_date( $get["EndTime"])){
+				$this->end = $get["EndTime"];
+				if( !is_null( $this->start) && $this->start > $this->end){
+					$this->error = "INCONSITENT_DATE";
+				}
+			}else{
+				$this->error = "INVALID_DATE";
+			}
+		}
+	}
+	protected function build_query(){
+		
+		$data = array(
+				"user" => ISGI_USER,
+				"index"=> $this->indice,
+				"StartTime" => $this->start,
+				"EndTime" 	=> $this->end
+		);
+		$query = ISGI_API_URL. "?" . http_build_query($data);
+		return $query;
+	}
+	protected function build_name(){
+		$name = "wisgi_". $this->indice."_";
+		$name .= str_replace( "-", "", $this->start)."_".str_replace("-", "", $this->end);
+		$name .= ".zip";
+		return $name;
+	}
+	
 }
 Class IndicesSearcher extends Searcher{
 	
@@ -281,7 +347,7 @@ Class  DataSearcher extends Searcher{
         
         	
             $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end, $this->indice);
-            $this->iaga->add_meta("isgi_url", $this->isgi_url);
+            $this->iaga->add_meta("isgi_url", $this->false_isgi_url);
             $this->iaga->add_meta("filesize", $this->filesize);
             if( $this->indice == "Qdays" || $this->indice == "CKdays"){
                 // look if have the lastest month values
@@ -361,11 +427,15 @@ Class  DataSearcher extends Searcher{
         unlink(Config::$upload_dir ."/" .$this->root .".zip");
         $this->root = null;
     }
-    private function prepare_get(){
-        $data = array(
-            "user" => "cnrs-formater610",
-            "index" => $this->indice,
-        );
+    private function prepare_get( $direct= true){
+    	if( $direct){
+	        $data = array(
+	            "user" => ISGI_USER,
+	            "index" => $this->indice,
+	        );
+	    }else{
+	    	$data = array();
+	    }
         if(!is_null( $this->start)){
             $data["StartTime"] = $this->start;
         }
@@ -404,7 +474,8 @@ Class  DataSearcher extends Searcher{
     }
 
     private function search_files(){
-        $this->isgi_url = Config::API_URL."?" . $this->prepare_get();
+        $this->isgi_url = ISGI_API_URL."?" . $this->prepare_get( true);
+        $this->false_isgi_url = APP_URL."/cds/isgi/archive/".$this->indice."?". $this->prepare_get( false);
         $ctx = stream_context_create(array('http'=>
         		array(
         				'timeout' => 30,  //1/2 minute
