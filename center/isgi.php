@@ -1,5 +1,6 @@
 <?php
-
+session_start();
+$token = session_id();
 include_once '../class/Isgi.php';
 
 
@@ -8,17 +9,15 @@ $isgi->execute($_GET);
 
 if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
     header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+    header('Access-Control-Allow-Credentials: true');
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+   // header('Access-Control-Max-Age: 86400'); 
     
 }
 
 if( $isgi->is_archive()){
-	$archive = $isgi->get_result();
-
-	header('Content-Type: application/octet-stream');
-	header("Content-Transfer-Encoding: Binary");
-	header('Content-disposition: attachment; filename="'.$archive["name"].'"');
-	echo readfile($archive["url"]);
+	$isgi->download();
+	
 }else{
    header("Content-Type: application/json");
 

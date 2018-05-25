@@ -101,6 +101,9 @@ Class Request{
     public function to_json(){
         return $this->searcher->to_json();
     }
+    public function download(){
+    	return $this->searcher->download();
+    }
     private function parseRequest(){
         //suppr cds/bcmt
         if( preg_match( Config::$pattern_indices, $this->request, $matches)){
@@ -149,6 +152,7 @@ Class  Searcher{
     public function to_json(){
         return json_encode( $this->result );
     }
+ 
     protected function extract_params( $get = array() ){
         return $get;
     }
@@ -160,17 +164,47 @@ Class  Searcher{
 Class ArchiveSearcher extends Searcher{
 	public function execute( $get=array()){
 		$this->extract_params( $get);
-		//create uri
 		$this->result = array(
 				"archive" => true,
-				"name" => $this->build_name(),
 				"url" => $this->build_query()
 				
 		);
+	
+		
 		
 	}
+	public function download(){
+		global $token;
+		$this->set_headers();
+		if( isset( $this->error)){
+			echo $this->error. " token = " . $token;
+		}else{
+			echo readfile($this->result["url"]);
+		}
+	}
+	protected function set_headers(){
 
+		if( ! isset( $this->error)){
+			header('Content-Type: application/octet-stream');
+			header("Content-Transfer-Encoding: Binary");
+			header('Content-disposition: attachment; filename="'.$this->build_name().'"');
+		}else{
+			header('Content-Type: text/plain');
+			header('Content-disposition: attachment; filename="'.$this->error.'.txt"');
+		}
+		
+	}
+	
 	protected function extract_params( $get = array() ){
+		global $token;
+
+		if( ! isset( $get["token"]) ){
+			$this->error = "MISSING_TOKEN";
+		}else{
+			if( $get["token"] != $token && $get["token"] != DEFAULT_TEST_TOKEN  ){
+				$this->error = "INVALID_TOKEN";
+			}
+		}
 		if(isset( $get["StartTime"])){
 			if( valid_date( $get["StartTime"])){
 				$this->start = $get["StartTime"];
@@ -188,6 +222,7 @@ Class ArchiveSearcher extends Searcher{
 				$this->error = "INVALID_DATE";
 			}
 		}
+		
 	}
 	protected function build_query(){
 		
@@ -428,19 +463,22 @@ Class  DataSearcher extends Searcher{
         $this->root = null;
     }
     private function prepare_get( $direct= true){
+    	global $token;
+    	
     	if( $direct){
 	        $data = array(
 	            "user" => ISGI_USER,
-	            "index" => $this->indice,
+	            "index" => $this->indice
 	        );
-	    }else{
-	    	$data = array();
 	    }
         if(!is_null( $this->start)){
             $data["StartTime"] = $this->start;
         }
         if(!is_null( $this->end)){
             $data["EndTime"] = $this->end;
+        }
+        if(! $direct){
+        	$data["token"]= $token;
         }
         return http_build_query($data);
     }
