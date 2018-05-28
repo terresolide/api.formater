@@ -1,6 +1,11 @@
 <?php
 session_start();
-$token = session_id();
+if(isset($_SESSION["token"])){
+	$token = $_SESSION["token"];
+}else{
+	$token = uniqid();
+	$_SESSION["token"] = $token;
+}
 include_once '../class/Isgi.php';
 
 
