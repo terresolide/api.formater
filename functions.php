@@ -26,3 +26,12 @@ function get_response_header($header, $response_headers) {
     return false;
 }
 
+function is_authorized_server_origin(){
+	global $_SERVER;
+	global $authorized_servers;
+	if( isset($_SERVER["HTTP_ORIGIN"] ) && in_array($_SERVER["HTTP_ORIGIN"], $authorized_servers)){
+		return true;
+	}else{
+		return false;
+	}
+}

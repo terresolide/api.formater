@@ -65,8 +65,8 @@ Class Request{
     
     public function __construct( $request){
         $this->request = $request;
-        $this->parseRequest();
-
+        $this->parse_request( );
+  
         switch( $this->type){
             case "indices":
                 $this->searcher = new IndicesSearcher( $this->indice);
@@ -85,26 +85,32 @@ Class Request{
         $this->response = $this->searcher->execute( $get );
         return $this->response;
     }
+    public function set_headers(){
+    	if( !is_null( $this->searcher)){
+    		$this->searcher->set_headers();
+    	}
+    }
     public function get_response(){
         return $this->response;
     }
     public function is_archive(){
-    	if( isset( $this->searcher->result["archive"])){
-    		return $this->searcher->result["archive"];
+    	if( $this->type == "archive"){
+    		return true;
     	}else{
     		return false;
     	}
     }
     public function get_result(){
     	return $this->searcher->result;
+    
     }
     public function to_json(){
         return $this->searcher->to_json();
     }
-    public function download(){
-    	return $this->searcher->download();
+    public function output(){
+    	return $this->searcher->output();
     }
-    private function parseRequest(){
+    private function parse_request(){
         //suppr cds/bcmt
         if( preg_match( Config::$pattern_indices, $this->request, $matches)){
             //search observatories
@@ -129,6 +135,7 @@ Class Request{
             }
         }
     }
+    
 }
 
 Class  Searcher{
@@ -137,11 +144,15 @@ Class  Searcher{
     public $end = null;
     public $error = null;
     public $result = array();
+    protected $forbidden = false;
+    protected $is_ajax = true;
+    
     public function __construct( $indice = null ){
         $this->indice = $indice;
     }
     public function execute( $get=array()){
         $this->extract_params( $get );
+        $this->check_request_property( $get);
         if( !is_null($this->error )){
             $this->result =  array( "error" => $this->error );
             return array( "error" => $this->error );
@@ -149,10 +160,51 @@ Class  Searcher{
         $this->treatment();
     }
     
-    public function to_json(){
-        return json_encode( $this->result );
+    public function output(){
+    	
+    	$this->set_headers();
+        echo $this->to_json();
     }
- 
+    public function to_json(){
+    	json_encode( $this->result);
+    }
+    protected function set_headers(){
+    	global $_SERVER;
+    	if( $this->forbidden ){
+    		header('HTTP/1.0 403 Forbidden');
+    	
+    	}else{
+    		if( $this->is_ajax ){
+    			header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+    			header('Access-Control-Allow-Credentials: true');
+    			header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    		}
+    		
+    	}
+    	header("Content-Type: application/json");
+    	
+    }
+    protected function check_request_property( $get){
+    	global $token;
+    	global $_SERVER;
+    	
+    	if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
+    				$this->is_ajax = true;
+    	}else{
+    		$this->is_ajax = false;
+    	}
+    	if( isset( $get["token"]) && ($token == $get["token"] || DEFAULT_TEST_TOKEN == $get["token"])){
+    		$this->forbidden = false;
+    	}else if( $this->is_ajax && is_authorized_server_origin()){
+    		$this->forbidden = false;
+    	}else{
+    		$this->forbidden = true;
+    		$this->error = array("403" => "FORBIDDEN");
+    	}
+    		
+    	
+    }
+   
     protected function extract_params( $get = array() ){
         return $get;
     }
@@ -169,11 +221,9 @@ Class ArchiveSearcher extends Searcher{
 				"url" => $this->build_query()
 				
 		);
-	
-		
 		
 	}
-	public function download(){
+	public function output(){
 		global $token;
 		$this->set_headers();
 		if( isset( $this->error)){
@@ -182,6 +232,7 @@ Class ArchiveSearcher extends Searcher{
 			echo readfile($this->result["url"]);
 		}
 	}
+
 	protected function set_headers(){
 
 		if( ! isset( $this->error)){
@@ -197,11 +248,13 @@ Class ArchiveSearcher extends Searcher{
 	
 	protected function extract_params( $get = array() ){
 		global $token;
-
+		
 		if( ! isset( $get["token"]) ){
 			$this->error = "MISSING_TOKEN";
+			$this->forbidden = true;
 		}else{
 			if( $get["token"] != $token && $get["token"] != DEFAULT_TEST_TOKEN  ){
+				$this->forbidden = true;
 				$this->error = "INVALID_TOKEN";
 			}
 		}
@@ -244,14 +297,29 @@ Class ArchiveSearcher extends Searcher{
 	
 }
 Class IndicesSearcher extends Searcher{
-	
+	/** @todo passer au parent **/
+	private $request_origin = null;
+	public function set_request_origin( $server){
+		$this->request_origin = $server;
+	}
+	protected function check_request_property($get){
+		
+		if( $this->request_origin == "local"){
+			// it's not really request, come from another request archive or data
+			$this->forbidden = false;
+		}else{
+			parent::check_request_property($get);
+		}
+	}
+	/** end passer au parent **/
 	protected function load_features(){
 		$content = file_get_contents( DATA_FILE_ISGI);
 		
 		return json_decode($content);
 	}
-	
+
     protected function treatment(){
+    	
     	$obj = $this->load_features();
        
     	$find = false;
@@ -292,14 +360,15 @@ Class  DataSearcher extends Searcher{
     public function __construct( $indice = null ){
         $this->indice = $indice;
     }
-    public function execute( $get=array() ){
-        $this->extract_params( $get );
-        if( $this->error ){
-            $this->result =  array( "error" => $this->error );
-            return array( "error" => $this->error );
-        }
-        $this->treatment();
-    }
+//     public function execute( $get=array() ){
+//         $this->extract_params( $get );
+//         $this->check_request_property( $get);
+//         if( $this->error ){
+//             $this->result =  array( "error" => $this->error );
+//             return array( "error" => $this->error );
+//         }
+//         $this->treatment();
+//     }
     
     public function to_json(){
         if( ! is_null( $this->error) ){
@@ -363,12 +432,13 @@ Class  DataSearcher extends Searcher{
 	    		$start->sub( new \DateInterval("P364D"));
 	    		$this->start = $start->format("Y-m-d");
 	    	}
-	    	
     	}
-    	
-  
     }
     protected function treatment(){
+    	if( $this->forbidden){
+    		$this->error = array("403" => "FORBIDDEN");
+    		return;
+    	}
     	$this->dates_filter();
     	
     	if( $this->error){
@@ -378,9 +448,7 @@ Class  DataSearcher extends Searcher{
         $this->search_files();
        
         if( is_null( $this->error)){
-            
-        
-        	
+            	
             $this->iaga = new \Iaga( $this->files, "", $this->start ,$this->end, $this->indice);
             $this->iaga->add_meta("isgi_url", $this->false_isgi_url);
             $this->iaga->add_meta("filesize", $this->filesize);
@@ -425,6 +493,9 @@ Class  DataSearcher extends Searcher{
     public function get_metadata(){
     	if( is_null( $this->indiceSearcher) && is_null( $this->metadata)){
     		$this->indiceSearcher = new IndicesSearcher($this->indice);
+    		// the indiceSearcher is called from another searcher (here DataSearcher)
+    		// and not from the original request
+    		$this->indiceSearcher->set_request_origin( "local");
     		$this->indiceSearcher->execute();
     		$this->metadata = $this->indiceSearcher->result;
    	    }
@@ -433,6 +504,7 @@ Class  DataSearcher extends Searcher{
     private function get_temporal(){
     	$metadata = $this->get_metadata();
     	return $metadata->temporalExtents;
+    
     }
     private function get_update(){
     	$metadata = $this->get_metadata();

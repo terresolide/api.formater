@@ -1,5 +1,11 @@
 <?php
-
+session_start();
+if(isset($_SESSION["token"])){
+	$token = $_SESSION["token"];
+}else{
+	$token = uniqid();
+	$_SESSION["token"] = $token;
+}
 include_once "config.php";
 include_once "functions.php";
 include_once 'class/Feature.php';

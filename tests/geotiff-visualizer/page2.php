@@ -1,12 +1,8 @@
 <?php
+/** la page n'existe plus et est renvoyé vers la page de test du catalogue*/
+
 include_once '../../config.php';
-$title = "Intégration des geotiffs (version 2.20.3)";
-$content = APP_DIR."/contents/geotiff-page2.phtml";
-$class= "ft-catalogue";
-
-
-include TEMPLATE_DIR."/layout.phtml";
-
+header("Location: ".APP_URL."/tests/catalog-component-vjs/"); 
 
 
 
