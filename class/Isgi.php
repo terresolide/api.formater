@@ -524,11 +524,17 @@ Class  DataSearcher extends Searcher{
         return $this->error;
     }
     private function clean_temporary_file(){
-        if(count($this->files) > 0 ){
-            foreach( $this->files as $file){
-                unlink( $file);
-            }
-        }
+//         if(count($this->files) > 0 ){
+//             foreach( $this->files as $file){
+//                 unlink( $file);
+//             }
+//         }
+       //delete all files in temporary extract directory
+    	$files = glob(Config::$upload_dir ."/" .$this->root."/*"); // get all file names
+    	foreach($files as $file){ // iterate files
+    		if(is_file($file))
+    			unlink($file); // delete file
+    	}
         $this->files = array();
         //remove directory
         rmdir( Config::$upload_dir ."/" .$this->root );
@@ -568,7 +574,16 @@ Class  DataSearcher extends Searcher{
                   $zip->extractTo( $root );
                   for($i = 0; $i < $zip->numFiles; $i++) {
                       $filename = $zip->getNameIndex($i);
-                      array_push( $this->files, $root. "/" . $filename);
+                      
+                      //pour l'indice AE, on ne prend que le fichier par heure (pas celui par minutes)
+                      
+                      if( $this->indice == "AE" ){
+                      	if( preg_match("/^AEAUALAO_.*h_(P|D)\.dat$/", $filename)){
+                      		array_push( $this->files, $root. "/" . $filename);
+                      	}
+                      }else{
+                     	 array_push( $this->files, $root. "/" . $filename);
+                      }
                      
                      // $fileinfo = pathinfo($filename);
                      // copy("zip://".$path."#".$filename, "/your/new/destination/".$fileinfo['basename']);
