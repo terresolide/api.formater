@@ -175,6 +175,7 @@ Class  Searcher{
     	
     	}else{
     		if( $this->is_ajax ){
+    			if( isset( $_SERVER['HTTP_ORIGIN']))
     			header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
     			header('Access-Control-Allow-Credentials: true');
     			header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
@@ -187,15 +188,16 @@ Class  Searcher{
     protected function check_request_property( $get){
     	global $token;
     	global $_SERVER;
-    	
-    	if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
+    	if( isset( $_SERVER['HTTP_ORIGIN'] ) 
+    			|| ( isset( $_SERVER['HTTP_X_REQUESTED_WITH']) &&  $_SERVER['HTTP_X_REQUESTED_WITH']== "XMLHttpRequest")){
     				$this->is_ajax = true;
     	}else{
     		$this->is_ajax = false;
     	}
+    
     	if( isset( $get["token"]) && ($token == $get["token"] || DEFAULT_TEST_TOKEN == $get["token"])){
     		$this->forbidden = false;
-    	}else if( $this->is_ajax && is_authorized_server_origin()){
+    	}else if( $this->is_ajax && ( is_authorized_server_origin() || !isset( $_SERVER['HTTP_ORIGIN']))){
     		$this->forbidden = false;
     	}else{
     		$this->forbidden = true;

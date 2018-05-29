@@ -6,6 +6,7 @@ if(isset($_SESSION["token"])){
 	$token = uniqid();
 	$_SESSION["token"] = $token;
 }
+
 include_once "config.php";
 include_once "functions.php";
 include_once 'class/Feature.php';

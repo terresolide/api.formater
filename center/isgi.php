@@ -6,6 +6,7 @@ if(isset($_SESSION["token"])){
 	$token = uniqid();
 	$_SESSION["token"] = $token;
 }
+
 include_once '../class/Isgi.php';
 
 
