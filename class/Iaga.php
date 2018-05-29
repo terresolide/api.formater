@@ -102,7 +102,7 @@ Class Iaga
                 $fields = preg_split('/\s+/', $line);
                 if($this->isgi){
                     $length = 4;
-                    if( $this->indice == "asigma"){
+                    if( $this->indice == "asigma" || $this->indice == "AE"){
                     	$length = 7;
                     }
                     if( $this->indice == "CKdays"){
@@ -123,6 +123,7 @@ Class Iaga
                         $fields = array_values( $fields);
                         
                     }
+                  
                     $fields = array_splice( $fields, 0, $length);
 
  					
