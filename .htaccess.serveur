@@ -18,7 +18,7 @@ RewriteRule ^api.*$ feature.php?%{QUERY_STRING} [L]
 ErrorDocument 404 /404.php
 
 # Enable cross domain access control
-<FilesMatch "\.png">
+<FilesMatch "\.(png|tiff)">
     Header set Access-Control-Allow-Origin "*"
 </FilesMatch>
 
@@ -27,3 +27,4 @@ ErrorDocument 404 /404.php
 # Header always set Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
 # Header always set Access-Control-Allow-Headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,C$
 # Header always set Access-Control-Allow-Credentials true
+
