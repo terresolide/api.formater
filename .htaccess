@@ -24,7 +24,7 @@ ErrorDocument 404 /404.php
 #   Header always set Access-Control-Allow-Credentials true
 
 
-<FilesMatch "\.(tiff|png)$">
+<FilesMatch "\.(tif|tiff|png)$">
 <IfModule mod_headers.c>
     Header set Access-Control-Allow-Origin "*"
 </IfModule>
