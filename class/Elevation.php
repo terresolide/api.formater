@@ -140,9 +140,7 @@ Class  ElevationSearcher extends Searcher{
         	$this->error = 'INCOMPLETE_LOCATION';
         }else{
         	$this->lat = floatval($get['lat']); // (floatval($get['lat']) - 90) % 180 + 90;
-        	var_dump($this->lat);
         	$this->lng = floatval($get['lng']); // (floatval($get['lng']) - 180) %360 + 180;
-        	var_dump($this->lng);
         }
         if(!isset($get['name'])){
         	$this->error = 'MISSING_PROJECT';
@@ -201,23 +199,24 @@ Class  ElevationSearcher extends Searcher{
     	$answer = array();
     	foreach($this->files as $file){
     		$filename = $file->tiffname;
-    		var_dump($filename);
-    		$cmd = 'gdallocationinfo -geoloc -valonly -b 1 '. GEOTIFF_DIR. '/'.$this->name.'/'.$filename. ' '.$this->lng. ' '.$this->lat;
-    		// var_dump($cmd);
-    		$output = array();
-    		$return_var = null;
-    		
-    		// $cmd = escapeshellcmd($cmd);
-    		var_dump($cmd);
-    		exec($cmd, $output, $return_var);
-    		
-    		// stop foreach if shell failed
-    		$failed = ($return_var > 0);
-    		if ($failed) {
-    			$this->error = 'SHELL_ERROR';
-    			break;
+    		// check if the date is ok
+    		if ($file->date <= $this->end && $file->date >= $this->start) {
+	    		// use gdal
+	    		// only request for raster 1 (-b 1) where is the information for mexico geotiff
+	    		// it can be different for others series
+	    		$cmd = 'gdallocationinfo -geoloc -valonly -b 1 '. GEOTIFF_DIR. '/'.$this->name.'/'.$filename. ' '.$this->lng. ' '.$this->lat;
+	    		$output = array();
+	    		$return_var = null;
+	    		exec($cmd, $output, $return_var);
+	    		
+	    		// stop foreach if shell failed
+	    		$failed = ($return_var > 0);
+	    		if ($failed) {
+	    			$this->error = 'SHELL_ERROR';
+	    			break;
+	    		}
+	    		array_push($answer, array('date' => $file->date, 'value' => $output[0]));
     		}
-    		array_push($answer, array('date' => $file->date, 'value' => $output[0]));
     	}
        $this->result = $answer;
     }
