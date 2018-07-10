@@ -82,7 +82,7 @@ Class  Searcher{
     	echo $this->to_json();
     }
     public function to_json(){
-    	json_encode( $this->result);
+    	json_encode( $this->result, JSON_NUMERIC_CHECK);
     }
     protected function set_headers(){
     	global $_SERVER;
@@ -263,7 +263,7 @@ Class  ElevationSearcher extends Searcher{
 	    			$this->error = 'SHELL_ERROR';
 	    			break;
 	    		}
-	    		array_push($answer, array('date' => $file->date, 'value' => $output[0]));
+	    		array_push($answer, array('date' => $file->date, 'value' => floatval($output[0])));
     		}
     	}
        $this->result = $answer;
