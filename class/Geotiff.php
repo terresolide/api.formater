@@ -12,6 +12,7 @@ namespace geotiff;
 
 
 include_once "../config.php";
+include_once "../config_unistra.php";
 include_once "../functions.php";
 
 
@@ -37,48 +38,96 @@ Class Request{
         }
     }
     public function execute( $get){
-        $this->response = $this->searcher->execute( $get );
-        return $this->response;
+    	$this->response = $this->searcher->execute( $get );
+    	return $this->response;
     }
     public function get_response(){
-        return $this->response;
+    	return $this->response;
     }
     public function to_json(){
-        return $this->searcher->to_json();
+    	return $this->searcher->to_json();
+    }
+    public function output(){
+    	return $this->searcher->output();
     }
     private function parseRequest(){
-       $this->type = "data";
-        
+    	$this->type = "data";
+    	
     }
 }
 
 Class  Searcher{
-
-    public $start = null;
-    public $end = null;
-    public $error = null;
-    public $result = array();
-    public function __construct( ){
-        
-    }
-    public function execute( $get ){
-        $this->extract_params( $get );
-        if( !is_null($this->error )){
-            $this->result =  array( "error" => $this->error );
-            return array( "error" => $this->error );
-        }
-        $this->treatment();
-    }
-    
-    public function to_json(){
-        return json_encode( $this->result );
-    }
-    protected function extract_params( $get = array() ){
-        return $get;
-    }
-    protected function treatment(){
-        $this->result = array("error" => "NOT_FOUND");
-    }
+	
+	public $start = null;
+	public $end = null;
+	public $error = null;
+	public $result = array();
+	protected $forbidden = false;
+	protected $is_ajax = true;
+	public function __construct( ){
+		
+	}
+	public function execute( $get ){
+		$this->extract_params( $get );
+		if( !is_null($this->error )){
+			$this->result =  array( "error" => $this->error );
+			return array( "error" => $this->error );
+		}
+		$this->treatment();
+	}
+	
+	protected function extract_params( $get = array() ){
+		return $get;
+	}
+	protected function treatment(){
+		$this->result = array("error" => "NOT_FOUND");
+	}
+	public function output(){
+		
+		$this->set_headers();
+		echo $this->to_json();
+	}
+	public function to_json(){
+		json_encode( $this->result);
+	}
+	protected function set_headers(){
+		global $_SERVER;
+		if( $this->forbidden ){
+			header('HTTP/1.0 403 Forbidden');
+			
+		}else{
+			if( $this->is_ajax ){
+				if( isset( $_SERVER['HTTP_ORIGIN']))
+					header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+					header('Access-Control-Allow-Credentials: true');
+					header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+					Header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+			}
+			
+		}
+		header("Content-Type: application/json");
+	}
+	protected function check_request_property( $get){
+		global $token;
+		global $_SERVER;
+		if( isset( $_SERVER['HTTP_ORIGIN'] )
+				|| ( isset( $_SERVER['HTTP_X_REQUESTED_WITH']) &&  $_SERVER['HTTP_X_REQUESTED_WITH']== "XMLHttpRequest")){
+					$this->is_ajax = true;
+		}else{
+			$this->is_ajax = false;
+		}
+		
+		if( isset( $get["token"]) && ($token == $get["token"] || DEFAULT_TEST_TOKEN == $get["token"])){
+			$this->forbidden = false;
+		}else if( $this->is_ajax && ( is_authorized_server_origin() || !isset( $_SERVER['HTTP_ORIGIN']))){
+			$this->forbidden = false;
+		}else{
+			$this->forbidden = true;
+			$this->error = array("403" => "FORBIDDEN");
+		}
+		
+		
+	}
 }
 
 Class  DataSearcher extends Searcher{

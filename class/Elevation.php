@@ -36,6 +36,9 @@ Class Request{
     public function to_json(){
         return $this->searcher->to_json();
     }
+    public function output(){
+    	return $this->searcher->output();
+    }
     private function parseRequest(){
        $this->type = "elevation";
         
@@ -53,6 +56,8 @@ Class  Searcher{
     public $end = null;
     public $error = null;
     public $result = array();
+    protected $forbidden = false;
+    protected $is_ajax = true;
     public function __construct( ){
         
     }
@@ -65,14 +70,57 @@ Class  Searcher{
         $this->treatment();
     }
     
-    public function to_json(){
-        return json_encode( $this->result );
-    }
     protected function extract_params( $get = array() ){
         return $get;
     }
     protected function treatment(){
         $this->result = array("error" => "NOT_FOUND");
+    }
+    public function output(){
+    	
+    	$this->set_headers();
+    	echo $this->to_json();
+    }
+    public function to_json(){
+    	json_encode( $this->result);
+    }
+    protected function set_headers(){
+    	global $_SERVER;
+    	if( $this->forbidden ){
+    		header('HTTP/1.0 403 Forbidden');
+    		
+    	}else{
+    		if( $this->is_ajax ){
+    			if( isset( $_SERVER['HTTP_ORIGIN']))
+    				header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+    				header('Access-Control-Allow-Credentials: true');
+    				header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    				Header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+    		}
+    		
+    	}
+    	header("Content-Type: application/json");
+    }
+    protected function check_request_property( $get){
+    	global $token;
+    	global $_SERVER;
+    	if( isset( $_SERVER['HTTP_ORIGIN'] )
+    			|| ( isset( $_SERVER['HTTP_X_REQUESTED_WITH']) &&  $_SERVER['HTTP_X_REQUESTED_WITH']== "XMLHttpRequest")){
+    				$this->is_ajax = true;
+    	}else{
+    		$this->is_ajax = false;
+    	}
+    	
+    	if( isset( $get["token"]) && ($token == $get["token"] || DEFAULT_TEST_TOKEN == $get["token"])){
+    		$this->forbidden = false;
+    	}else if( $this->is_ajax && ( is_authorized_server_origin() || !isset( $_SERVER['HTTP_ORIGIN']))){
+    		$this->forbidden = false;
+    	}else{
+    		$this->forbidden = true;
+    		$this->error = array("403" => "FORBIDDEN");
+    	}
+    	
+    	
     }
 }
 

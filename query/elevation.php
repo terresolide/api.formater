@@ -1,9 +1,10 @@
 <?php
+session_start();
 /**
  * example request
  * http://api.formater/service/elevation?name=mexico&lat=19.39268618643092&lng=-99.07470703125001&start=2015-07-18&end=2018-06-07
  */
-session_start();
+
 if(isset($_SESSION["token"])){
 	$token = $_SESSION["token"];
 }else{
@@ -15,15 +16,15 @@ include_once '../class/Elevation.php';
 $profile = new \elevation\Request( $_SERVER['REQUEST_URI']);
 $profile->execute($_GET);
 
-if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
-	header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
-	header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-	header('Access-Control-Allow-Credentials: true');
+// if( isset( $_SERVER['HTTP_ORIGIN'] ) ){
+// 	header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+// 	header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+// 	header('Access-Control-Allow-Credentials: true');
 	
-}
-header("Content-Type: application/json");
+// }
+// header("Content-Type: application/json");
 
-echo $profile->to_json();
+echo $profile->output();
 
 
 /** tests gdal
