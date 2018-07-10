@@ -11,6 +11,8 @@ define('DATA_FILE_ISGI', APP_DIR.'/data/geojson_isgi_local.json');
 define('DATA_FILE_GRENOBLE', APP_DIR.'/data/geojson_etalab_ft.json');
 define('GEOTIFF_DIR', APP_DIR.'/geotiff');
 define('GEOTIFF_URL', APP_URL.'/geotiff/');
+define('MEXICO_DIR', GEOTIFF_DIR.'/mexico');
+define('MEXICO_URL', GEOTIFF_URL. 'mexico/');
 
 /** SERVEUR BCMT**/
 define('BCMT_FTP_SERVER' ,"ftp.bcmt.fr");

@@ -151,7 +151,7 @@ Class  DataSearcher extends Searcher{
         //search files in directory
         $end = false;
         $result = array();
-    	if ( $handle = opendir(GEOTIFF_DIR) ) {
+    	if ( $handle = opendir(MEXICO_DIR) ) {
     		$matches = array();
     		/* Ceci est la façon correcte de traverser un dossier. */
     		while (false !== ($entry = readdir($handle)) ) {
@@ -169,7 +169,7 @@ Class  DataSearcher extends Searcher{
 	    							"date" => $date,
 	    					);
 	    				}
-	    				$result[ $key][ $extension] = GEOTIFF_URL.$entry;
+	    				$result[ $key][ $extension] = MEXICO_URL.$entry;
     		  		}
     			}
     		}
