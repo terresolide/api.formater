@@ -30,3 +30,9 @@ ErrorDocument 404 /404.php
     Header set Access-Control-Allow-Origin "*"
 </IfModule>
 </FilesMatch>
+<FilesMatch "\.(json)$">
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Content-Type "application/json"
+</IfModule>
+</FilesMatch>
