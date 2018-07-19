@@ -119,8 +119,6 @@ Class  Searcher{
     		$this->forbidden = true;
     		$this->error = array("403" => "FORBIDDEN");
     	}
-    	
-    	
     }
 }
 
@@ -135,6 +133,7 @@ Class  ElevationSearcher extends Searcher{
     private $bbox = null;
     private $lat = null;
     private $lng = null;
+    private $band = 1;
 
     
     public function __construct( $indice = null ){
@@ -157,52 +156,63 @@ Class  ElevationSearcher extends Searcher{
         }
     }
     /**
-     *  $_GET['start'] date de début
-	 *  $_GET['end'] date de fin
+     *  $_GET['start'] date de début (optionel)
+	 *  $_GET['end'] date de fin (optionel)
 	 *  $_GET['name'] nom du répertoire dans lequel se trouve les fichiers geotiff d'une serie
 	 *   j'ai créé un json appelé info.json qui contient les noms des fichiers concernées d'une serie et la bbox?
 	 *   ici les noms des geotiffs du répertoire ont tous le même schéma geo_TOT_<date>.unw.tiff
 	 *  $_GET['lat'] la latitude
 	 *  $_GET['lng'] la longitude
+	 *  $_GET['band'] la bande concernée (1 par défaut)
      * @param array $get
      */
     protected function extract_params( $get = array() ){
+    	if(!isset($get['name'])){
+    		$this->error = 'MISSING_PROJECT';
+    	}else{
+    		$this->name = filter_var($get['name'], FILTER_SANITIZE_STRING);
+    		if(!$this->load_info()){
+    			return;
+    		}
+    	}
+    	
         if(isset( $get["start"])){
             if( valid_date( $get["start"])){
                 $this->start = $get["start"];
             }else{
-                $this->error = "INVALID_DATE";
+            	$this->error = "INVALID_DATE";
+            	return;
             }
+        }else{
+        	$this->start = reset($this->files)->date;
         }
         if(isset( $get["end"])){
             if( valid_date( $get["end"])){
                 $this->end = $get["end"];
-                if( !is_null( $this->start) && $this->start > $this->end){
-                    $this->error = "INCONSITENT_DATE";
-                }
             }else{
-                $this->error = "INVALID_DATE";
+            	$this->error = "INVALID_DATE";
+            	return;
             }
+        }else{
+        	$this->end = end($this->files)->date;
         }
         if(!isset($get['lat']) || !isset($get['lng'])){
         	$this->error = 'INCOMPLETE_LOCATION';
+        	return;
         }else{
         	$this->lat = floatval($get['lat']); // (floatval($get['lat']) - 90) % 180 + 90;
         	$this->lng = floatval($get['lng']); // (floatval($get['lng']) - 180) %360 + 180;
         }
-        if(!isset($get['name'])){
-        	$this->error = 'MISSING_PROJECT';
-        }else{
-        	$this->name = filter_var($get['name'], FILTER_SANITIZE_STRING);
+        if(isset($get['band'])){
+        	$this->band = intval($get['band']);
         }
+        
     }
     protected function treatment(){
-    	if ($this->load_info()) {
-    		if ($this->is_inbbox()) {
-    			$this->extract_elevation();
-    		}else{
+    	if ($this->is_inbbox()) {
+    		$this->extract_elevation();
+    	}else{
     			$this->error = 'OUTOF_BBOX';
-    		}
     	}
     }
     private function is_inbbox () {
@@ -252,7 +262,7 @@ Class  ElevationSearcher extends Searcher{
 	    		// use gdal
 	    		// only request for raster 1 (-b 1) where is the information for mexico geotiff
 	    		// it can be different for others series
-	    		$cmd = 'gdallocationinfo -geoloc -valonly -b 1 '. GEOTIFF_DIR. '/'.$this->name.'/'.$filename. ' '.$this->lng. ' '.$this->lat;
+	    		$cmd = 'gdallocationinfo -geoloc -valonly -b ' . $this->band.' '. GEOTIFF_DIR. '/'.$this->name.'/'.$filename. ' '.$this->lng. ' '.$this->lat;
 	    		$output = array();
 	    		$return_var = null;
 	    		exec($cmd, $output, $return_var);
@@ -262,8 +272,13 @@ Class  ElevationSearcher extends Searcher{
 	    		if ($failed) {
 	    			$this->error = 'SHELL_ERROR';
 	    			break;
+	    		} 
+	    		if (empty($output)) {
+	    			$this->error = 'NOT_FIND';
+	    			break;
 	    		}
 	    		array_push($answer, array('date' => $file->date, 'value' => floatval($output[0])));
+	    		
     		}
     	}
        $this->result = $answer;
