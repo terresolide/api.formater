@@ -77,7 +77,6 @@ Class  Searcher{
         $this->result = array("error" => "NOT_FOUND");
     }
     public function output(){
-    	
     	$this->set_headers();
     	echo $this->to_json();
     }
@@ -148,10 +147,33 @@ Class  ElevationSearcher extends Searcher{
         $this->treatment();
     }
     
+    public function save($filename) {
+
+    	$geo = array(
+    			"type" => "Feature",
+    			"geometry" => array(
+    				"type" => "Point",
+    				"coordinates" => array( $this->lng, $this->lat)
+    			),
+    			"properties" => array(
+    				"type"   => "chart",
+    				"data"	 => $this->result
+    			)
+    	);
+    	file_put_contents($filename, json_encode($geo));
+    }
     public function to_json(){
         if( ! is_null( $this->error) ){
             return json_encode( array("error" => $this->error));
         }else{
+        	// save resultat before display
+//         	$i = 0;
+//         	$filename = APP_DIR . '/exemples/feature_'. $i .'.json';
+//         	while(file_exists($filename)) {
+//         		$i++;
+//         		$filename = APP_DIR . '/exemples/feature_'. $i .'.json';
+//         	}
+//             $this->save($filename);
             return json_encode( $this->result);
         }
     }
