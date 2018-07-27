@@ -4,7 +4,7 @@
  */
 
 
-$content = file_get_contents('geotiff/mexico/info.json');
+$content = file_get_contents('geotiff/mexico/info_ft.json');
 $info = json_decode($content);
 $result = array();
 $first = current((Array)$info->result)->date;

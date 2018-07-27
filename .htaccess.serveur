@@ -18,12 +18,11 @@ RewriteRule ^api.*$ feature.php?%{QUERY_STRING} [L]
 ErrorDocument 404 /404.php
 
 # Enable cross domain access control
-<FilesMatch "\.(png|tiff|tif)">
+<FilesMatch "\.(png|tiff|tif|json)">
     Header set Access-Control-Allow-Origin "*"
 </FilesMatch>
 <FilesMatch "\.(json)$">
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
     Header set Content-Type "application/json"
 </IfModule>
 </FilesMatch>
