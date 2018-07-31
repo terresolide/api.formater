@@ -167,13 +167,13 @@ Class  ElevationSearcher extends Searcher{
             return json_encode( array("error" => $this->error));
         }else{
         	// save resultat before display
-        	$i = 0;
-        	$filename = APP_DIR . '/exemples/feature_'. $i .'.json';
-        	while(file_exists($filename)) {
-        		$i++;
-        		$filename = APP_DIR . '/exemples/feature_'. $i .'.json';
-        	}
-            $this->save($filename);
+//         	$i = 0;
+//         	$filename = APP_DIR . '/exemples/feature_'. $i .'.json';
+//         	while(file_exists($filename)) {
+//         		$i++;
+//         		$filename = APP_DIR . '/exemples/feature_'. $i .'.json';
+//         	}
+//             $this->save($filename);
             return json_encode( $this->result);
         }
     }
