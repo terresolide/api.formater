@@ -101,7 +101,7 @@ Class  Searcher{
 					header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
 					header('Access-Control-Allow-Credentials: true');
 					header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-					Header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+					// Header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
 			}
 			
 		}
@@ -203,6 +203,8 @@ Class  DataSearcher extends Searcher{
     	if ( $handle = opendir(MEXICO_DIR) ) {
     		$matches = array();
     		/* Ceci est la façon correcte de traverser un dossier. */
+    		// start date 
+    	    $start = new \DateTime($this->start);
     		while (false !== ($entry = readdir($handle)) ) {
     			if( preg_match( $this->pattern, $entry, $matches)){
     				//var_dump($matches);
@@ -211,6 +213,10 @@ Class  DataSearcher extends Searcher{
     				
     				if( $this->is_valid_date( $date)){
 	    				$key = str_replace( "-", "", $date);
+	    				// number of days since start day
+	    				$current = new \DateTime($date);
+	    				$diff = $start->diff($current);
+	    				$key = $diff->days;
 	    				$extension = $matches[4];
 	    				
 	    				if( !isset( $result[$key])){
@@ -218,7 +224,7 @@ Class  DataSearcher extends Searcher{
 	    							"date" => $date,
 	    					);
 	    				}
-	    				$result[ $key][ $extension] = MEXICO_URL.$entry;
+	    				$result[$key][ $extension] = MEXICO_URL.$entry;
     		  		}
     			}
     		}
@@ -227,10 +233,20 @@ Class  DataSearcher extends Searcher{
     		closedir($handle);
     	}
     	ksort( $result);
+    	// decale tous les indexes de celui du début
+    	reset($result);
+    	$first_key = key($result);
+    	$keys = array_keys($result);
+    	$return_result = array();
+    	foreach( $keys as $value){
+    		$return_result[$value - $first_key] = $result[$value];
+    	}
+    
+    	
     	if( count( $result)>0)
     	$this->result = array( 
     			"bbox" => $this->bbox,
-    			"result" => $result
+    			"result" => $return_result
     	);
        
     }

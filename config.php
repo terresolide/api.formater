@@ -8,8 +8,8 @@ define('LIB_DIR',  APP_DIR.'/lib');
 
 define('DATA_FILE_BCMT', APP_DIR.'/data/geojson_bcmt_ft_test.json');
 define('DATA_FILE_ISGI', APP_DIR.'/data/geojson_isgi_local.json');
-// define('DATA_FILE_GRENOBLE', APP_DIR.'/data/geojson_etalab_ft_test.json');
-define('DATA_FILE_GRENOBLE', APP_DIR.'/data/geojson_etalab_ft.json');
+define('DATA_FILE_GRENOBLE', APP_DIR.'/data/geojson_etalab_ft_test.json');
+// define('DATA_FILE_GRENOBLE', APP_DIR.'/data/geojson_etalab_ft.json');
 define('GEOTIFF_DIR', APP_DIR.'/geotiff');
 define('GEOTIFF_URL', APP_URL.'/geotiff/');
 define('MEXICO_DIR', GEOTIFF_DIR.'/mexico');
