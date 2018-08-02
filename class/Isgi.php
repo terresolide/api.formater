@@ -209,6 +209,16 @@ Class  Searcher{
     }
    
     protected function extract_params( $get = array() ){
+    	global $_SERVER;
+    	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    		header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+    		header('Access-Control-Allow-Credentials: true');
+    		header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    		header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+    		
+    		$this->error = 'PRE_REQUEST';
+    		return false;
+    	}
         return $get;
     }
     protected function treatment(){
@@ -250,15 +260,25 @@ Class ArchiveSearcher extends Searcher{
 	}
 	
 	protected function extract_params( $get = array() ){
-		global $token;
-		
+		global $_SERVER;
+		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+			header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+			header('Access-Control-Allow-Credentials: true');
+			header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+			header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+			
+			$this->error = 'PRE_REQUEST';
+			return false;
+		}
 		if( ! isset( $get["token"]) ){
 			$this->error = "MISSING_TOKEN";
 			$this->forbidden = true;
+			return false;
 		}else{
 			if( $get["token"] != $token && $get["token"] != DEFAULT_TEST_TOKEN  ){
 				$this->forbidden = true;
 				$this->error = "INVALID_TOKEN";
+				return false;
 			}
 		}
 		if(isset( $get["StartTime"])){
@@ -266,6 +286,7 @@ Class ArchiveSearcher extends Searcher{
 				$this->start = $get["StartTime"];
 			}else{
 				$this->error = "INVALID_DATE";
+				return false;
 			}
 		}
 		if(isset( $get["EndTime"])){
@@ -273,11 +294,14 @@ Class ArchiveSearcher extends Searcher{
 				$this->end = $get["EndTime"];
 				if( !is_null( $this->start) && $this->start > $this->end){
 					$this->error = "INCONSITENT_DATE";
+					return false;
 				}
 			}else{
 				$this->error = "INVALID_DATE";
+				return false;
 			}
 		}
+		return true;
 		
 	}
 	protected function build_query(){
@@ -381,6 +405,16 @@ Class  DataSearcher extends Searcher{
         }
     }
     protected function extract_params( $get = array() ){
+    	global $_SERVER;
+    	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    		header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+    		header('Access-Control-Allow-Credentials: true');
+    		header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    		header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+    		
+    		$this->error = 'PRE_REQUEST';
+    		return false;
+    	}
         if(isset( $get["start"])){
             if( valid_date( $get["start"])){
                 $this->start = $get["start"];

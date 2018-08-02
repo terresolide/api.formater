@@ -157,6 +157,16 @@ Class  Searcher{
 		return json_encode( $this->result );
 	}
 	protected function extract_params( $get = array() ){
+		global $_SERVER;
+		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+			header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+			header('Access-Control-Allow-Credentials: true');
+			header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+			header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+			
+			$this->error = 'PRE_REQUEST';
+			return false;
+		}
 		return $get;
 	}
 	protected function treatment(){
@@ -386,7 +396,16 @@ Class DataSearcher extends Searcher{
     * @return boolean
     */
    protected function extract_param( $get ){
-   
+   		global $_SERVER;
+	   	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+	   		header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+	   		header('Access-Control-Allow-Credentials: true');
+	   		header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+	   		header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+	   		
+	   		$this->error = 'PRE_REQUEST';
+	   		return false;
+	   	}
        if( is_null($get) || (!isset( $get["start"]) && !isset($get["end"]))){
            $this->start = new \DateTime(" -". Config::$default_days . " day");
            $this->end = new \DateTime();
