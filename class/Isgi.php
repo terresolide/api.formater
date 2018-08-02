@@ -261,15 +261,16 @@ Class ArchiveSearcher extends Searcher{
 	
 	protected function extract_params( $get = array() ){
 		global $_SERVER;
-		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-			header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
-			header('Access-Control-Allow-Credentials: true');
-			header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-			header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+		global $token;
+// 		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+// 			header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+// 			header('Access-Control-Allow-Credentials: true');
+// 			header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+// 			header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
 			
-			$this->error = 'PRE_REQUEST';
-			return false;
-		}
+// 			$this->error = 'PRE_REQUEST';
+// 			return false;
+// 		}
 		if( ! isset( $get["token"]) ){
 			$this->error = "MISSING_TOKEN";
 			$this->forbidden = true;
@@ -277,7 +278,7 @@ Class ArchiveSearcher extends Searcher{
 		}else{
 			if( $get["token"] != $token && $get["token"] != DEFAULT_TEST_TOKEN  ){
 				$this->forbidden = true;
-				$this->error = "INVALID_TOKEN";
+				$this->error = "INVALID_TOKEN ";
 				return false;
 			}
 		}
