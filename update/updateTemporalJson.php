@@ -7,7 +7,7 @@
 include "../config.php";
 // ftp connexion
 
-$infile =  DATA_FILE_BCMT;
+$infile =  DATA_FILE;
 $outputfile = DATA_DIR."/geojson_bcmt_ft_test2.json";
 $conn_id = ftp_connect(BCMT_FTP_SERVER) or die('{ "error": "NO_FTP_CONNEXION"}');
 if(  ! @ftp_login( $conn_id, BCMT_FTP_USER, BCMT_FTP_PWD) ){
