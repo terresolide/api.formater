@@ -2,7 +2,7 @@
 /** creation du fichier des zones de latitudes magnétiques **/
 
 include "../../config.php";
-$file = DIR_ISGI_ZONES."/geojson_isgi_auroral.json";
+$file = DIR_ISGI_ZONES."/geojson_isgi_auroral_nord.json";
 $content = file_get_contents( $file);
 $auroral = json_decode( $content);
 
