@@ -2,7 +2,8 @@
 /**
 * Extract code list from http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml
 * */
-$url = "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml";
+// $url = "http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml";
+$url = "ML_gmxCodelists.xml";
 $doc = new DOMDocument();
 $doc->load($url);
 // $xpath = new DOMXpath($doc);
